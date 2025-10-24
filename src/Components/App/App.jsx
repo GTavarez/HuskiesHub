@@ -2,11 +2,10 @@ import React, { useEffect, useState } from "react";
 import "./App.css";
 import Calendar from "../Calendar/Calendar";
 
-const CLIENT_ID =
-  "891073803869-682huhakpr2ucj53d7m1v9clapdmbru1.apps.googleusercontent.com";
-const API_KEY = "AIzaSyC72OCBUqZ0M-UZstEtfK9w-0OoUY2vqmY";
-const DISCOVERY_DOC =
-  "https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest";
+const CLIENT_ID = import.meta.env.VITE_ClientID;
+
+const API_KEY = import.meta.env.VITE_CalendarAPIKey;
+const DISCOVERY_DOC = import.meta.env.VITE_DiscoveryDoc;
 const SCOPES = "https://www.googleapis.com/auth/calendar.readonly";
 
 export default function GoogleCalendarQuickstart() {

@@ -30,7 +30,7 @@ function Calendar() {
           end: event.end?.dateTime || event.end?.date,
           
         }));
-
+        
         setEvents(googleEvents);
       } catch (err) {
         console.error("Error fetching events:", err);
