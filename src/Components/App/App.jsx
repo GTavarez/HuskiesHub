@@ -7,6 +7,8 @@ import { Routes, Route, BrowserRouter } from "react-router-dom";
 import React from "react";
 
 function App() {
+  const [user, setUser] = React.useState(null);
+  const [activeModal, setActiveModal] = React.useState("");
   return (
     <BrowserRouter>
       <div className="page">
