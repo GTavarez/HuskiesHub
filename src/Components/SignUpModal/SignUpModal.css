@@ -1,0 +1,6 @@
+.modal__password_match {
+  color: red;
+  position: absolute;
+  top: 340px;
+  left: 28px;
+}

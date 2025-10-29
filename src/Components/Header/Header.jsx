@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import React from "react";
 import logo from "../../assets/logo.png";
 
-function Header() {
+function Header({ onSignUp, onClick }) {
   const [isOpen, setIsOpen] = React.useState(false);
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -59,7 +59,11 @@ function Header() {
             </button>
           </div>
         )}
-        <button className="header__signup_button" type="button">
+        <button
+          className="header__signup_button"
+          type="button"
+          onClick={onClick}
+        >
           {" "}
           Join Team{" "}
         </button>
