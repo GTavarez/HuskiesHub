@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import React from "react";
 import logo from "../../assets/logo.png";
 
-function Header({ onSignUp, onClick }) {
+function Header({ onSignUp, onClick, onSignin, openSignInModal }) {
   const [isOpen, setIsOpen] = React.useState(false);
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -23,15 +23,16 @@ function Header({ onSignUp, onClick }) {
           </Link>
         </button>
         <button className="header__nav-button">
+          <Link to="/teams" className="header__nav-link">
+            Teams
+          </Link>
+        </button>
+        <button className="header__nav-button">
           <Link to="/schedule" className="header__nav-link">
             Schedule
           </Link>
         </button>
-        <button className="header__nav-button">
-          <Link to="/leagues" className="header__nav-link">
-            Leagues
-          </Link>
-        </button>
+
         <button
           className={
             isOpen ? "header__nav-dropbuttons-open" : "header__nav-dropbuttons"
@@ -48,8 +49,8 @@ function Header({ onSignUp, onClick }) {
               </Link>
             </button>
             <button className="header__dropdown_button" type="button">
-              <Link to="/aboutteam" className="header__dropdown-link">
-                About Team
+              <Link to="/collegecommits" className="header__dropdown-link">
+                College Commits
               </Link>
             </button>
             <button className="header__dropdown_button" type="button">
@@ -60,9 +61,17 @@ function Header({ onSignUp, onClick }) {
           </div>
         )}
         <button
+          className="header__nav-button"
+          type="button"
+          onClick={openSignInModal}
+        >
+          Login
+        </button>
+        <button
           className="header__signup_button"
           type="button"
           onClick={onClick}
+          onSubmit={onSignUp}
         >
           {" "}
           Join Team{" "}

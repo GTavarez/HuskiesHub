@@ -69,6 +69,13 @@
   color: #9ca3af;
   background-color: #0a192f;
 }
+
+.modal__input:active {
+  background-color: #0a192f;
+}
+.modal__input:focus {
+  background-color: #0a192f;
+}
 .modal__label {
   border-bottom: 1px solid rgba(255, 255, 255, 0.5);
   color: #fff;
@@ -92,6 +99,7 @@
   display: flex;
   flex-direction: row;
   justify-content: center;
+  gap: 8px;
 }
 .modal__login-button {
   margin: 0;
@@ -101,4 +109,5 @@
   background-color: transparent;
   color: #ffff;
   cursor: pointer;
+  width: fit-content;
 }

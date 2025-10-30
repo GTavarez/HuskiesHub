@@ -1,0 +1,39 @@
+.main__image_section {
+  width: 100%;
+  height: 600px; /* Desktop view */
+  background-image: url("../../assets/team.JPEG");
+  background-size: cover;
+  background-position: center 60%; /* keeps faces visible */
+  background-repeat: no-repeat;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  text-align: center;
+}
+.main__image_section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.35);
+}
+.main__image_section_content {
+  position: relative;
+  z-index: 2;
+  max-width: 800px;
+  padding: 20px;
+  top: 220px;
+  left: -460px;
+}
+.main__image_section_content-title {
+  font-size: 40px;
+  margin-bottom: 5px;
+}
+.main__image_section_content-subtitle {
+  font-size: 25px;
+  margin-top: 0;
+}

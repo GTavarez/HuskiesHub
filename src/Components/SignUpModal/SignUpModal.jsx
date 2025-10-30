@@ -4,7 +4,13 @@ import React from "react";
 import { useForm } from "../../hooks/useForm.js";
 import { useEffect } from "react";
 
-function SignUpModal({ isOpen, onClose, activeModal }) {
+function SignUpModal({
+  isOpen,
+  onClose,
+  activeModal,
+  onSignInModal,
+  onRegister,
+}) {
   const defaultValues = {
     name: "",
     email: "",
@@ -29,6 +35,7 @@ function SignUpModal({ isOpen, onClose, activeModal }) {
       password: values.password,
       confirmPassword: values.confirmPassword,
     });
+    
   };
   return (
     <ModalWithForm
@@ -41,17 +48,17 @@ function SignUpModal({ isOpen, onClose, activeModal }) {
       hideSubmitButton={true}
     >
       <label className="modal__label">
-        First Name{" "}
+        Name{" "}
         <input
           className="modal__input"
           type="text"
-          name="firstName"
+          name="name"
           required
-          id="firstName"
-          value={values.firstName}
+          id="name"
+          value={values.name}
           minLength="1"
           maxLength="30"
-          placeholder="First name"
+          placeholder="Name"
           onChange={handleChange}
         />
       </label>
@@ -61,10 +68,11 @@ function SignUpModal({ isOpen, onClose, activeModal }) {
           className="modal__input"
           type="email"
           name="email"
+          id="email"
           required
           minLength="1"
           maxLength="30"
-          placeholder="Email"
+          placeholder="email"
           value={values.email}
           onChange={handleChange}
         />
@@ -97,7 +105,9 @@ function SignUpModal({ isOpen, onClose, activeModal }) {
           placeholder="Confirm Password"
         />
       </label>
-      {!passwordMatches && <span className="modal__password_match">Password must match</span>}
+      {!passwordMatches && (
+        <span className="modal__password_match">Password must match</span>
+      )}
       <div className="modal__auth-buttons">
         <button
           disabled={!passwordMatches || values.password === ""}
@@ -110,7 +120,7 @@ function SignUpModal({ isOpen, onClose, activeModal }) {
           type="button"
           onClick={() => {
             onClose();
-            onLogin();
+            onSignInModal();
           }}
           className="modal__login-button"
         >

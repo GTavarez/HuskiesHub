@@ -33,7 +33,7 @@ export const signin = ({ email, password }) => {
 };
 
 export const getCurrentUser = (token) => {
-  return fetch(`${baseUrl}/users/me`, {
+  return fetch(`${baseUrl}/me`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

@@ -1,6 +1,10 @@
 .modal__password_match {
-  color: red;
+  color: rgba(255, 0, 0, 1);
   position: absolute;
   top: 340px;
   left: 28px;
+}
+.modal__auth-buttons {
+  display: flex;
+  gap: 16px;
 }
