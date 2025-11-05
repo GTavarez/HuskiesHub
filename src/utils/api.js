@@ -12,15 +12,15 @@ function request(url, options) {
 }
 
 // Functions for schedule management
-function getSchedules() {
-  return fetch(`${baseUrl}/schedules`, {
+function getSchedule() {
+  return fetch(`${baseUrl}/api/schedule`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
     },
   }).then(checkResponse);
 }
-function createGame({ title, date, time, location }) {
+/* function createGame({ title, date, time, location }) {
   return fetch(`${baseUrl}/schedules`, {
     method: "POST",
     headers: {
@@ -28,8 +28,8 @@ function createGame({ title, date, time, location }) {
     },
     body: JSON.stringify({ title, date, time, location }),
   }).then(checkResponse);
-}
-function deleteGame(scheduleId) {
+} */
+/*function deleteGame(scheduleId) {
   return fetch(`${baseUrl}/schedules/${scheduleId}`, {
     method: "DELETE",
     headers: {
@@ -62,15 +62,15 @@ function getPlayerById(playerId) {
       "Content-Type": "application/json",
     },
   }).then(checkResponse);
-}
+} */
 // Exporting the functions for external use
-export default {
+export { getSchedule, checkResponse };
+/* export default {
   checkResponse,
   request,
-  getSchedules,
-  createGame,
+  getSchedule, */
+/*  createGame,
   deleteGame,
   getPlayers,
   createPlayer,
-  getPlayerById,
-};
+  getPlayerById, */

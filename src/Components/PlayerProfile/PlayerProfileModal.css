@@ -1,0 +1,34 @@
+.profile {
+  background: #111217;
+  color: white;
+  width: 600px;
+  border-radius: 16px;
+  padding: 30px;
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.profile__hero {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.profile__hero_img {
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  border: 4px solid #1e90ff;
+  object-fit: cover;
+}
+.profile__bio {
+  margin-top: 25px;
+}
+.profile__bio p {
+  margin-bottom: 10px;
+  font-size: 20px;
+  color: #ffd700;
+}
+.profile__commit {
+  color: #ffd700;
+  font-weight: bold;
+  margin-top: 5px;
+}

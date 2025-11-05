@@ -32,8 +32,6 @@
   cursor: pointer;
   background-image: url(../../assets/close.png);
 }
-.modal__close_type_form {
-}
 .modal__content {
   position: relative;
   background-color: #0a192f;

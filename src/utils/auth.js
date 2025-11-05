@@ -1,5 +1,5 @@
 import { baseUrl } from "./constants.js";
-import checkResponse from "./api.js";
+import { checkResponse } from "./api.js";
 
 // Added functions for user registration, login, and fetching current user
 

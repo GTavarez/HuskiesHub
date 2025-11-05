@@ -1,7 +1,7 @@
 .main__image_section {
   width: 100%;
   height: 600px; /* Desktop view */
-  background-image: url("../../assets/team.JPEG");
+  background-image: url("../../assets/team+coaches.jpg");
   background-size: cover;
   background-position: center 60%; /* keeps faces visible */
   background-repeat: no-repeat;

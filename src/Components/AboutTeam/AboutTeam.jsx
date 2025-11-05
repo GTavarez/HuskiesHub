@@ -1,4 +1,5 @@
 import "./AboutTeam.css";
+import aboutImage from "../../assets/SB23.png";
 
 function AboutTeam() {
   return (
@@ -65,10 +66,7 @@ function AboutTeam() {
           </p>
         </div>
         <div className="about__image">
-          <img
-            src="assets/example1.jpg"
-            alt="Empire State Huskies Yoffee Team"
-          ></img>
+          <img src={aboutImage} alt="Empire State Huskies Yoffee Team"></img>
         </div>
       </div>
     </section>

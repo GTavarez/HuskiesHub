@@ -1,13 +1,17 @@
 import "./App.css";
 import Header from "../Header/Header.jsx";
-import Calendar from "../Calendar/Calendar.jsx";
+import Schedule from "../Schedule/Schedule.jsx";
 import Main from "../Main/Main.jsx";
-import Profile from "../Profile/Profile.jsx";
 import SignUpModal from "../SignUpModal/SignUpModal.jsx";
 import SignInModal from "../SignInModal/SignInModal.jsx";
+import Players from "../Players/Players.jsx";
+import Teams from "../Teams/Teams.jsx";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
+import { useState } from "react";
 import React from "react";
 import { getCurrentUser, signin, signup } from "../../utils/auth.js";
+
+import CurrentUserContext from "../../context/CurrentUserContext.js";
 
 function App() {
   const [user, setUser] = React.useState(null);
@@ -15,6 +19,9 @@ function App() {
   const [isSignUpOpen, setIsSignUpOpen] = React.useState(false);
   const [isSignInOpen, setIsSignInOpen] = React.useState(false);
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+  const [selectedPlayer, setSelectedPlayer] = React.useState(null);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+  const [shouldResetLoginForm, setShouldResetLoginForm] = useState(false);
 
   const openSignUpModal = () => {
     setActiveModal("Sign up");
@@ -24,6 +31,14 @@ function App() {
   };
   const closeActiveModal = () => {
     setActiveModal("");
+  };
+  const closeFullProfileModal = () => {
+    setSelectedPlayer(null);
+    setIsProfileModalOpen(false);
+  };
+  const openFullProfileModal = (player) => {
+    setSelectedPlayer(player);
+    setIsProfileModalOpen(true);
   };
 
   const handleSignUp = ({ name, email, password, confirmPassword }) => {
@@ -70,10 +85,15 @@ function App() {
     setIsSignInOpen(true);
     setTimeout(() => setActiveModal("Sign in"));
   };
+  const switchToLogIn = () => {
+    closeFullProfileModal();
+    setActiveModal("Sign in");
+  };
   const handleRegistration = ({ name, email, password, confirmPassword }) => {
     signup({ name, email, password, confirmPassword })
       .then((data) => {
         // data now contains token + user
+        console.log(data);
         if (!data?.token || !data?.user) {
           throw new Error("Signup did not return token or user");
         }
@@ -86,6 +106,12 @@ function App() {
       .catch((error) => {
         console.error("Registration error", error);
       });
+  };
+  const handleSignOut = () => {
+    localStorage.removeItem("jwt");
+    setIsLoggedIn(false);
+    setUser(null);
+    setShouldResetLoginForm(true);
   };
   /*  const handleRegistration = ({ name, email, password, confirmPassword }) => {
     signup({ name, email, password, confirmPassword })
@@ -108,35 +134,52 @@ function App() {
 
   return (
     <BrowserRouter>
-      <div className="page">
-        <Header
-          onSignUp={handleSignUp}
-          onSignIn={handleSignIn}
-          onClick={openSignUpModal}
-          openSignInModal={openSignInModal}
-        />
-        <Routes>
-          <Route path="/" element={<Main />} />
-          <Route path="/calendar" element={<Calendar />} />
-          <Route path="/profile" element={<Profile />} />
-        </Routes>
-      </div>
-      {activeModal === "Sign up"} && (
-      <SignUpModal
-        activeModal={activeModal}
-        isOpen={activeModal === "Sign up"}
-        onClose={closeActiveModal}
-        onSignInModal={switchToSignIn}
-        onRegister={handleRegistration}
-      />
-      ){activeModal === "Sign in"} && (
-      <SignInModal
-        isOpen={activeModal === "Sign in"}
-        onClose={closeActiveModal}
-        onSignUpModal={switchToSignUp}
-        onSignIn={handleSignIn}
-      />
-      )
+      <CurrentUserContext.Provider value={user}>
+        <div className="page">
+          <Header
+            onSignUp={handleSignUp}
+            onSignIn={handleSignIn}
+            onClick={openSignUpModal}
+            openSignInModal={openSignInModal}
+            onSignOut={handleSignOut}
+          />
+          <Routes>
+            <Route path="/" element={<Main />} />
+            <Route path="/schedule" element={<Schedule />} />
+            <Route path="/teams" element={<Teams />} />
+            <Route
+              path="/teams/:teamsId"
+              element={
+                <Players
+                  onViewProfile={openFullProfileModal}
+                  onClose={closeFullProfileModal}
+                  selectedPlayer={selectedPlayer}
+                  isLoggedIn={isLoggedIn}
+                  openLogin={switchToLogIn}
+                  isProfileModalOpen={isProfileModalOpen}
+                />
+              }
+            />
+          </Routes>
+        </div>
+        {activeModal === "Sign up" && (
+          <SignUpModal
+            activeModal={activeModal}
+            isOpen={activeModal === "Sign up"}
+            onClose={closeActiveModal}
+            onSignInModal={switchToSignIn}
+            onRegister={handleRegistration}
+          />
+        )}
+        {activeModal === "Sign in" && (
+          <SignInModal
+            isOpen={activeModal === "Sign in"}
+            onClose={closeActiveModal}
+            onSignUpModal={switchToSignUp}
+            onSignIn={handleSignIn}
+          />
+        )}
+      </CurrentUserContext.Provider>
     </BrowserRouter>
   );
 }

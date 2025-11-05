@@ -1,5 +1,6 @@
 import "./EventsCards.css";
 import example1 from "../../assets/example1.jpg";
+import event1 from "../../assets/event1.jpg";
 
 function EventsCards() {
   return (
@@ -15,7 +16,7 @@ function EventsCards() {
             </div>
           </div>
           <div className="events__card">
-            <img className="events__card__image" src={example1} />
+            <img className="events__card__image" src={event1} />
             <div className="events__card-overlay">
               <h3>Xtreme Fall Classic</h3>
               <p>Sept 27th • Ewing, NJ</p>

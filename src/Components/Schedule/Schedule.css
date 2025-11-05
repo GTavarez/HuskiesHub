@@ -1,0 +1,42 @@
+.schedule {
+  background-color: #0a192f;
+  min-height: 100vh;
+  padding: 0px 5%;
+  color: #ffffff;
+}
+
+.schedule__title {
+  text-align: center;
+  font-size: 36px;
+  margin-bottom: 20px;
+  color: #ffffff;
+}
+
+.schedule__actions {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.schedule__btn {
+  background-color: #64b5f6;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  font-size: 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.schedule__btn:hover {
+  background-color: #4a9cd9;
+}
+
+.schedule__message {
+  text-align: center;
+  color: #b0b9c1;
+  font-size: 18px;
+  margin-top: 20px;
+}
+

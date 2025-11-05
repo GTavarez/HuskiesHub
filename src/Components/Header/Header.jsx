@@ -2,11 +2,38 @@ import "./Header.css";
 import { Link } from "react-router-dom";
 import React from "react";
 import logo from "../../assets/logo.png";
+import CurrentUserContext from "../../context/CurrentUserContext";
 
-function Header({ onSignUp, onClick, onSignin, openSignInModal }) {
+function Header({ onSignUp, onClick, onSignOut, openSignInModal }) {
+  const currentUser = React.useContext(CurrentUserContext);
   const [isOpen, setIsOpen] = React.useState(false);
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = React.useState(false);
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
+  };
+  const toggleProfileMenu = () => {
+    setIsProfileMenuOpen(!isProfileMenuOpen);
+  };
+  const renderImage = () => {
+    if (currentUser?.image) {
+      return (
+        <img
+          src={currentUser.image}
+          alt={currentUser.name}
+          className="header__image"
+          onClick={toggleProfileMenu}
+        />
+      );
+    } else {
+      const firstLetter = currentUser?.name
+        ? currentUser.name.charAt(0).toUpperCase()
+        : "?";
+      return (
+        <div className="header__initials" onClick={toggleProfileMenu}>
+          {firstLetter}
+        </div>
+      );
+    }
   };
   return (
     <header className="header">
@@ -60,24 +87,38 @@ function Header({ onSignUp, onClick, onSignin, openSignInModal }) {
             </button>
           </div>
         )}
-        <button
-          className="header__nav-button"
-          type="button"
-          onClick={openSignInModal}
-        >
-          Login
-        </button>
-        <button
-          className="header__signup_button"
-          type="button"
-          onClick={onClick}
-          onSubmit={onSignUp}
-        >
-          {" "}
-          Join Team{" "}
-        </button>
+        {currentUser ? (
+          <div className="header__profile">
+            {renderImage()}
+
+            {isProfileMenuOpen && (
+              <div className="header__profile-menu">
+                <Link to="/profile" className="header__dropdown-link">
+                  My Profile
+                </Link>
+                <button onClick={onSignOut} className="header__dropdown-link">
+                  Log Out
+                </button>
+              </div>
+            )}
+          </div>
+        ) : (
+          <>
+            <button className="header__nav-button" onClick={openSignInModal}>
+              Login
+            </button>
+            <button
+              className="header__signup_button"
+              onClick={onClick}
+              onSubmit={onSignUp}
+            >
+              Join Team
+            </button>
+          </>
+        )}
       </div>
     </header>
   );
 }
+
 export default Header;
