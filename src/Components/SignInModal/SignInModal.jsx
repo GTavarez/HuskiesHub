@@ -69,11 +69,7 @@ export default function SignInModal({
       </label>
 
       <div className="modal__signin__auth-buttons">
-        <button
-          type="submit"
-          className="modal__signin-button"
-          onClick={onSignIn}
-        >
+        <button type="submit" className="modal__signin-button">
           Log in
         </button>
         <button

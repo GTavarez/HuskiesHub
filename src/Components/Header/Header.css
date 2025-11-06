@@ -130,7 +130,7 @@
   position: absolute;
   top: 60px;
   right: 10px;
-  background-color: #fff;
+  background-color: #0a192f;
   border: 1px solid #ddd;
   border-radius: 6px;
   padding: 10px;
@@ -145,4 +145,6 @@
   cursor: pointer;
   padding: 8px;
   text-align: left;
+  background-color: #0a192f;
+  color: #9ca3af;
 }

@@ -55,8 +55,15 @@ function Players({
                 </p>
                 <button
                   type="button"
-                  onClick={() => onViewProfile(player)}
                   className="player__profile-btn"
+                  onClick={() => {
+                    if (!isLoggedIn) {
+                      openLogin();
+                      onClose(); // 🔹 If guest → show login modal
+                    } else {
+                      onViewProfile(player); // 🔹 Logged-in → open profile
+                    }
+                  }}
                 >
                   View Profile
                 </button>

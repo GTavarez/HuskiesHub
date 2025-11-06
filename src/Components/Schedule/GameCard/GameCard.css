@@ -1,0 +1,92 @@
+/* ===== Modal Overlay (Blurred Background) ===== */
+.modal__overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(10, 25, 47, 0.8);
+  backdrop-filter: blur(5px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* ===== Modal Box ===== */
+.modal__content {
+  background: #0a192f;
+  color: #ffffff;
+  padding: 30px;
+  width: 450px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  position: relative;
+  animation: slideIn 0.3s ease-out;
+  font-family: "Montserrat", sans-serif;
+}
+
+/* ===== Title ===== */
+.modal__content h2 {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+/* ===== Text Styling ===== */
+.modal__content p {
+  color: #d1d5db;
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+/* ===== Location Link (Clickable) ===== */
+.modal__location-link {
+  color: #1e90ff;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.modal__location-link:hover {
+  color: #ffd700;
+  text-decoration: underline;
+}
+
+/* ===== Close Button ===== */
+.modal__close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  font-size: 20px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.modal__close:hover {
+  color: #ffd700;
+}
+
+/* ===== Animations ===== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

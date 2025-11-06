@@ -39,4 +39,15 @@
   font-size: 18px;
   margin-top: 20px;
 }
+/* Day cell hover effect (applies to each calendar day) */
+.fc-daygrid-day:hover {
+  background-color: rgba(100, 181, 246, 0.2); /* Soft Huskies blue glow */
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
 
+/* If you want the date number to also change color on hover */
+.fc-daygrid-day:hover .fc-daygrid-day-number {
+  color: #64b5f6; /* Light blue text */
+  font-weight: 600;
+}

@@ -1,6 +1,7 @@
 .modal__signin__auth-buttons {
   display: flex;
   gap: 16px;
+  margin-top: 10px;
 }
 .modal__signin-button {
   margin: 0;

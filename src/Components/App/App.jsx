@@ -6,6 +6,7 @@ import SignUpModal from "../SignUpModal/SignUpModal.jsx";
 import SignInModal from "../SignInModal/SignInModal.jsx";
 import Players from "../Players/Players.jsx";
 import Teams from "../Teams/Teams.jsx";
+import CollegeCommits from "../CollegeCommits/CollegeCommits.jsx";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import { useState } from "react";
 import React from "react";
@@ -39,6 +40,7 @@ function App() {
   const openFullProfileModal = (player) => {
     setSelectedPlayer(player);
     setIsProfileModalOpen(true);
+    setActiveModal("profile")
   };
 
   const handleSignUp = ({ name, email, password, confirmPassword }) => {
@@ -147,6 +149,7 @@ function App() {
             <Route path="/" element={<Main />} />
             <Route path="/schedule" element={<Schedule />} />
             <Route path="/teams" element={<Teams />} />
+            <Route path="/collegecommits" element={<CollegeCommits />} />
             <Route
               path="/teams/:teamsId"
               element={
