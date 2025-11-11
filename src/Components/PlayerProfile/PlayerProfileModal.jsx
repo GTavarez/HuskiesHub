@@ -14,7 +14,7 @@ function PlayerProfileModal({ onClose, player }) {
       <div className="player__profile__notfound">
         <h2>Player not found</h2>
         <Link to="/teams" className="player__profile_back-btn">
-          ← Back to Players
+          ← Back to Teams
         </Link>
       </div>
     );
@@ -90,7 +90,7 @@ function PlayerProfileModal({ onClose, player }) {
 
         <div className="profile__footer">
           <Link to="/teams" className="profile__return-btn">
-            ← Back to Players
+            ← Back to Teams
           </Link>
         </div>
       </div>

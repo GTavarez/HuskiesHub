@@ -16,23 +16,31 @@ function Schedule() {
         const formatted = data.map((game) => ({
           id: game.id,
           title: game.summary,
-          start: game.start.dateTime || game.start.date,
+          start: game.start?.dateTime || game.start?.date,
           end: game.end?.dateTime || game.end?.date,
-          location: game.location,
+          location: game.location || "Location TBA",
         }));
         setEvents(formatted);
       })
-      .catch((err) => console.error(err));
+      .catch((err) => console.error("Error fetching schedule:", err));
   }, []);
 
   const handleEventClick = (info) => {
-    setSelectedEvent(info.event);
+    const clickedEvent = {
+      id: info.event.id,
+      title: info.event.title,
+      start: info.event.start,
+      end: info.event.end,
+      location: info.event.extendedProps.location,
+    };
+    setSelectedEvent(clickedEvent);
     setIsModalOpen(true);
   };
 
   return (
     <section className="schedule">
       <h2 className="schedule__title">Team Schedule</h2>
+
       <FullCalendar
         plugins={[dayGridPlugin]}
         initialView="dayGridMonth"
@@ -40,8 +48,8 @@ function Schedule() {
         eventClick={handleEventClick}
       />
 
-      {isModalOpen && (
-        <GameCard event={selectedEvent} onClose={() => setIsModalOpen(false)} />
+      {isModalOpen && selectedEvent && (
+        <GameCard game={selectedEvent} onClose={() => setIsModalOpen(false)} />
       )}
     </section>
   );
