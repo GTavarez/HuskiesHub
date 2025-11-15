@@ -18,7 +18,6 @@ function Main() {
       <EventsCards />
       <AboutTeam />
       <section className="main__event"></section>
-      <p>Your central hub for all things Huskies!</p>
     </main>
   );
 }

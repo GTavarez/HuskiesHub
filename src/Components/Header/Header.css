@@ -131,7 +131,7 @@
   top: 60px;
   right: 10px;
   background-color: #0a192f;
-  border: 1px solid #ddd;
+  border: none;
   border-radius: 6px;
   padding: 10px;
   display: flex;
@@ -147,4 +147,17 @@
   text-align: left;
   background-color: #0a192f;
   color: #9ca3af;
+}
+.header__initials {
+  font-size: 20px;
+  border-radius: 50%;
+  font-weight: bold;
+  color: white;
+  background-color: #1e90ff;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 }

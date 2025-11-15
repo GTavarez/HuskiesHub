@@ -36,7 +36,7 @@
 .modal__content {
   position: relative;
   background-color: #0a192f;
-  max-width: 496px;
+  width: 496px;
   box-sizing: border-box;
   font-family: Cabinet Grotesk;
   font-weight: Bold;
@@ -44,6 +44,8 @@
   line-height: 20px;
   border-radius: 20px;
   padding: 28px 28px;
+  border: 1px solid rgba(100, 181, 246, 0.4);
+  box-shadow: 0 0 25px rgba(100, 181, 246, 0.25);
 }
 .modal__content_type_signup {
   width: 496px;

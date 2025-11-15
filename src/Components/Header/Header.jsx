@@ -14,6 +14,9 @@ function Header({ onSignUp, onClick, onSignOut, openSignInModal }) {
   const toggleProfileMenu = () => {
     setIsProfileMenuOpen(!isProfileMenuOpen);
   };
+  const closeDropdown = () => {
+    setIsOpen(false);
+  };
   const renderImage = () => {
     if (currentUser?.image) {
       return (
@@ -71,17 +74,29 @@ function Header({ onSignUp, onClick, onSignOut, openSignInModal }) {
         {isOpen && (
           <div className="header__nav-dropdown_menu">
             <button className="header__dropdown_button" type="button">
-              <Link to="/coaches" className="header__dropdown-link">
+              <Link
+                to="/coaches"
+                className="header__dropdown-link"
+                onClick={closeDropdown}
+              >
                 Coaches
               </Link>
             </button>
             <button className="header__dropdown_button" type="button">
-              <Link to="/collegecommits" className="header__dropdown-link">
+              <Link
+                to="/collegecommits"
+                className="header__dropdown-link"
+                onClick={closeDropdown}
+              >
                 College Commits
               </Link>
             </button>
             <button className="header__dropdown_button" type="button">
-              <Link to="/clinics" className="header__dropdown-link">
+              <Link
+                to="/clinics"
+                className="header__dropdown-link"
+                onClick={closeDropdown}
+              >
                 Clinics
               </Link>
             </button>
@@ -93,7 +108,11 @@ function Header({ onSignUp, onClick, onSignOut, openSignInModal }) {
 
             {isProfileMenuOpen && (
               <div className="header__profile-menu">
-                <Link to="/profile" className="header__dropdown-link">
+                <Link
+                  to="/profile"
+                  className="header__dropdown-link"
+                  onClick={closeDropdown}
+                >
                   My Profile
                 </Link>
                 <button onClick={onSignOut} className="header__dropdown-link">

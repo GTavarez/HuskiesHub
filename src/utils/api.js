@@ -63,14 +63,8 @@ function getPlayerById(playerId) {
     },
   }).then(checkResponse);
 } */
+
+
+
 // Exporting the functions for external use
 export { getSchedule, checkResponse };
-/* export default {
-  checkResponse,
-  request,
-  getSchedule, */
-/*  createGame,
-  deleteGame,
-  getPlayers,
-  createPlayer,
-  getPlayerById, */

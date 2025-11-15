@@ -13,6 +13,12 @@ import React from "react";
 import { getCurrentUser, signin, signup } from "../../utils/auth.js";
 
 import CurrentUserContext from "../../context/CurrentUserContext.js";
+import MyProfile from "../MyProfile/MyProfile.jsx";
+import ProtectedRoute from "../ProtectedRoute/ProtectedRoute.jsx";
+import Coaches from "../Coaches/Coaches.jsx";
+import Clinics from "../Clinics/Clinics.jsx";
+import Contact from "../Contact/Contact.jsx";
+import Footer from "../Footer/Footer.jsx";
 
 function App() {
   const [user, setUser] = React.useState(null);
@@ -40,7 +46,7 @@ function App() {
   const openFullProfileModal = (player) => {
     setSelectedPlayer(player);
     setIsProfileModalOpen(true);
-    setActiveModal("profile")
+    setActiveModal("profile");
   };
 
   const handleSignUp = ({ name, email, password, confirmPassword }) => {
@@ -149,7 +155,10 @@ function App() {
             <Route path="/" element={<Main />} />
             <Route path="/schedule" element={<Schedule />} />
             <Route path="/teams" element={<Teams />} />
+            <Route path="/clinics" element={<Clinics />} />
+            <Route path="/coaches" element={<Coaches />} />
             <Route path="/collegecommits" element={<CollegeCommits />} />
+            <Route path="/contact" element={<Contact />} />
             <Route
               path="/teams/:teamsId"
               element={
@@ -161,6 +170,14 @@ function App() {
                   openLogin={switchToLogIn}
                   isProfileModalOpen={isProfileModalOpen}
                 />
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute isLoggedIn={isLoggedIn}>
+                  <MyProfile currentUser={user} onUpdateUser={setUser} />
+                </ProtectedRoute>
               }
             />
           </Routes>
@@ -182,6 +199,7 @@ function App() {
             onSignIn={handleSignIn}
           />
         )}
+        <Footer />
       </CurrentUserContext.Provider>
     </BrowserRouter>
   );

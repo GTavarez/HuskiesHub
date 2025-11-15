@@ -1,7 +1,6 @@
-import team18UGold from "../assets/team2.jpg"
+import team18UGold from "../assets/team2.jpg";
 const playerImages = import.meta.glob("/src/assets/players/*", { eager: true });
 const baseUrl = "http://localhost:3001";
-
 
 export const playersData = [
   {
@@ -301,3 +300,59 @@ playersData.forEach((team) => {
   });
 });
 export { baseUrl };
+export const coachesData = [
+  {
+    _id: 1,
+    name: "Allie Yoffee",
+    role: "Head Coach",
+    bio: " Allie Yoffee is the founder and head coach of the Empire State Huskies. With over a decade of coaching experience, she has led numerous teams to state and national championships. Her dedication to player development and passion for the game make her an invaluable asset to the Huskies organization.",
+    email: "alliey@gmail.com",
+    phone: "201-410-0431",
+    image: "",
+  },
+  {
+    _id: 2,
+    name: "Jessica Shulman",
+    role: "Assistant Coach",
+    bio: " Jessica Shulman brings a wealth of experience to the Huskies as an assistant coach. A former collegiate athlete, Jessica specializes in hitting mechanics and offensive strategy. Her hands-on approach and ability to connect with players help foster a positive and competitive team environment.",
+    email: " ",
+    phone: " ",
+    image: "",
+  },
+  {
+    _id: 3,
+    name: "Megan Wargo",
+    role: "Pitching Coach",
+    bio: " Megan Wargo is the Huskies' dedicated pitching coach, known for her technical expertise and personalized coaching style. With a background in collegiate softball, Megan focuses on developing pitchers' mechanics, mental toughness, and game strategy. Her commitment to each player's growth is evident in the Huskies' strong pitching performances.",
+    email: " ",
+    phone: " ",
+    image: "",
+  },
+];
+export const clinicsData = [
+  {
+    id: 1,
+    title: "Winter Pitching & Hitting Clinic",
+    date: "January 12, 2026",
+    time: "6:00 PM – 8:30 PM",
+    location: "Wayne Valley High School – Wayne, NJ",
+    level: "14U–18U",
+    description:
+      "High-rep small-group work with the Huskies staff focused on mechanics, strength, and game situations.",
+    price: "$85",
+    registerLink:
+      "mailto:info@huskieshub.com?subject=Winter Clinic Registration",
+  },
+  {
+    id: 2,
+    title: "Defensive Skills & Speed Camp",
+    date: "February 9, 2026",
+    time: "5:30 PM – 8:00 PM",
+    location: "Indoor Facility – TBA",
+    level: "12U–18U",
+    description:
+      "Infield and outfield defense, footwork, and speed/agility training designed to translate directly to games.",
+    price: "$75",
+    registerLink: "mailto:info@huskieshub.com?subject=Defense & Speed Camp",
+  },
+];

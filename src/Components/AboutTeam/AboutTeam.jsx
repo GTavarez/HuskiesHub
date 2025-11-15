@@ -1,11 +1,14 @@
 import "./AboutTeam.css";
-import aboutImage from "../../assets/SB23.png";
+import aboutImage from "../../assets/softball.jpg";
 
 function AboutTeam() {
   return (
     <section className="about__section">
       <div className="about__container">
-        <h2 className="about__title">About Empire State Huskies Yoffee</h2>
+        <div className="about__image">
+          <h2 className="about__title">About Empire State Huskies Yoffee</h2>
+          <img src={aboutImage} alt="Empire State Huskies Yoffee Team"></img>
+        </div>
         <div className="about__divider"></div>
         <div className="about__content">
           <h3>Our Mission</h3>
@@ -64,9 +67,6 @@ function AboutTeam() {
             teach athletes how to compete with character and enjoy the process
             of becoming the best version of themselves.
           </p>
-        </div>
-        <div className="about__image">
-          <img src={aboutImage} alt="Empire State Huskies Yoffee Team"></img>
         </div>
       </div>
     </section>

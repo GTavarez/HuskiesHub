@@ -1,0 +1,105 @@
+.clinics {
+  min-height: 100vh;
+  padding: 100px 6vw 80px;
+  background: linear-gradient(135deg, #020617 0%, #020617 35%, #020b3a 100%);
+  color: #e5e7eb;
+}
+
+.clinics__header {
+  max-width: 760px;
+  margin: 0 auto 40px;
+  text-align: center;
+}
+
+.clinics__title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #f9fafb;
+  margin-bottom: 10px;
+}
+
+.clinics__subtitle {
+  font-size: 0.98rem;
+  color: #9ca3af;
+}
+
+.clinics__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  gap: 24px;
+}
+
+.clinic-card {
+  background: rgba(15, 23, 42, 0.95);
+  border-radius: 18px;
+  padding: 18px 20px 20px;
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  box-shadow: 0 18px 35px rgba(15, 23, 42, 0.8);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.clinic-card:hover {
+  transform: translateY(-4px);
+  border-color: #38bdf8;
+  box-shadow: 0 22px 45px rgba(56, 189, 248, 0.25);
+}
+
+.clinic-card__title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #f9fafb;
+}
+
+.clinic-card__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 0.85rem;
+  color: #cbd5f5;
+}
+
+.clinic-card__location,
+.clinic-card__level {
+  font-size: 0.9rem;
+  color: #cbd5f5;
+}
+
+.clinic-card__description {
+  font-size: 0.9rem;
+  color: #d1d5db;
+  line-height: 1.5;
+}
+
+.clinic-card__footer {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.clinic-card__price {
+  font-weight: 600;
+  color: #38bdf8;
+}
+
+.clinic-card__register-btn {
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: none;
+  background: #38bdf8;
+  color: #020617;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.clinic-card__register-btn:hover {
+  background: #0ea5e9;
+  transform: translateY(-1px);
+  box-shadow: 0 12px 22px rgba(56, 189, 248, 0.35);
+}

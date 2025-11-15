@@ -41,3 +41,18 @@ export const getCurrentUser = (token) => {
     },
   }).then(checkResponse);
 };
+export const updateUserProfile = async (name, avatar, token) => {
+  return fetch(`${baseUrl}/me`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ name, avatar }),
+  })
+    .then(checkResponse)
+    .catch((err) => {
+      console.error("Error updating profile:", err);
+      throw err;
+    });
+};
