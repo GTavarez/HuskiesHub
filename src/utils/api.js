@@ -64,7 +64,13 @@ function getPlayerById(playerId) {
   }).then(checkResponse);
 } */
 
-
+// get weather API
+export function getWeather(lat, lon) {
+  const apiKey = import.meta.env.VITE_WeatherAPIKey;
+  return fetch(
+    `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=imperial&appid=${apiKey}`
+  ).then(checkResponse);
+}
 
 // Exporting the functions for external use
 export { getSchedule, checkResponse };

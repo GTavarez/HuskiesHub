@@ -1,6 +1,6 @@
 .about__section {
   background-color: #f9fafc;
-  padding: 100px 10%;
+  padding: 10px 5%;
 }
 .about__container {
   display: flex;
@@ -44,6 +44,7 @@
   padding-left: 0;
   margin-top: 1rem;
   margin-bottom: 2rem;
+  color: #333;
 }
 .about__list li {
   margin-bottom: 0.7rem;

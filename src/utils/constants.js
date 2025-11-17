@@ -117,7 +117,7 @@ export const playersData = [
         gradYear: 2026,
         highSchool: "Fair Lawn High School",
         GPA: 3.8,
-        image: "",
+        image: "nd.jpg",
       },
       {
         _id: 112,
@@ -172,7 +172,7 @@ export const playersData = [
         GPA: 3.8,
         isCommitted: false,
         committedCollege: "",
-        image: "",
+        image: "nd.jpg",
       },
       {
         _id: 204,
@@ -220,7 +220,7 @@ export const playersData = [
         GPA: 4.68,
         isCommitted: true,
         committedCollege: "MIT",
-        image: "",
+        image: "cf.jpg",
       },
       {
         _id: 208,

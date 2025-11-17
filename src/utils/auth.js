@@ -56,3 +56,15 @@ export const updateUserProfile = async (name, avatar, token) => {
       throw err;
     });
 };
+export const uploadAvatar = async (file, token) => {
+  const formData = new FormData();
+  formData.append("avatar", file);
+
+  return fetch(`${baseUrl}/me/avatar`, {
+    method: "PATCH",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: formData,
+  }).then(checkResponse);
+};

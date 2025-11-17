@@ -1,7 +1,7 @@
 import React from "react";
 import "./MyProfile.css";
 
-function MyProfile({ currentUser }) {
+function MyProfile({ currentUser, onUpdateUser }) {
   const isPlayer = Boolean(currentUser?.playerData);
 
   return (
@@ -21,8 +21,22 @@ function MyProfile({ currentUser }) {
             </div>
           )}
 
+          <button
+            className="profile__edit-avatar-btn"
+            onClick={() => onEditProfile("avatar")}
+          >
+            Upload Avatar
+          </button>
+
           <h2 className="profile__name">{currentUser?.name}</h2>
           <p className="profile__email">{currentUser?.email}</p>
+
+          <button
+            className="profile__edit-btn"
+            onClick={() => onUpdateUser("profile")}
+          >
+            Edit Profile
+          </button>
         </div>
 
         {/* GUEST INFO */}

@@ -1,8 +1,9 @@
 .page {
-  background-color: #f3f3f3;
+  background: linear-gradient(180deg, #0f253f 0%, #112240 100%);
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  color: #fff;
 }
 .page__content {
   max-width: 1440px;

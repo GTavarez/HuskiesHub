@@ -18,6 +18,8 @@ import ProtectedRoute from "../ProtectedRoute/ProtectedRoute.jsx";
 import Coaches from "../Coaches/Coaches.jsx";
 import Clinics from "../Clinics/Clinics.jsx";
 import Contact from "../Contact/Contact.jsx";
+import { updateUserProfile } from "../../utils/auth.js";
+import EditProfileModal from "../EditProfileModal/EditProfileModal.jsx";
 import Footer from "../Footer/Footer.jsx";
 
 function App() {
@@ -29,6 +31,8 @@ function App() {
   const [selectedPlayer, setSelectedPlayer] = React.useState(null);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [shouldResetLoginForm, setShouldResetLoginForm] = useState(false);
+  const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
+  const [profileEditMode, setProfileEditMode] = useState(null);
 
   const openSignUpModal = () => {
     setActiveModal("Sign up");
@@ -48,7 +52,20 @@ function App() {
     setIsProfileModalOpen(true);
     setActiveModal("profile");
   };
+  const openEditProfileModal = (mode) => {
+    setProfileEditMode(mode);
+    setIsEditProfileOpen(true);
+  };
+  const handleSaveProfile = (updatedData) => {
+    const token = localStorage.getItem("jwt");
 
+    updateUserProfile(updatedData.name, updatedData.avatar, token)
+      .then((updatedUser) => {
+        setUser(updatedUser.user);
+        setIsEditProfileOpen(false);
+      })
+      .catch((err) => console.log("Error updating profile:", err));
+  };
   const handleSignUp = ({ name, email, password, confirmPassword }) => {
     signup({ name, email, password, confirmPassword })
       .then((data) => {
@@ -75,8 +92,24 @@ function App() {
         return getCurrentUser(data.token);
       })
       .then((userData) => {
+        const testPlayer = {
+          _id: 101,
+          name: "Antonella Sottile",
+          jersey: 1,
+          position: "P, CF",
+          gradYear: 2026,
+          highSchool: "Immaculate Heart Academy",
+          GPA: 3.8,
+          image: "as.jpg",
+        };
+
+        const injectedUser = {
+          ...userData.user,
+          playerData: testPlayer,
+        };
+
+        setUser(injectedUser);
         setIsLoggedIn(true);
-        setUser(userData.user);
         setIsSignInOpen(false);
       })
       .catch((error) => {
@@ -121,24 +154,6 @@ function App() {
     setUser(null);
     setShouldResetLoginForm(true);
   };
-  /*  const handleRegistration = ({ name, email, password, confirmPassword }) => {
-    signup({ name, email, password, confirmPassword })
-      .then((data) => {
-        return data;
-      })
-      .then(() => {
-        setIsSignUpOpen(false);
-        return signin({ email, password });
-      })
-      .then((data) => {
-        localStorage.setItem("jwt", data.token);
-        setIsLoggedIn(true);
-        setUser(data.user);
-      })
-      .catch((error) => {
-        console.error("Registration error", error);
-      });
-  }; */
 
   return (
     <BrowserRouter>
@@ -176,7 +191,10 @@ function App() {
               path="/profile"
               element={
                 <ProtectedRoute isLoggedIn={isLoggedIn}>
-                  <MyProfile currentUser={user} onUpdateUser={setUser} />
+                  <MyProfile
+                    currentUser={user}
+                    onUpdateUser={openEditProfileModal}
+                  />
                 </ProtectedRoute>
               }
             />
@@ -199,6 +217,13 @@ function App() {
             onSignIn={handleSignIn}
           />
         )}
+        <EditProfileModal
+          isOpen={isEditProfileOpen}
+          onClose={() => setIsEditProfileOpen(false)}
+          currentUser={user}
+          onSave={handleSaveProfile}
+        />
+
         <Footer />
       </CurrentUserContext.Provider>
     </BrowserRouter>

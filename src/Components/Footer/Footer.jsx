@@ -19,7 +19,7 @@ function Footer() {
           <div className="footer__column">
             <h4>Program</h4>
             <NavLink to="/schedule">Schedule</NavLink>
-            <NavLink to="/college-commits">College Commits</NavLink>
+            <NavLink to="/collegecommits">College Commits</NavLink>
             <NavLink to="/coaches">Coaches</NavLink>
             <NavLink to="/clinics">Clinics</NavLink>
           </div>

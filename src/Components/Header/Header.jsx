@@ -111,7 +111,9 @@ function Header({ onSignUp, onClick, onSignOut, openSignInModal }) {
                 <Link
                   to="/profile"
                   className="header__dropdown-link"
-                  onClick={closeDropdown}
+                  onClick={()=>{
+                    setIsProfileMenuOpen(false);
+                    closeDropdown}}
                 >
                   My Profile
                 </Link>
