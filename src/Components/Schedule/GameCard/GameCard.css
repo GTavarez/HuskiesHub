@@ -1,0 +1,122 @@
+/* ===== Overlay ===== */
+.game__modal__overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(10, 25, 47, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; /* Make sure it sits above the calendar */
+}
+.modal__content-game {
+  background-color: #0a192f;
+  color: #e6f1ff;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 0 15px rgba(100, 255, 218, 0.15);
+  max-width: 600px;
+  width: 90%;
+  position: relative;
+  height: 70vh;
+  max-height: 600px;
+}
+.directions__btn {
+  margin-top: 1rem;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  background-color: #64b5f6;
+  color: #0a192f;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.directions__btn:hover {
+  background-color: #0066cc;
+  transform: scale(1.03);
+}
+
+/* ===== Modal container ===== */
+.game__modal__container {
+  background: #0a192f;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 600px;
+  max-height: 90vh;
+  padding: 24px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+  position: relative;
+  overflow-y: auto;
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* ===== Close button ===== */
+/* .modal__close {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  background: transparent;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  color: #333;
+} */
+
+/* ===== Content ===== */
+.game__modal__title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.game__modal__date,
+.game__modal__location {
+  color: #fff;
+  text-align: center;
+  margin-bottom: 8px;
+  font-size: 1rem;
+}
+
+/* ===== Map styling ===== */
+.game__map__wrapper {
+  width: 100%;
+  height: 300px;
+  margin-top: 1rem;
+  position: relative;
+}
+
+.game__map__container {
+  width: 100%;
+  height: 300px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 2px solid #0046cc;
+  pointer-events: auto;
+  background-color: #0a192f;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .game__map__container {
+    height: 240px;
+  }
+}
