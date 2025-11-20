@@ -217,13 +217,14 @@ function App() {
             onSignIn={handleSignIn}
           />
         )}
-       {/*  <EditProfileModal
-          isOpen={isEditProfileOpen}
-          onClose={() => setIsEditProfileOpen(false)}
-          currentUser={user}
-          onSave={handleSaveProfile}
-        />
- */}
+        {isProfileModalOpen && selectedPlayer && (
+          <EditProfileModal
+            isOpen={isEditProfileOpen}
+            onClose={() => setIsEditProfileOpen(false)}
+            currentUser={user}
+            onSave={handleSaveProfile}
+          />
+        )}
         <Footer />
       </CurrentUserContext.Provider>
     </BrowserRouter>
