@@ -2,7 +2,6 @@
 import React, { useState } from "react";
 import { updateUserProfile, uploadAvatar } from "../../utils/auth.js";
 import "./EditProfileModal.css";
-import { set } from "mongoose";
 
 function EditProfileModal({ currentUser, onClose, onUpdate }) {
   const [name, setName] = useState(currentUser?.name || "");
@@ -30,13 +29,18 @@ function EditProfileModal({ currentUser, onClose, onUpdate }) {
         uploadedAvatar = avatarRes.avatar;
         setAvatarPreview(uploadedAvatar);
       }
+      const updateUserResponse = await updateUserProfile(
+        name,
+        uploadedAvatar,
+        token
+      );
 
       // Update name
-      if (name !== currentUser.name) {
+      /* if (name !== currentUser.name) {
         await updateUserProfile(name, uploadedAvatar, token);
-      }
+      } */
 
-      onUpdate(currentUser); // reload user info
+      onUpdate(updateUserResponse.user); // reload user info
       onClose();
     } catch (err) {
       console.error("Profile update error:", err);

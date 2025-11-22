@@ -24,20 +24,14 @@ function MyProfile({ currentUser, onEditProfile, onUpdateUser, onClose }) {
             </div>
           )}
 
-          <button
-            className="profile__edit-avatar-btn"
-            onClick={() => onEditProfile("avatar")}
-          >
+          <button className="profile__edit-avatar-btn" onClick={onUpdateUser}>
             Upload Avatar
           </button>
 
           <h2 className="profile__name">{currentUser?.name}</h2>
           <p className="profile__email">{currentUser?.email}</p>
 
-          <button
-            className="profile__edit-btn"
-            onClick={() => onEditProfile("profile")}
-          >
+          <button className="profile__edit-btn" onClick={() => onUpdateUser()}>
             Edit Profile
           </button>
         </div>
