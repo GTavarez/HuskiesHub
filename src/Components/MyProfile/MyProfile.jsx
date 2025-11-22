@@ -1,12 +1,15 @@
 import React from "react";
 import "./MyProfile.css";
 
-function MyProfile({ currentUser, onUpdateUser }) {
+function MyProfile({ currentUser, onEditProfile, onUpdateUser, onClose }) {
   const isPlayer = Boolean(currentUser?.playerData);
 
   return (
     <section className="profile">
       <div className="profile__container">
+        <button className="profile__close-btn" onClick={onClose}>
+          ×
+        </button>
         {/* AVATAR */}
         <div className="profile__header">
           {currentUser?.avatar ? (
@@ -33,7 +36,7 @@ function MyProfile({ currentUser, onUpdateUser }) {
 
           <button
             className="profile__edit-btn"
-            onClick={() => onUpdateUser("profile")}
+            onClick={() => onEditProfile("profile")}
           >
             Edit Profile
           </button>
@@ -44,9 +47,7 @@ function MyProfile({ currentUser, onUpdateUser }) {
           <div className="profile__card">
             <h3 className="profile__card-title">Account Details</h3>
             <p>You are logged in as a guest.</p>
-            <p>
-              You can browse teams, view the schedule, and explore the site.
-            </p>
+            <p>You can browse teams and view the schedule.</p>
           </div>
         )}
 

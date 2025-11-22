@@ -2,11 +2,13 @@
 import React, { useState } from "react";
 import { updateUserProfile, uploadAvatar } from "../../utils/auth.js";
 import "./EditProfileModal.css";
+import { set } from "mongoose";
 
-function EditProfileModal({ currentUser, token, onClose, onUpdate }) {
+function EditProfileModal({ currentUser, onClose, onUpdate }) {
   const [name, setName] = useState(currentUser?.name || "");
   const [avatarPreview, setAvatarPreview] = useState(currentUser?.avatar || "");
   const [avatarFile, setAvatarFile] = useState(null);
+  const token = localStorage.getItem("jwt");
 
   const handleAvatarChange = (e) => {
     const file = e.target.files[0];
@@ -21,18 +23,20 @@ function EditProfileModal({ currentUser, token, onClose, onUpdate }) {
     e.preventDefault();
 
     try {
+      let uploadedAvatar = avatarPreview;
       // Upload avatar first if changed
       if (avatarFile) {
         const avatarRes = await uploadAvatar(avatarFile, token);
-        avatarPreview(avatarRes.avatar);
+        uploadedAvatar = avatarRes.avatar;
+        setAvatarPreview(uploadedAvatar);
       }
 
       // Update name
       if (name !== currentUser.name) {
-        await updateUserProfile(name, token);
+        await updateUserProfile(name, uploadedAvatar, token);
       }
 
-      onUpdate(); // reload user info
+      onUpdate(currentUser); // reload user info
       onClose();
     } catch (err) {
       console.error("Profile update error:", err);

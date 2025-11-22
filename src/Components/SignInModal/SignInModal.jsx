@@ -18,16 +18,18 @@ export default function SignInModal({
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
     const formData = {
       email: values.email,
       password: values.password,
     };
+
     onSignIn(formData);
   };
+
   useEffect(() => {
     if (shouldResetLoginForm) {
-      resetForm(); // or however you manage state
-      // Don't fOrget to reset the shouldResetForm flag!
+      resetForm();
       onResetComplete();
     }
   }, [shouldResetLoginForm]);
@@ -42,7 +44,7 @@ export default function SignInModal({
       hideSubmitButton={true}
     >
       <label className="modal__label">
-        Email{" "}
+        Email
         <input
           name="email"
           type="email"
@@ -54,8 +56,9 @@ export default function SignInModal({
           onChange={handleChange}
         />
       </label>
+
       <label className="modal__label">
-        Password{" "}
+        Password
         <input
           name="password"
           type="password"
@@ -69,9 +72,12 @@ export default function SignInModal({
       </label>
 
       <div className="modal__signin__auth-buttons">
+        {/* ONLY this button submits the form */}
         <button type="submit" className="modal__signin-button">
           Log in
         </button>
+
+        {/* Switch modals */}
         <button
           type="button"
           className="modal__signup-button"
