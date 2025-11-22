@@ -64,7 +64,7 @@ function App() {
   };
   const handleSaveProfile = (updatedUser) => {
     console.log("Updated user in App:", updatedUser);
-    setUser(updatedUser.user);
+    setUser(updatedUser);
     setIsEditProfileOpen(false);
   };
   const handleSignUp = ({ name, email, password, confirmPassword }) => {
@@ -79,7 +79,7 @@ function App() {
         });
       })
       .catch((err) => {
-        console.log(err);
+        console.error("Registration error", err);
       });
   };
   const handleSignIn = ({ email, password }) => {
@@ -90,7 +90,7 @@ function App() {
         return getCurrentUser(data.token);
       })
       .then((userData) => {
-        const testPlayer = {
+        /* const testPlayer = {
           _id: 101,
           name: "Antonella Sottile",
           jersey: 1,
@@ -104,9 +104,9 @@ function App() {
         const injectedUser = {
           ...userData.user,
           playerData: testPlayer,
-        };
+        }; */
 
-        setUser(injectedUser);
+        setUser(userData.user);
         setIsLoggedIn(true);
         setIsSignInOpen(false);
       })
@@ -193,7 +193,7 @@ function App() {
                     currentUser={user}
                     onEditProfile={openEditProfileModal}
                     onUpdateUser={openEditProfileModal}
-                    onClose={closeActiveModal}
+                    onClose={handleCloseEditProfile}
                   />
                 </ProtectedRoute>
               }

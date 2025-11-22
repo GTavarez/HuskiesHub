@@ -22,7 +22,7 @@ function PlayerProfileModal({ onClose, player }) {
 
   return (
     <div className="profile__overlay" onClick={onClose}>
-      <div className="profile__container" onClick={(e) => e.stopPropagation()}>
+      <div className="profilePlayer__container" onClick={(e) => e.stopPropagation()}>
         <button className="profile__modal__close" onClick={onClose}>
           ✕
         </button>
