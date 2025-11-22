@@ -21,6 +21,7 @@ import Contact from "../Contact/Contact.jsx";
 import { updateUserProfile } from "../../utils/auth.js";
 import EditProfileModal from "../EditProfileModal/EditProfileModal.jsx";
 import Footer from "../Footer/Footer.jsx";
+import { set } from "mongoose";
 
 function App() {
   const [user, setUser] = React.useState(null);
@@ -33,6 +34,7 @@ function App() {
   const [shouldResetLoginForm, setShouldResetLoginForm] = useState(false);
   const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
   const [profileEditMode, setProfileEditMode] = useState(null);
+  const [editMode, setEditMode] = useState(null);
 
   const openSignUpModal = () => {
     setActiveModal("Sign up");
@@ -53,32 +55,28 @@ function App() {
     setActiveModal("profile");
   };
   const openEditProfileModal = (mode) => {
-    setProfileEditMode(mode);
+    setEditMode(mode);
     setIsEditProfileOpen(true);
   };
-  const handleSaveProfile = (updatedData) => {
-    const token = localStorage.getItem("jwt");
-
-    updateUserProfile(updatedData.name, updatedData.avatar, token)
-      .then((updatedUser) => {
-        setUser(updatedUser.user);
-        setIsEditProfileOpen(false);
-      })
-      .catch((err) => console.log("Error updating profile:", err));
+  const handleCloseEditProfile = () => {
+    setIsEditProfileOpen(false);
+    setEditMode(null);
+  };
+  const handleSaveProfile = (updatedUser) => {
+    console.log("Updated user in App:", updatedUser);
+    setUser(updatedUser.user);
+    setIsEditProfileOpen(false);
   };
   const handleSignUp = ({ name, email, password, confirmPassword }) => {
     signup({ name, email, password, confirmPassword })
-      .then((data) => {
-        return data;
-      })
       .then(() => {
         setIsSignUpOpen(false);
-        return signin({ email, password });
-      })
-      .then((data) => {
-        localStorage.setItem("jwt", data.token);
-        setIsLoggedIn(true);
-        setUser(data.user);
+        return signin({ email, password }).then((data) => {
+          localStorage.setItem("jwt", data.token);
+          setIsLoggedIn(true);
+          setUser(data.user);
+          setIsSignInOpen(false);
+        });
       })
       .catch((err) => {
         console.log(err);
@@ -134,7 +132,7 @@ function App() {
     signup({ name, email, password, confirmPassword })
       .then((data) => {
         // data now contains token + user
-        console.log(data);
+
         if (!data?.token || !data?.user) {
           throw new Error("Signup did not return token or user");
         }
@@ -193,7 +191,9 @@ function App() {
                 <ProtectedRoute isLoggedIn={isLoggedIn}>
                   <MyProfile
                     currentUser={user}
+                    onEditProfile={openEditProfileModal}
                     onUpdateUser={openEditProfileModal}
+                    onClose={closeActiveModal}
                   />
                 </ProtectedRoute>
               }
@@ -206,7 +206,7 @@ function App() {
             isOpen={activeModal === "Sign up"}
             onClose={closeActiveModal}
             onSignInModal={switchToSignIn}
-            onRegister={handleRegistration}
+            onRegister={handleSignUp}
           />
         )}
         {activeModal === "Sign in" && (
@@ -217,12 +217,12 @@ function App() {
             onSignIn={handleSignIn}
           />
         )}
-        {isProfileModalOpen && selectedPlayer && (
+        {isEditProfileOpen && (
           <EditProfileModal
-            isOpen={isEditProfileOpen}
-            onClose={() => setIsEditProfileOpen(false)}
             currentUser={user}
-            onSave={handleSaveProfile}
+            mode={editMode} // PASS MODE HERE
+            onClose={handleCloseEditProfile}
+            onUpdate={handleSaveProfile}
           />
         )}
         <Footer />

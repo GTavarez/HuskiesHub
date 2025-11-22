@@ -2,14 +2,16 @@
 import React, { useEffect, useState } from "react";
 import "./WeatherBanner.css";
 
-const API_KEY = import.meta.env.VITE_WeatherAPIKey;
+const apiKey = import.meta.env.VITE_OPENWEATHER_API_KEY;
+
+
 
 function WeatherBanner() {
   const [weather, setWeather] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!API_KEY) {
+    if (!apiKey) {
       console.error("❌ Missing OpenWeather API key.");
       return;
     }
@@ -20,7 +22,7 @@ function WeatherBanner() {
 
         try {
           const response = await fetch(
-            `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=imperial&appid=${API_KEY}`
+            `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=imperial&appid=${apiKey}`
           );
           const data = await response.json();
           setWeather(data);
@@ -33,7 +35,7 @@ function WeatherBanner() {
       () => {
         console.warn("⚠️ Location blocked, using default NJ");
         fetch(
-          `https://api.openweathermap.org/data/2.5/weather?lat=40.9&lon=-74.2&units=imperial&appid=${API_KEY}`
+          `https://api.openweathermap.org/data/2.5/weather?lat=40.9&lon=-74.2&units=imperial&appid=${apiKey}`
         )
           .then((res) => res.json())
           .then((data) => setWeather(data))

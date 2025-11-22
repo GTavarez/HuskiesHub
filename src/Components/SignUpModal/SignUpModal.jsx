@@ -35,7 +35,6 @@ function SignUpModal({
       password: values.password,
       confirmPassword: values.confirmPassword,
     });
-    
   };
   return (
     <ModalWithForm
@@ -119,8 +118,8 @@ function SignUpModal({
         <button
           type="button"
           onClick={() => {
-            onClose();
             onSignInModal();
+            onClose();
           }}
           className="modal__login-button"
         >
