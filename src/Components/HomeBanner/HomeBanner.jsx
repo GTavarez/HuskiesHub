@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import "./HomeBanner.css";
 
 const images = [
-  "https://images.unsplash.com/photo-1517649763962-0c623066013b",
-  "https://images.unsplash.com/photo-1587280501635-68a0e86f0d31",
-  "https://images.unsplash.com/photo-1581011401790-1c1ffc33d5c1",
+"../../assets/banner1.jpg",
+"../../assets/banner2.jpg",
+"../../assets/banner3.jpg",
 ];
 
 function HomeBanner() {

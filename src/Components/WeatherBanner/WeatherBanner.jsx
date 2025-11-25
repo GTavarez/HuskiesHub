@@ -4,8 +4,6 @@ import "./WeatherBanner.css";
 
 const apiKey = import.meta.env.VITE_OPENWEATHER_API_KEY;
 
-
-
 function WeatherBanner() {
   const [weather, setWeather] = useState(null);
   const [loading, setLoading] = useState(true);

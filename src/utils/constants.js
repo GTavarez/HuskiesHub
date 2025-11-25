@@ -1,13 +1,14 @@
 import team18UGold from "../assets/team2.jpg";
+import team18UPremier from "../assets/team18UPremier.jpg";
 const playerImages = import.meta.glob("/src/assets/players/*", { eager: true });
-const baseUrl = "http://localhost:3001";
+const baseUrl = "https://huskieshub-backend-891073803869.us-central1.run.app";
 
 export const playersData = [
   {
     _id: 1,
     name: "Empire State Huskies Yoffee",
     ageGroup: "18U Premier",
-    banner: "",
+    banner: team18UPremier,
     players: [
       {
         _id: 101,

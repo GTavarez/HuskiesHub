@@ -128,24 +128,7 @@ function App() {
     closeFullProfileModal();
     setActiveModal("Sign in");
   };
-  const handleRegistration = ({ name, email, password, confirmPassword }) => {
-    signup({ name, email, password, confirmPassword })
-      .then((data) => {
-        // data now contains token + user
 
-        if (!data?.token || !data?.user) {
-          throw new Error("Signup did not return token or user");
-        }
-
-        localStorage.setItem("jwt", data.token);
-        setUser(data.user);
-        setIsLoggedIn(true);
-        setIsSignUpOpen(false);
-      })
-      .catch((error) => {
-        console.error("Registration error", error);
-      });
-  };
   const handleSignOut = () => {
     localStorage.removeItem("jwt");
     setIsLoggedIn(false);
