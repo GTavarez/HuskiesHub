@@ -3,7 +3,7 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import { getSchedule } from "../../utils/api";
 import GameCard from "../Schedule/GameCard/GameCard.jsx";
-import "./schedule.css";
+import "./Schedule.css";
 
 function Schedule() {
   const [events, setEvents] = useState([]);
