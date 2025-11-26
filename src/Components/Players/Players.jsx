@@ -23,13 +23,12 @@ function Players({
     navigate("/teams");
   };
   function getPlayerImage(filename) {
-  const key = Object.keys(playerImages).find((k) =>
-    k.toLowerCase().includes(filename.toLowerCase())
-  );
+    const key = Object.keys(getPlayerImage).find((k) =>
+      k.toLowerCase().includes(filename.toLowerCase())
+    );
 
-  return key ? playerImages[key] : "/default-player.png"; // fallback image
-}
-
+    return key ? getPlayerImage[key] : "/default.avif"; // fallback image
+  }
 
   return (
     <section className="players__section">
