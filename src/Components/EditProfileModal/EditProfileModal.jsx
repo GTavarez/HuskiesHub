@@ -1,18 +1,15 @@
-// src/Components/EditProfileModal/EditProfileModal.jsx
 import React, { useState } from "react";
 import { updateUserProfile, uploadAvatar } from "../../utils/auth.js";
 import "./EditProfileModal.css";
 
-function EditProfileModal({ currentUser, onClose, onUpdate }) {
+function EditProfileModal({ currentUser, token, onClose, onUpdate }) {
   const [name, setName] = useState(currentUser?.name || "");
   const [avatarPreview, setAvatarPreview] = useState(currentUser?.avatar || "");
   const [avatarFile, setAvatarFile] = useState(null);
-  const token = localStorage.getItem("jwt");
 
   const handleAvatarChange = (e) => {
     const file = e.target.files[0];
     setAvatarFile(file);
-
     if (file) {
       setAvatarPreview(URL.createObjectURL(file));
     }
@@ -22,25 +19,19 @@ function EditProfileModal({ currentUser, onClose, onUpdate }) {
     e.preventDefault();
 
     try {
-      let uploadedAvatar = avatarPreview;
-      // Upload avatar first if changed
+      let newAvatar = currentUser.avatar;
+
+      // Upload avatar if changed
       if (avatarFile) {
         const avatarRes = await uploadAvatar(avatarFile, token);
-        uploadedAvatar = avatarRes.avatar;
-        setAvatarPreview(uploadedAvatar);
+        newAvatar = avatarRes.avatar;
+        setAvatarPreview(newAvatar);
       }
-      const updateUserResponse = await updateUserProfile(
-        name,
-        uploadedAvatar,
-        token
-      );
 
-      // Update name
-      /* if (name !== currentUser.name) {
-        await updateUserProfile(name, uploadedAvatar, token);
-      } */
+      // Update profile
+      await updateUserProfile(name, newAvatar, token);
 
-      onUpdate(updateUserResponse.user); // reload user info
+      onUpdate();
       onClose();
     } catch (err) {
       console.error("Profile update error:", err);
@@ -57,7 +48,6 @@ function EditProfileModal({ currentUser, onClose, onUpdate }) {
         <h2 className="editProfile__title">Edit Profile</h2>
 
         <form className="editProfile__form" onSubmit={handleSubmit}>
-          {/* AVATAR */}
           <div className="editProfile__avatarSection">
             {avatarPreview ? (
               <img src={avatarPreview} className="editProfile__avatar" />
@@ -69,15 +59,10 @@ function EditProfileModal({ currentUser, onClose, onUpdate }) {
 
             <label className="editProfile__uploadBtn">
               Upload New Avatar
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleAvatarChange}
-              />
+              <input type="file" accept="image/*" onChange={handleAvatarChange} />
             </label>
           </div>
 
-          {/* NAME */}
           <label className="editProfile__label">
             Full Name
             <input
