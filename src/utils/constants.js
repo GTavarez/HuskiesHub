@@ -5,7 +5,7 @@ const playerImages = import.meta.glob("../assets/players/*", {
   import: "default",
 });
 
-const baseUrl = "https://huskieshub-backend-891073803869.us-central1.run.app";
+const baseUrl = "http://localhost:8080";
 
 export const playersData = [
   {

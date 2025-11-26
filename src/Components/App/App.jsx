@@ -106,7 +106,7 @@ function App() {
           playerData: testPlayer,
         }; */
 
-        setUser(userData.user);
+        setUser(userData);
         setIsLoggedIn(true);
         setIsSignInOpen(false);
       })
