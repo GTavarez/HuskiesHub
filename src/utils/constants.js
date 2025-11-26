@@ -1,6 +1,10 @@
 import team18UGold from "../assets/team2.jpg";
 import team18UPremier from "../assets/team18UPremier.jpg";
-const playerImages = import.meta.glob("/src/assets/players/*", { eager: true });
+const playerImages = import.meta.glob("../assets/players/*", {
+  eager: true,
+  import: "default",
+});
+
 const baseUrl = "https://huskieshub-backend-891073803869.us-central1.run.app";
 
 export const playersData = [
