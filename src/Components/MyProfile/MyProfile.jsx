@@ -14,7 +14,7 @@ function MyProfile({ currentUser, onEditProfile, onUpdateUser, onClose }) {
         <div className="profile__header">
           {currentUser?.avatar ? (
             <img
-              src={currentUser.avatar}
+              src={`http://localhost:8080${currentUser.avatar}`}
               alt={currentUser.name}
               className="profile__avatar"
             />
