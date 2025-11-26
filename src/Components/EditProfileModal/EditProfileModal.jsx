@@ -31,7 +31,7 @@ function EditProfileModal({ currentUser, token, onClose, onUpdate }) {
       // Update profile
       await updateUserProfile(name, newAvatar, token);
 
-      onUpdate();
+      onUpdate({ _id: currentUser._id, name, avatar: newAvatar });
       onClose();
     } catch (err) {
       console.error("Profile update error:", err);
@@ -59,7 +59,11 @@ function EditProfileModal({ currentUser, token, onClose, onUpdate }) {
 
             <label className="editProfile__uploadBtn">
               Upload New Avatar
-              <input type="file" accept="image/*" onChange={handleAvatarChange} />
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleAvatarChange}
+              />
             </label>
           </div>
 

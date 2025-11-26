@@ -1,9 +1,5 @@
 import team18UGold from "../assets/team2.jpg";
 import team18UPremier from "../assets/team18UPremier.jpg";
-const playerImages = import.meta.glob("../assets/players/*", {
-  eager: true,
-  import: "default",
-});
 
 const baseUrl = "http://localhost:8080";
 
@@ -290,18 +286,32 @@ export const playersData = [
     ],
   },
 ];
+// ==========================
+// LOAD PLAYER IMAGES GLOBALLY
+// ==========================
+const imageModules = import.meta.glob(
+  "../assets/players/*.{jpg,jpeg,png,avif}",
+  {
+    eager: true,
+    import: "default",
+  }
+);
+
+// Attach full image URLs to your playersData
 playersData.forEach((team) => {
   team.players.forEach((player) => {
     if (!player.image) {
-      player.image = null; // Optionally set placeholder
+      player.image = "/default.avif"; // fallback
       return;
     }
 
-    const match = Object.entries(playerImages).find(([path]) =>
-      path.toLowerCase().includes(player.image.toLowerCase())
+    const lower = player.image.toLowerCase();
+
+    const match = Object.entries(imageModules).find(([path]) =>
+      path.toLowerCase().includes(lower)
     );
 
-    player.image = match ? match[1].default : null;
+    player.image = match ? match[1] : "/default.avif";
   });
 });
 export { baseUrl };

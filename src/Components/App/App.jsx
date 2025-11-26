@@ -35,7 +35,7 @@ function App() {
   const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
   const [profileEditMode, setProfileEditMode] = useState(null);
   const [editMode, setEditMode] = useState(null);
-
+  const token = localStorage.getItem("jwt");
   const openSignUpModal = () => {
     setActiveModal("Sign up");
   };
@@ -203,6 +203,7 @@ function App() {
         {isEditProfileOpen && (
           <EditProfileModal
             currentUser={user}
+            token={token}
             mode={editMode} // PASS MODE HERE
             onClose={handleCloseEditProfile}
             onUpdate={handleSaveProfile}
