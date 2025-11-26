@@ -22,6 +22,14 @@ function Players({
   const handleBack = () => {
     navigate("/teams");
   };
+  function getPlayerImage(filename) {
+  const key = Object.keys(playerImages).find((k) =>
+    k.toLowerCase().includes(filename.toLowerCase())
+  );
+
+  return key ? playerImages[key] : "/default-player.png"; // fallback image
+}
+
 
   return (
     <section className="players__section">
@@ -42,7 +50,7 @@ function Players({
             {team.players.map((player) => (
               <div key={player._id} className="player__card">
                 <div className="player__image">
-                  <img src={player.image} alt={player.name} />
+                  <img src={getPlayerImage(player.image)} alt={player.name} />
                 </div>
                 <h4>{player.name}</h4>
                 <p className="player__info">
