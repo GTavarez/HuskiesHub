@@ -3,7 +3,9 @@ import "./CollegeCommits.css";
 import { playersData } from "../../utils/constants";
 
 function CollegeCommits() {
-  const committedPlayers = playersData.flatMap((team) =>team.players.filter((player) => player.isCommitted));
+  const committedPlayers = playersData.flatMap((team) =>
+    team.players.filter((player) => player.isCommitted)
+  );
 
   return (
     <section className="commits">
@@ -17,9 +19,9 @@ function CollegeCommits() {
       ) : (
         <div className="commits__grid">
           {committedPlayers.map((player) => (
-            <div key={player.id} className="commit__card">
+            <div key={player._id} className="commit__card">
               <img
-                src={player.image}
+                src={player.image || "/default.avif"}
                 alt={player.name}
                 className="commit__image"
               />

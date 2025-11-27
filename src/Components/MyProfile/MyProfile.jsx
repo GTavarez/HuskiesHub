@@ -1,17 +1,20 @@
 import React from "react";
 import "./MyProfile.css";
 
-function MyProfile({ currentUser, onUpdateUser }) {
+function MyProfile({ currentUser, onEditProfile, onUpdateUser, onClose }) {
   const isPlayer = Boolean(currentUser?.playerData);
 
   return (
     <section className="profile">
       <div className="profile__container">
+        <button className="profile__close-btn" onClick={onClose}>
+          ×
+        </button>
         {/* AVATAR */}
         <div className="profile__header">
           {currentUser?.avatar ? (
             <img
-              src={currentUser.avatar}
+              src={`http://localhost:8080${currentUser.avatar}`}
               alt={currentUser.name}
               className="profile__avatar"
             />
@@ -21,20 +24,14 @@ function MyProfile({ currentUser, onUpdateUser }) {
             </div>
           )}
 
-          <button
-            className="profile__edit-avatar-btn"
-            onClick={() => onEditProfile("avatar")}
-          >
+          <button className="profile__edit-avatar-btn" onClick={onUpdateUser}>
             Upload Avatar
           </button>
 
           <h2 className="profile__name">{currentUser?.name}</h2>
           <p className="profile__email">{currentUser?.email}</p>
 
-          <button
-            className="profile__edit-btn"
-            onClick={() => onUpdateUser("profile")}
-          >
+          <button className="profile__edit-btn" onClick={() => onUpdateUser()}>
             Edit Profile
           </button>
         </div>
@@ -44,9 +41,7 @@ function MyProfile({ currentUser, onUpdateUser }) {
           <div className="profile__card">
             <h3 className="profile__card-title">Account Details</h3>
             <p>You are logged in as a guest.</p>
-            <p>
-              You can browse teams, view the schedule, and explore the site.
-            </p>
+            <p>You can browse teams and view the schedule.</p>
           </div>
         )}
 

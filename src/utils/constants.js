@@ -1,13 +1,14 @@
 import team18UGold from "../assets/team2.jpg";
-const playerImages = import.meta.glob("/src/assets/players/*", { eager: true });
-const baseUrl = "http://localhost:3001";
+import team18UPremier from "../assets/team18UPremier.jpg";
+
+const baseUrl = "https://huskieshub-backend-891073803869.us-central1.run.app/";
 
 export const playersData = [
   {
     _id: 1,
     name: "Empire State Huskies Yoffee",
     ageGroup: "18U Premier",
-    banner: "",
+    banner: team18UPremier,
     players: [
       {
         _id: 101,
@@ -285,18 +286,32 @@ export const playersData = [
     ],
   },
 ];
+// ==========================
+// LOAD PLAYER IMAGES GLOBALLY
+// ==========================
+const imageModules = import.meta.glob(
+  "../assets/players/*.{jpg,jpeg,png,avif}",
+  {
+    eager: true,
+    import: "default",
+  }
+);
+
+// Attach full image URLs to your playersData
 playersData.forEach((team) => {
   team.players.forEach((player) => {
     if (!player.image) {
-      player.image = null; // Optionally set placeholder
+      player.image = "/default.avif"; // fallback
       return;
     }
 
-    const match = Object.entries(playerImages).find(([path]) =>
-      path.toLowerCase().includes(player.image.toLowerCase())
+    const lower = player.image.toLowerCase();
+
+    const match = Object.entries(imageModules).find(([path]) =>
+      path.toLowerCase().includes(lower)
     );
 
-    player.image = match ? match[1].default : null;
+    player.image = match ? match[1] : "/default.avif";
   });
 });
 export { baseUrl };
