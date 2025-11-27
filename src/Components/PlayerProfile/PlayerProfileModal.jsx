@@ -22,7 +22,7 @@ function PlayerProfileModal({ onClose, player }) {
 
   return (
     <div className="profile__overlay" onClick={onClose}>
-      <div className="profile__container" onClick={(e) => e.stopPropagation()}>
+      <div className="profilePlayer__container" onClick={(e) => e.stopPropagation()}>
         <button className="profile__modal__close" onClick={onClose}>
           ✕
         </button>
@@ -80,14 +80,14 @@ function PlayerProfileModal({ onClose, player }) {
         </div>
 
         {/* HIGHLIGHTS */}
-        <div className="profile__section">
+        {/* <div className="profile__section">
           <h2>Highlights</h2>
           <div className="highlights__grid">
             <img src="/assets/highlights/highlight1.jpg" alt="" />
             <img src="/assets/highlights/highlight2.jpg" alt="" />
             <img src="/assets/highlights/highlight3.jpg" alt="" />
           </div>
-        </div>
+        </div> */}
 
         <div className="profile__footer">
           <button className="profile__return-btn" onClick={onClose}>

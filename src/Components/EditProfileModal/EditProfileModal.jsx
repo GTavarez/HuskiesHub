@@ -1,4 +1,3 @@
-// src/Components/EditProfileModal/EditProfileModal.jsx
 import React, { useState } from "react";
 import { updateUserProfile, uploadAvatar } from "../../utils/auth.js";
 import "./EditProfileModal.css";
@@ -11,7 +10,6 @@ function EditProfileModal({ currentUser, token, onClose, onUpdate }) {
   const handleAvatarChange = (e) => {
     const file = e.target.files[0];
     setAvatarFile(file);
-
     if (file) {
       setAvatarPreview(URL.createObjectURL(file));
     }
@@ -21,18 +19,19 @@ function EditProfileModal({ currentUser, token, onClose, onUpdate }) {
     e.preventDefault();
 
     try {
-      // Upload avatar first if changed
+      let newAvatar = currentUser.avatar;
+
+      // Upload avatar if changed
       if (avatarFile) {
         const avatarRes = await uploadAvatar(avatarFile, token);
-        avatarPreview(avatarRes.avatar);
+        newAvatar = avatarRes.avatar;
+        setAvatarPreview(newAvatar);
       }
 
-      // Update name
-      if (name !== currentUser.name) {
-        await updateUserProfile(name, token);
-      }
+      // Update profile
+      await updateUserProfile(name, newAvatar, token);
 
-      onUpdate(); // reload user info
+      onUpdate({ _id: currentUser._id, name, avatar: newAvatar });
       onClose();
     } catch (err) {
       console.error("Profile update error:", err);
@@ -49,7 +48,6 @@ function EditProfileModal({ currentUser, token, onClose, onUpdate }) {
         <h2 className="editProfile__title">Edit Profile</h2>
 
         <form className="editProfile__form" onSubmit={handleSubmit}>
-          {/* AVATAR */}
           <div className="editProfile__avatarSection">
             {avatarPreview ? (
               <img src={avatarPreview} className="editProfile__avatar" />
@@ -69,7 +67,6 @@ function EditProfileModal({ currentUser, token, onClose, onUpdate }) {
             </label>
           </div>
 
-          {/* NAME */}
           <label className="editProfile__label">
             Full Name
             <input

@@ -7,29 +7,21 @@ export const signup = ({ name, email, password, confirmPassword }) => {
   return fetch(`${baseUrl}/signup`, {
     method: "POST",
     headers: {
+      accept: "application/json",
       "Content-Type": "application/json",
     },
     body: JSON.stringify({ name, email, password, confirmPassword }),
-  })
-    .then(checkResponse)
-    .then((data) => {
-      localStorage.setItem("jwt", data.token);
-      return data;
-    });
+  }).then(checkResponse);
 };
 export const signin = ({ email, password }) => {
   return fetch(`${baseUrl}/signin`, {
     method: "POST",
     headers: {
+      accept: "application/json",
       "Content-Type": "application/json",
     },
     body: JSON.stringify({ email, password }),
-  })
-    .then(checkResponse)
-    .then((data) => {
-      localStorage.setItem("jwt", data.token);
-      return data;
-    });
+  }).then(checkResponse);
 };
 
 export const getCurrentUser = (token) => {

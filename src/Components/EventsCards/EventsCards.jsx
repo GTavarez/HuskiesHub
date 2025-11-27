@@ -1,6 +1,8 @@
 import "./EventsCards.css";
 import example1 from "../../assets/example1.jpg";
 import event1 from "../../assets/event1.jpg";
+import event2 from "../../assets/event2.jpg";
+import event3 from "../../assets/event3.jpg";
 
 function EventsCards() {
   return (
@@ -9,7 +11,7 @@ function EventsCards() {
         <h2 className="events__cards_title">Season Events</h2>
         <div className="events__cards_grid">
           <div className="events__card">
-            <img className="events__card__image" src={example1} />
+            <img className="events__card__image" src={event2} />
             <div className="events__card-overlay">
               <h3>Beacon Xtreme Fall Benefit</h3>
               <p>Sept 20th • Beacon, NY</p>
@@ -23,7 +25,7 @@ function EventsCards() {
             </div>
           </div>
           <div className="events__card">
-            <img className="events__card__image" src={example1} />
+            <img className="events__card__image" src={event3} />
             <div className="events__card-overlay">
               <h3>Huskies Friendly</h3>
               <p>Oct 5th • Pequannock, NJ</p>

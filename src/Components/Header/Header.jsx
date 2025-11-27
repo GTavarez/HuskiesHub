@@ -111,9 +111,10 @@ function Header({ onSignUp, onClick, onSignOut, openSignInModal }) {
                 <Link
                   to="/profile"
                   className="header__dropdown-link"
-                  onClick={()=>{
+                  onClick={() => {
                     setIsProfileMenuOpen(false);
-                    closeDropdown}}
+                    closeDropdown;
+                  }}
                 >
                   My Profile
                 </Link>
@@ -128,11 +129,7 @@ function Header({ onSignUp, onClick, onSignOut, openSignInModal }) {
             <button className="header__nav-button" onClick={openSignInModal}>
               Login
             </button>
-            <button
-              className="header__signup_button"
-              onClick={onClick}
-              onSubmit={onSignUp}
-            >
+            <button className="header__signup_button" onClick={onClick}>
               Join Team
             </button>
           </>
