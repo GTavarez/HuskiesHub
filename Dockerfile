@@ -1,22 +1,35 @@
-# Stage 1 — Build with Node 20 (Vite requires Node 20+)
-FROM node:20-alpine AS builder
+# -----------------------------------
+# 1. Build Stage
+# -----------------------------------
+FROM node:18 AS build
 WORKDIR /app
 
+# Install dependencies
 COPY package*.json ./
 RUN npm install
 
+# Copy project files
 COPY . .
+
+# Build Vite frontend
 RUN npm run build
 
-# Stage 2 — Serve with NGINX on Cloud Run
-FROM nginx:alpine
+# -----------------------------------
+# 2. Run Stage
+# -----------------------------------
+FROM node:18
+WORKDIR /app
 
-# Copy custom nginx config
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Copy ONLY necessary built files
+COPY --from=build /app/dist ./dist
+COPY server.js ./
+COPY package*.json ./
 
-# Copy built Vite files
-COPY --from=builder /app/dist /usr/share/nginx/html
+# Install ONLY production dependencies (including express)
+RUN npm install --omit=dev
 
+# Cloud Run requires PORT env
+ENV PORT=8080
 EXPOSE 8080
 
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["npm", "start"]

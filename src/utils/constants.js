@@ -1,7 +1,7 @@
 import team18UGold from "../assets/team2.jpg";
 import team18UPremier from "../assets/team18UPremier.jpg";
 
-const baseUrl = "http://localhost:8080";
+const baseUrl = "https://huskieshub-backend-891073803869.us-central1.run.app/";
 
 export const playersData = [
   {
