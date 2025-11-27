@@ -2,7 +2,7 @@
 # 1. Build Stage
 # -----------------------------------
 FROM node:18 AS build
-WORKDIR /app
+WORKDIR /
 
 # Install dependencies
 COPY package*.json ./
@@ -18,15 +18,15 @@ RUN npm run build
 # 2. Run Stage
 # -----------------------------------
 FROM node:18
-WORKDIR /app
+WORKDIR /
 
 # Copy ONLY necessary built files
-COPY --from=build /app/dist ./dist
+COPY --from=build /dist ./dist
 COPY server.js ./
 COPY package*.json ./
 
 # Install ONLY production dependencies (including express)
-RUN npm install --omit=dev
+RUN npm ci --production
 
 # Cloud Run requires PORT env
 ENV PORT=8080
