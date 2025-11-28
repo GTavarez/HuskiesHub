@@ -1,7 +1,7 @@
 # -----------------------------------
 # 1. Build Stage
 # -----------------------------------
-FROM node:18 AS build
+FROM node:22 AS build
 WORKDIR /
 
 # Install dependencies
@@ -17,7 +17,7 @@ RUN npm run build
 # -----------------------------------
 # 2. Run Stage
 # -----------------------------------
-FROM node:18
+FROM node:22
 WORKDIR /
 
 # Copy ONLY necessary built files
