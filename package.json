@@ -8,16 +8,13 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "start": "node server.js"
+    "start": "npx serve -s dist -l $PORT"
   },
   "dependencies": {
     "@fullcalendar/core": "^6.1.19",
     "@fullcalendar/daygrid": "^6.1.19",
     "@fullcalendar/react": "^6.1.19",
     "date-fns": "^4.1.0",
-    "express": "^5.1.0",
-    "googleapis": "^164.1.0",
-    "http-server": "^14.1.1",
     "jwt-decode": "^4.0.0",
     "moment": "^2.30.1",
     "mongoose": "^8.20.0",
@@ -36,6 +33,7 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.22",
     "globals": "^16.4.0",
+    "serve": "^14.2.5",
     "vite": "^7.2.2"
   }
 }
