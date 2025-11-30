@@ -18,10 +18,8 @@ import ProtectedRoute from "../ProtectedRoute/ProtectedRoute.jsx";
 import Coaches from "../Coaches/Coaches.jsx";
 import Clinics from "../Clinics/Clinics.jsx";
 import Contact from "../Contact/Contact.jsx";
-import { updateUserProfile } from "../../utils/auth.js";
 import EditProfileModal from "../EditProfileModal/EditProfileModal.jsx";
 import Footer from "../Footer/Footer.jsx";
-import { set } from "mongoose";
 
 function App() {
   const [user, setUser] = React.useState(null);
