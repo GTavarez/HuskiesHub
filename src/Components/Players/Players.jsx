@@ -19,6 +19,18 @@ function Players({
   const handleBack = () => {
     navigate("/teams");
   };
+  const cleanImage = (str) => {
+    if (!str) return "default";
+
+    // remove .jpg anywhere
+    const withoutExt = str.replace(".jpg", "");
+
+    // if already full URL:
+    if (withoutExt.startsWith("http")) return withoutExt + ".jpg";
+
+    // otherwise add backend
+    return `https://huskieshub-backend-891073803869-us-central1.run.app/images/${withoutExt}.jpg`;
+  };
 
   return (
     <section className="players__section">
@@ -36,17 +48,7 @@ function Players({
             {team.players.map((player) => (
               <div key={player._id} className="player__card">
                 <div className="player__image">
-                  <img
-                    src={
-                      player.imageCode
-                        ? `${baseUrl}/images/${player.imageCode}`
-                        : `${baseUrl}/images/default`
-                    }
-                    onError={(e) =>
-                      (e.target.src = `${baseUrl}/images/default`)
-                    }
-                    alt={player.name}
-                  />
+                  <img src={cleanImage(player.image)} alt={player.name} />
                 </div>
 
                 <h4>{player.name}</h4>
@@ -66,11 +68,11 @@ function Players({
                   className="player__profile-btn"
                   onClick={() => {
                     if (!isLoggedIn) {
-                      openLogin();
-                      onClose();
-                    } else {
-                      onViewProfile(player);
+                      onViewProfile(player); // open preview modal with the selected player
+                      /* openLogin(); */ // show login modal
+                      return;
                     }
+                    onViewProfile(player); // open full profile modal
                   }}
                 >
                   View Profile
@@ -91,8 +93,8 @@ function Players({
           <PlayerProfileModal player={selectedPlayer} onClose={onClose} />
         ) : (
           <PlayerProfilePreviewModal
-            openLogin={openLogin}
             player={selectedPlayer}
+            openLogin={openLogin}
             onClose={onClose}
           />
         ))}

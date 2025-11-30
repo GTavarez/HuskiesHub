@@ -5,9 +5,9 @@ const baseUrl = import.meta.env.PROD
   ? "https://huskieshub-backend-891073803869.us-central1.run.app"
   : "http://localhost:8080";
 
-const defaultImage = `${baseUrl}/images/default`;
+const defaultImage = `${baseUrl}/images/default`; // your backend default route
 
-export const playersData = [
+const playersData = [
   {
     _id: 1,
     name: "Empire State Huskies Yoffee",
@@ -22,16 +22,17 @@ export const playersData = [
         gradYear: 2026,
         highSchool: "Immaculate Heart Academy",
         GPA: 3.8,
-        imageCode: "as",
+        image: `${baseUrl}/images/as`, // ← backend
       },
       {
         _id: 102,
         name: "Ana Feliciano",
         jersey: 5,
+        position: "",
         gradYear: 2027,
-        highSchool: "Pompton Lakes HS",
+        highSchool: "Pompton Lakes High School",
         GPA: 3.79,
-        imageCode: null,
+        image: defaultImage,
       },
       {
         _id: 103,
@@ -39,9 +40,9 @@ export const playersData = [
         jersey: 14,
         position: "OF",
         gradYear: 2026,
-        highSchool: "Nutley HS",
+        highSchool: "Nutley High School",
         GPA: 3.4,
-        imageCode: "sr",
+        image: `${baseUrl}/images/sr`,
       },
       {
         _id: 104,
@@ -49,8 +50,9 @@ export const playersData = [
         jersey: 24,
         position: "C, 3B",
         gradYear: 2028,
-        highSchool: "Wanaque HS",
-        imageCode: "gb",
+        highSchool: "Wanaque High School",
+        GPA: "",
+        image: `${baseUrl}/images/gb`,
       },
       {
         _id: 105,
@@ -58,9 +60,9 @@ export const playersData = [
         jersey: 2,
         position: "IF, OF",
         gradYear: 2027,
-        highSchool: "Pascack Valley HS",
+        highSchool: "Pascack Valley High School",
         GPA: 4.0,
-        imageCode: "aw",
+        image: `${baseUrl}/images/aw`,
       },
       {
         _id: 106,
@@ -68,9 +70,9 @@ export const playersData = [
         jersey: 10,
         position: "C, OF",
         gradYear: 2026,
-        highSchool: "Ridgewood HS",
+        highSchool: "Ridgewood High School",
         GPA: 3.5,
-        imageCode: "ek",
+        image: `${baseUrl}/images/ek`,
       },
       {
         _id: 107,
@@ -78,9 +80,9 @@ export const playersData = [
         jersey: 16,
         position: "OF",
         gradYear: 2028,
-        highSchool: "Butler HS",
+        highSchool: "Butler High School",
         GPA: 3.8,
-        imageCode: "im",
+        image: `${baseUrl}/images/im`,
       },
       {
         _id: 108,
@@ -89,16 +91,18 @@ export const playersData = [
         position: "OF, IF",
         gradYear: 2029,
         highSchool: "High School",
-        imageCode: "js",
+        GPA: "",
+        image: `${baseUrl}/images/js`,
       },
       {
         _id: 109,
         name: "Lexi Feliciano",
         jersey: 4,
+        position: "",
         gradYear: 2027,
-        highSchool: "Pompton Lakes HS",
+        highSchool: "Pompton Lakes High School",
         GPA: 3.5,
-        imageCode: "lf",
+        image: `${baseUrl}/images/lf`,
       },
       {
         _id: 110,
@@ -106,8 +110,9 @@ export const playersData = [
         jersey: 13,
         position: "1B, 3B",
         gradYear: 2026,
-        highSchool: "Wayne Valley HS",
-        imageCode: "kb",
+        highSchool: "Wayne Valley High School",
+        GPA: 3.3,
+        image: `${baseUrl}/images/kb`,
       },
       {
         _id: 111,
@@ -115,8 +120,9 @@ export const playersData = [
         jersey: 17,
         position: "OF",
         gradYear: 2026,
-        highSchool: "Fair Lawn HS",
-        imageCode: "nd",
+        highSchool: "Fair Lawn High School",
+        GPA: 3.8,
+        image: `${baseUrl}/images/nd`,
       },
       {
         _id: 112,
@@ -124,8 +130,9 @@ export const playersData = [
         jersey: 12,
         position: "P",
         gradYear: 2027,
-        highSchool: "West Milford HS",
-        imageCode: "am",
+        highSchool: "West Milford High School",
+        GPA: 3.5,
+        image: `${baseUrl}/images/am`,
       },
     ],
   },
@@ -142,8 +149,11 @@ export const playersData = [
         jersey: "00",
         position: "P, Utility",
         gradYear: 2026,
-        highSchool: "Ramsey HS",
-        imageCode: "ls",
+        highSchool: "Ramsey High School",
+        GPA: 4.1,
+        isCommitted: true,
+        committedCollege: "Middlebury College",
+        image: `${baseUrl}/images/ls`,
       },
       {
         _id: 202,
@@ -151,8 +161,9 @@ export const playersData = [
         jersey: 9,
         position: "RHP, OF",
         gradYear: 2027,
-        highSchool: "Ramapo HS",
-        imageCode: "th",
+        highSchool: "Ramapo High School",
+        GPA: 3.8,
+        image: `${baseUrl}/images/th`,
       },
       {
         _id: 203,
@@ -160,8 +171,9 @@ export const playersData = [
         jersey: 17,
         position: "OF, 1B",
         gradYear: 2026,
-        highSchool: "Fair Lawn HS",
-        imageCode: "nd",
+        highSchool: "Fair Lawn High School",
+        GPA: 3.8,
+        image: `${baseUrl}/images/nd`,
       },
       {
         _id: 204,
@@ -169,8 +181,9 @@ export const playersData = [
         jersey: 22,
         position: "CF, Utility",
         gradYear: 2028,
-        highSchool: "Ridgewood HS",
-        imageCode: null,
+        highSchool: "Ridgwood High School",
+        GPA: 3.5,
+        image: defaultImage,
       },
       {
         _id: 205,
@@ -178,8 +191,11 @@ export const playersData = [
         jersey: 3,
         position: "RHP, OF",
         gradYear: 2026,
-        highSchool: "Wayne Valley HS",
-        imageCode: "sb",
+        highSchool: "Wayne Valley High School",
+        GPA: 3.75,
+        isCommitted: true,
+        committedCollege: "Roanoke College",
+        image: `${baseUrl}/images/sb`,
       },
       {
         _id: 206,
@@ -187,8 +203,11 @@ export const playersData = [
         jersey: 10,
         position: "C, 3B, 1B",
         gradYear: 2026,
-        highSchool: "Wayne Hills HS",
-        imageCode: "ac",
+        highSchool: "Wayne Hills High School",
+        GPA: 3.7,
+        isCommitted: true,
+        committedCollege: "Washington College",
+        image: `${baseUrl}/images/ac`,
       },
       {
         _id: 207,
@@ -196,18 +215,21 @@ export const playersData = [
         jersey: 19,
         position: "C, 2B, 3B",
         gradYear: 2026,
-        highSchool: "Morris Tech HS",
-        imageCode: "cf",
+        highSchool: "Morris Tech High School",
+        GPA: 4.68,
+        isCommitted: true,
+        committedCollege: "MIT",
+        image: `${baseUrl}/images/cf`,
       },
       {
         _id: 208,
         name: "Ella Mchugh",
         jersey: 28,
-        position: "SS, 2B",
+        position: "SS, 2B, Utility",
         gradYear: 2027,
-        highSchool: "Pearl River HS",
+        highSchool: "Pearl River High School",
         GPA: 3.8,
-        imageCode: "em",
+        image: `${baseUrl}/images/em`,
       },
       {
         _id: 209,
@@ -215,9 +237,9 @@ export const playersData = [
         jersey: 7,
         position: "C, OF",
         gradYear: 2026,
-        highSchool: "Pascack Valley HS",
+        highSchool: "Pascack Valley High School",
         GPA: 4.2,
-        imageCode: "cd",
+        image: `${baseUrl}/images/cd`,
       },
       {
         _id: 210,
@@ -225,30 +247,76 @@ export const playersData = [
         jersey: 13,
         position: "MIF",
         gradYear: 2026,
-        highSchool: "Pearl River HS",
+        highSchool: "Pearl River High School",
         GPA: 3.2,
-        imageCode: "af",
+        isCommitted: true,
+        committedCollege: "Albertus Magnus College",
+        image: `${baseUrl}/images/af`,
       },
       {
         _id: 211,
         name: "Therese Adams",
         jersey: 21,
-        position: "3B, MIF, OF",
+        position: "3B,MIF, OF",
         gradYear: 2026,
-        highSchool: "Ramapo HS",
-        imageCode: null,
+        highSchool: "Ramapo High School",
+        GPA: 4.0,
+        image: defaultImage,
       },
       {
         _id: 212,
         name: "Lily Kriz",
         jersey: 44,
-        position: "C, 3B",
+        position: "C, 3B Utility",
         gradYear: 2026,
-        highSchool: "Ramsey HS",
-        imageCode: "lk",
+        highSchool: "Ramsey High School",
+        GPA: 4.96,
+        image: `${baseUrl}/images/lk`,
       },
     ],
   },
 ];
+// coachesData.js
+// Empire State Huskies — Coaches Directory
 
-export { baseUrl };
+const coachesData = [
+  {
+    id: "A",
+    name: "Allie Yoffee",
+    role: "Head Coach",
+    bio: `Allie Yoffee is the founder and head coach of the Empire State Huskies. 
+With over a decade of coaching experience, she has led numerous teams to 
+state and national championships. Her dedication to player development and 
+passion for the game make her an invaluable asset to the Huskies organization.`,
+    email: "alliey@gmail.com",
+    phone: "201-410-0431",
+    image: "allie.jpg", // Replace with your GridFS filename if needed
+  },
+  {
+    id: "J",
+    name: "Jessica Shulman",
+    role: "Assistant Coach",
+    bio: `Jessica Shulman brings a wealth of experience to the Huskies as an 
+assistant coach. A former collegiate athlete, Jessica specializes in hitting 
+mechanics and offensive strategy. Her hands-on approach and ability to connect 
+with players help foster a positive and competitive team environment.`,
+    email: "",
+    phone: "",
+    image: "jessica.jpg",
+  },
+  {
+    id: "M",
+    name: "Megan Wargo",
+    role: "Pitching Coach",
+    bio: `Megan Wargo is the Huskies' dedicated pitching coach, known for her 
+technical expertise and personalized coaching style. With a background in 
+collegiate softball, Megan focuses on developing pitchers' mechanics, mental 
+toughness, and game strategy. Her commitment to each player's growth is evident 
+in the Huskies' strong pitching performances.`,
+    email: "",
+    phone: "",
+    image: "megan.jpg",
+  },
+];
+
+export { baseUrl, coachesData, playersData };

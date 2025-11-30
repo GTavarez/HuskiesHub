@@ -1,118 +1,167 @@
+/* ======================================== */
+/* PLAYERS SECTION – MODERN RESPONSIVE THEME */
+/* ======================================== */
+
 .players__section {
-  padding: 48px, 32px;
-  background-color: #0b0b0d;
+  padding: 60px 32px;
+  background-color: #0a192f;
   color: #f5f5f5;
+  max-width: 1400px;
+  margin: 0 auto;
+  box-sizing: border-box;
 }
+
+/* HEADER */
 .players__header {
   text-align: center;
-  font-size: 32px;
-  margin-bottom: 8px;
-  font-size: 36px;
-  color: #ffffff;
-  font-weight: 700;
-  letter-spacing: 1px;
-  font-family: Gabinet, Arial, Helvetica, sans-serif;
+  margin-bottom: 16px;
 }
+
+.players__header h2 {
+  font-size: 36px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 1px;
+  margin: 0;
+}
+
+.players__back-btn {
+  background: transparent;
+  color: #64b5f6;
+  border: 1px solid #64b5f6;
+  padding: 8px 16px;
+  font-size: 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-bottom: 16px;
+  transition: 0.25s ease;
+}
+
+.players__back-btn:hover {
+  background: #64b5f6;
+  color: #0a192f;
+}
+
 .players__divider {
-  width: 60px;
-  height: 3px;
-  background: linear-gradient(90deg, #1e90ff, #ffd700);
-  margin: 0 auto 32px;
+  width: 70px;
+  height: 4px;
+  margin: 14px auto 32px;
+  background: linear-gradient(90deg, #64b5f6, #ffd700);
   border-radius: 2px;
 }
-.players__team__block {
-  margin-bottom: 48px;
-}
-.players__team__name {
-  font-size: 24px;
-  margin-bottom: 24px;
-  color: #ffd700;
-}
+
+/* GRID LAYOUT */
 .players__team__grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 28px;
+  width: 100%;
+  box-sizing: border-box;
 }
+
+/* PLAYER CARD */
 .player__card {
-  background: linear-gradient(145deg, #111113, #1a1a1d);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: linear-gradient(145deg, #101f36, #0d1628);
   border-radius: 16px;
   padding: 24px;
   text-align: center;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+  transition: 0.3s ease;
 }
+
 .player__card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 12px 28px rgba(30, 144, 255, 0.4);
+  transform: translateY(-6px);
+  box-shadow: 0 10px 26px rgba(100, 181, 246, 0.35);
 }
+
+/* PLAYER IMAGE */
 .player__image img {
   width: 120px;
   height: 120px;
   border-radius: 50%;
   object-fit: cover;
-  border: 3px solid #1e90ff;
-  margin-bottom: 16px;
+  border: 3px solid #64b5f6;
+  margin-bottom: 14px;
   transition: 0.3s ease;
-  position: relative;
-  margin: auto;
 }
+
 .player__card:hover .player__image img {
   border-color: #ffd700;
 }
+
+/* TEXT STYLES */
 .player__info {
-  color: #1e90ff;
-  font-weight: 500;
+  color: #64b5f6;
+  font-size: 16px;
+  font-weight: 600;
   margin-bottom: 6px;
 }
+
 .player__details {
+  color: #cdd4de;
   font-size: 14px;
-  color: #cccccc;
-  opacity: 0.9;
   margin-bottom: 12px;
+  opacity: 0.9;
 }
+
+/* BUTTON */
 .player__profile-btn {
-  margin-top: 14px;
-  background: linear-gradient(90deg, #1e90ff, #ffd700);
-  color: #0b0b0d;
-  border: none;
+  background: linear-gradient(90deg, #64b5f6, #ffd700);
+  color: #0a192f;
   padding: 10px 20px;
-  border-radius: 8px;
+  border-radius: 10px;
+  border: none;
   font-weight: 600;
   cursor: pointer;
-  letter-spacing: 0.3px;
   transition: 0.3s ease;
+  margin-top: 10px;
 }
+
 .player__profile-btn:hover {
-  background: linear-gradient(90deg, #ffd700, #1e90ff);
-  box-shadow: 0 0 12px rgba(30, 144, 255, 0.6);
-}
-.players__back-btn {
-  background: transparent;
-  color: #1e90ff;
-  border: 1px solid #1e90ff;
-  padding: 8px 16px;
-  border-radius: 8px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-.players__back-btn:hover {
-  background: #1e90ff;
-  color: #ffffff;
+  background: linear-gradient(90deg, #ffd700, #64b5f6);
+  box-shadow: 0 0 14px rgba(100, 181, 246, 0.5);
 }
 
-@media (max-width: 627px) {
+/* ======================================== */
+/*              RESPONSIVE FIXES            */
+/* ======================================== */
+
+/* 📌 Large-desktop fallback (1400px and down) */
+@media (max-width: 1400px) {
   .players__section {
-    padding: 50px 20px;
+    padding: 50px 28px;
+  }
+}
+
+/* 📌 Tablets (900px and down) */
+@media (max-width: 900px) {
+  .players__header h2 {
+    font-size: 30px;
   }
 
-  .players__header {
-    font-size: 28px;
+  .player__card {
+    padding: 20px;
   }
 
-  .team__name {
-    font-size: 22px;
+  .player__image img {
+    width: 110px;
+    height: 110px;
+  }
+}
+
+/* 📌 Mobile (600px and down) */
+@media (max-width: 600px) {
+  .players__section {
+    padding: 40px 20px;
+  }
+
+  .players__header h2 {
+    font-size: 26px;
+  }
+
+  .players__team__grid {
+    grid-template-columns: 1fr; /* ONE column */
   }
 
   .player__card {
@@ -126,5 +175,18 @@
 
   .player__profile-btn {
     padding: 8px 16px;
+    font-size: 14px;
+  }
+}
+
+/* 📌 Tiny phones (420px and down) */
+@media (max-width: 420px) {
+  .player__image img {
+    width: 90px;
+    height: 90px;
+  }
+
+  .player__card {
+    padding: 18px;
   }
 }
