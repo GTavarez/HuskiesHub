@@ -1,8 +1,8 @@
 import "./Main.css";
-import EventsCards from "../EventsCards/EventsCards";
-import AboutTeam from "../AboutTeam/AboutTeam";
-import HomeBanner from "../HomeBanner/HomeBanner";
-import WeatherBanner from "../WeatherBanner/WeatherBanner";
+import EventsCards from "../EventsCards/EventsCards.jsx";
+import AboutTeam from "../AboutTeam/AboutTeam.jsx";
+import HomeBanner from "../HomeBanner/HomeBanner.jsx";
+import WeatherBanner from "../WeatherBanner/WeatherBanner.jsx";
 
 function Main() {
   return (

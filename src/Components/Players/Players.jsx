@@ -4,13 +4,6 @@ import { useParams, useNavigate } from "react-router-dom";
 import PlayerProfileModal from "../PlayerProfile/PlayerProfileModal";
 import PlayerProfilePreviewModal from "../PlayerProfilePreviewModal/PlayerProfilePreviewModal";
 
-const playerImages = import.meta.glob(
-  "/src/assets/players/*.{jpg,jpeg,png,avif}",
-  {
-    eager: true,
-  }
-);
-
 function Players({
   onViewProfile,
   onClose,
@@ -20,36 +13,12 @@ function Players({
   openLogin,
 }) {
   const { teamsId } = useParams();
-
   const team = playersData.find((t) => t._id === parseInt(teamsId));
-
-  // ✅ CORRECT GLOB
-  /*  const playerImages = import.meta.glob(
-    "/src/assets/players/*.{jpg,jpeg,png,webp,avif}",
-    { eager: true }
-  ); */
-
   const navigate = useNavigate();
+
   const handleBack = () => {
     navigate("/teams");
   };
-
-  // ✅ FIXED IMAGE LOOKUP
-  function getPlayerImage(filename) {
-    if (!filename) {
-      return "/default.avif";
-    }
-
-    const lower = filename.toLowerCase();
-
-    for (const [path, module] of Object.entries(playerImages)) {
-      if (path.toLowerCase().includes(lower)) {
-        return module.default; // <-- always returns a string URL
-      }
-    }
-
-    return "/default.avif";
-  }
 
   return (
     <section className="players__section">
@@ -67,10 +36,21 @@ function Players({
             {team.players.map((player) => (
               <div key={player._id} className="player__card">
                 <div className="player__image">
-                  <img src={getPlayerImage(player.image)} alt={player.name} />
+                  <img
+                    src={
+                      player.imageCode
+                        ? `${baseUrl}/images/${player.imageCode}`
+                        : `${baseUrl}/images/default`
+                    }
+                    onError={(e) =>
+                      (e.target.src = `${baseUrl}/images/default`)
+                    }
+                    alt={player.name}
+                  />
                 </div>
 
                 <h4>{player.name}</h4>
+
                 <p className="player__info">
                   <span>#{player.jersey}</span> | {player.position}
                 </p>
