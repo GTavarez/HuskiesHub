@@ -8,6 +8,18 @@ function PlayerProfileModal({ onClose, player }) {
    const player = playersData
     .flatMap((team) => team.players)
     .find((p) => p._id === playerId); */
+  const cleanImage = (str) => {
+    if (!str) return "default";
+
+    // remove .jpg anywhere
+    const withoutExt = str.replace(".jpg", "");
+
+    // if already full URL:
+    if (withoutExt.startsWith("http")) return withoutExt + ".jpg";
+
+    // otherwise add backend
+    return `https://huskieshub-backend-891073803869-us-central1.run.app/images/${withoutExt}.jpg`;
+  };
 
   if (!player) {
     return (
@@ -22,7 +34,10 @@ function PlayerProfileModal({ onClose, player }) {
 
   return (
     <div className="profile__overlay" onClick={onClose}>
-      <div className="profilePlayer__container" onClick={(e) => e.stopPropagation()}>
+      <div
+        className="profilePlayer__container"
+        onClick={(e) => e.stopPropagation()}
+      >
         <button className="profile__modal__close" onClick={onClose}>
           ✕
         </button>
@@ -30,7 +45,7 @@ function PlayerProfileModal({ onClose, player }) {
         {/* HERO SECTION */}
         <div className="profile__hero">
           <img
-            src={player.image}
+            src={cleanImage(player.image)}
             alt={player.name}
             className="profile__hero_img"
           />

@@ -20,18 +20,17 @@ import Clinics from "../Clinics/Clinics.jsx";
 import Contact from "../Contact/Contact.jsx";
 import EditProfileModal from "../EditProfileModal/EditProfileModal.jsx";
 import Footer from "../Footer/Footer.jsx";
+import { set } from "mongoose";
 
 function App() {
   const [user, setUser] = React.useState(null);
   const [activeModal, setActiveModal] = React.useState("");
-  const [isSignUpOpen, setIsSignUpOpen] = React.useState(false);
-  const [isSignInOpen, setIsSignInOpen] = React.useState(false);
+  
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
   const [selectedPlayer, setSelectedPlayer] = React.useState(null);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
-  const [shouldResetLoginForm, setShouldResetLoginForm] = useState(false);
+  
   const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
-  const [profileEditMode, setProfileEditMode] = useState(null);
   const [editMode, setEditMode] = useState(null);
   const token = localStorage.getItem("jwt");
   const openSignUpModal = () => {
@@ -68,12 +67,12 @@ function App() {
   const handleSignUp = ({ name, email, password, confirmPassword }) => {
     signup({ name, email, password, confirmPassword })
       .then(() => {
-        setIsSignUpOpen(false);
+        setActiveModal("sign in");
         return signin({ email, password }).then((data) => {
           localStorage.setItem("jwt", data.token);
           setIsLoggedIn(true);
           setUser(data.user);
-          setIsSignInOpen(false);
+          setActiveModal("");
         });
       })
       .catch((err) => {
@@ -106,20 +105,18 @@ function App() {
 
         setUser(userData);
         setIsLoggedIn(true);
-        setIsSignInOpen(false);
+        setActiveModal("");
       })
       .catch((error) => {
         console.error("Login error", error.message);
       });
   };
   const switchToSignUp = () => {
-    setIsSignUpOpen(true);
     setTimeout(() => {
       setActiveModal("Sign up");
     });
   };
   const switchToSignIn = () => {
-    setIsSignInOpen(true);
     setTimeout(() => setActiveModal("Sign in"));
   };
   const switchToLogIn = () => {
@@ -131,7 +128,6 @@ function App() {
     localStorage.removeItem("jwt");
     setIsLoggedIn(false);
     setUser(null);
-    setShouldResetLoginForm(true);
   };
 
   return (

@@ -4,6 +4,18 @@ import "./Coaches.css";
 import { coachesData } from "../../utils/constants.js";
 
 function Coaches() {
+  const cleanImage = (str) => {
+    if (!str) return "default";
+
+    // remove .jpg anywhere
+    const withoutExt = str.replace(".jpg", "");
+
+    // if already full URL:
+    if (withoutExt.startsWith("http")) return withoutExt + ".jpg";
+
+    // otherwise add backend
+    return `https://huskieshub-backend-891073803869-us-central1.run.app/images/${withoutExt}.jpg`;
+  };
   return (
     <section className="coaches">
       <div className="coaches__header">
@@ -20,7 +32,7 @@ function Coaches() {
             <div className="coach-card__image-wrapper">
               {coach.image ? (
                 <img
-                  src={coach.image}
+                  src={cleanImage(coach.image)}
                   alt={coach.name}
                   className="coach-card__image"
                 />

@@ -6,6 +6,18 @@ function CollegeCommits() {
   const committedPlayers = playersData.flatMap((team) =>
     team.players.filter((player) => player.isCommitted)
   );
+  const cleanImage = (str) => {
+    if (!str) return "default";
+
+    // remove .jpg anywhere
+    const withoutExt = str.replace(".jpg", "");
+
+    // if already full URL:
+    if (withoutExt.startsWith("http")) return withoutExt + ".jpg";
+
+    // otherwise add backend
+    return `https://huskieshub-backend-891073803869-us-central1.run.app/images/${withoutExt}.jpg`;
+  };
 
   return (
     <section className="commits">
@@ -21,7 +33,7 @@ function CollegeCommits() {
           {committedPlayers.map((player) => (
             <div key={player._id} className="commit__card">
               <img
-                src={player.image || "/default.avif"}
+                src={cleanImage(player.image) || "/default.avif"}
                 alt={player.name}
                 className="commit__image"
               />
