@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from "react";
 import "./HomeBanner.css";
 
+const BASE_URL =
+  import.meta.env.MODE === "development"
+    ? "http://localhost:8080"
+    : "https://huskieshub-backend-891073803869.us-central1.run.app";
+
 const images = [
-"../../assets/banner1.jpg",
-"../../assets/banner2.jpg",
-"../../assets/banner3.jpg",
+  `${BASE_URL}/api/uploads/692e1702f9271d773ed7d7c5`,
+  `${BASE_URL}/api/uploads/692e1a9c83b8ca375da343fb`,
 ];
+
 
 function HomeBanner() {
   const [current, setCurrent] = useState(0);

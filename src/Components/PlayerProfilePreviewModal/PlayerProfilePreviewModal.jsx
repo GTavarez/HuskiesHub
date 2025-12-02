@@ -1,6 +1,18 @@
 import "./PlayerProfilePreviewModal.css";
 
 function PlayerProfilePreviewModal({ onClose, player, openLogin }) {
+  const cleanImage = (str) => {
+    if (!str) return "default";
+
+    // remove .jpg anywhere
+    const withoutExt = str.replace(".jpg", "");
+
+    // if already full URL:
+    if (withoutExt.startsWith("http")) return withoutExt + ".jpg";
+
+    // otherwise add backend
+    return `https://huskieshub-backend-891073803869-us-central1.run.app/images/${withoutExt}.jpg`;
+  };
   return (
     <div className="modal__overlay">
       <div className="modal__container">
@@ -11,7 +23,7 @@ function PlayerProfilePreviewModal({ onClose, player, openLogin }) {
         ></button>
         <header className="modal__header">
           <img
-            src={player.image}
+            src={cleanImage(player.image)}
             alt={player.name}
             className="modal__player-img"
           />
