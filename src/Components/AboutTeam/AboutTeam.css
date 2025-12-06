@@ -15,6 +15,7 @@
 .about__title {
   flex: 1.2;
   min-width: 350px;
+  color: #0b132b;
 }
 .about__divider {
   width: 60px;
@@ -26,6 +27,7 @@
 .about__content {
   flex: 1.2;
   min-width: 350px;
+  color: #0b132b;
 }
 .about__content p {
   color: #222;
