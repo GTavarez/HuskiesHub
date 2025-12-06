@@ -1,7 +1,7 @@
 import "./Coaches.css";
 import React from "react";
 import { coachesData } from "../../utils/constants.js";
-import CoachCard from "./CoachCard";
+import CoachCard from "../CoachCard/CoachCard.jsx";
 
 function Coaches() {
   const cleanImage = (str) => {
@@ -11,7 +11,7 @@ function Coaches() {
 
     if (withoutExt.startsWith("http")) return withoutExt + ".jpg";
 
-    return `https://huskieshub-backend-891073803869-us-central1.run.app/images/${withoutExt}.jpg`;
+    return `https://api.eshuskiesyoffee.com/${withoutExt}.jpg`;
   };
 
   return (

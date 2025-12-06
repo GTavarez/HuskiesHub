@@ -6,17 +6,31 @@ import CurrentUserContext from "../../context/CurrentUserContext";
 
 function Header({ onSignUp, onClick, onSignOut, openSignInModal }) {
   const currentUser = React.useContext(CurrentUserContext);
-  const [isOpen, setIsOpen] = React.useState(false);
-  const [isProfileMenuOpen, setIsProfileMenuOpen] = React.useState(false);
+
+  const [navOpen, setNavOpen] = React.useState(false);
+  const [dropdownOpen, setDropdownOpen] = React.useState(false);
+  const [profileOpen, setProfileOpen] = React.useState(false);
+
+  const toggleHamburger = () => {
+    setNavOpen((prev) => !prev);
+    setDropdownOpen(false);
+    setProfileOpen(false);
+  };
+
   const toggleDropdown = () => {
-    setIsOpen(!isOpen);
+    setDropdownOpen((prev) => !prev);
   };
+
   const toggleProfileMenu = () => {
-    setIsProfileMenuOpen(!isProfileMenuOpen);
+    setProfileOpen((prev) => !prev);
   };
-  const closeDropdown = () => {
-    setIsOpen(false);
+
+  const closeAllMenus = () => {
+    setNavOpen(false);
+    setDropdownOpen(false);
+    setProfileOpen(false);
   };
+
   const renderImage = () => {
     if (currentUser?.image) {
       return (
@@ -27,94 +41,75 @@ function Header({ onSignUp, onClick, onSignOut, openSignInModal }) {
           onClick={toggleProfileMenu}
         />
       );
-    } else {
-      const firstLetter = currentUser?.name
-        ? currentUser.name.charAt(0).toUpperCase()
-        : "?";
-      return (
-        <div className="header__initials" onClick={toggleProfileMenu}>
-          {firstLetter}
-        </div>
-      );
     }
+    const firstLetter = currentUser?.name
+      ? currentUser.name.charAt(0).toUpperCase()
+      : "?";
+
+    return (
+      <div className="header__initials" onClick={toggleProfileMenu}>
+        {firstLetter}
+      </div>
+    );
   };
+
   return (
     <header className="header">
-      <div className="header__spacer">
-        <Link to="/">
-          <img src={logo} alt="HuskiesHub Logo" className="header__logo" />
-        </Link>
-        <div className="header__title"></div>
-      </div>
-      <div className="header__nav">
-        <button className="header__nav-button">
-          <Link to="/" className="header__nav-link">
-            Home
-          </Link>
-        </button>
-        <button className="header__nav-button">
-          <Link to="/teams" className="header__nav-link">
-            Teams
-          </Link>
-        </button>
-        <button className="header__nav-button">
-          <Link to="/schedule" className="header__nav-link">
-            Schedule
-          </Link>
-        </button>
+      <Link to="/">
+        <img src={logo} alt="HuskiesHub Logo" className="header__logo" />
+      </Link>
 
-        <button
-          className={
-            isOpen ? "header__nav-dropbuttons-open" : "header__nav-dropbuttons"
-          }
-          onClick={toggleDropdown}
+      {/* HAMBURGER BUTTON */}
+      <button className="header__hamburger" onClick={toggleHamburger}>
+        <span className={navOpen ? "bar bar1 open" : "bar bar1"}></span>
+        <span className={navOpen ? "bar bar2 open" : "bar bar2"}></span>
+        <span className={navOpen ? "bar bar3 open" : "bar bar3"}></span>
+      </button>
+
+      {/* NAVIGATION */}
+      <nav className={navOpen ? "header__nav open" : "header__nav"}>
+        <Link to="/" className="header__nav-link" onClick={closeAllMenus}>
+          Home
+        </Link>
+        <Link to="/teams" className="header__nav-link" onClick={closeAllMenus}>
+          Teams
+        </Link>
+        <Link
+          to="/schedule"
+          className="header__nav-link"
+          onClick={closeAllMenus}
         >
+          Schedule
+        </Link>
+
+        {/* DROPDOWN */}
+        <button className="header__nav-dropbuttons" onClick={toggleDropdown}>
           More ▼
         </button>
-        {isOpen && (
+        {dropdownOpen && (
           <div className="header__nav-dropdown_menu">
-            <button className="header__dropdown_button" type="button">
-              <Link
-                to="/coaches"
-                className="header__dropdown-link"
-                onClick={closeDropdown}
-              >
-                Coaches
-              </Link>
-            </button>
-            <button className="header__dropdown_button" type="button">
-              <Link
-                to="/collegecommits"
-                className="header__dropdown-link"
-                onClick={closeDropdown}
-              >
-                College Commits
-              </Link>
-            </button>
-            <button className="header__dropdown_button" type="button">
-              <Link
-                to="/clinics"
-                className="header__dropdown-link"
-                onClick={closeDropdown}
-              >
-                Clinics
-              </Link>
-            </button>
+            <Link to="/coaches" className="header__dropdown-link" onClick={closeAllMenus}>
+              Coaches
+            </Link>
+            <Link to="/collegecommits" className="header__dropdown-link" onClick={closeAllMenus}>
+              College Commits
+            </Link>
+            <Link to="/clinics" className="header__dropdown-link" onClick={closeAllMenus}>
+              Clinics
+            </Link>
           </div>
         )}
-        {currentUser ? (
-          <div className="header__profile">
-            {renderImage()}
 
-            {isProfileMenuOpen && (
+        {/* PROFILE MENU */}
+        {currentUser ? (
+          <>
+            {renderImage()}
+            {profileOpen && (
               <div className="header__profile-menu">
                 <Link
                   to="/profile"
                   className="header__dropdown-link"
-                  onClick={() => {
-                    setIsProfileMenuOpen(false);
-                    closeDropdown;
-                  }}
+                  onClick={closeAllMenus}
                 >
                   My Profile
                 </Link>
@@ -123,7 +118,7 @@ function Header({ onSignUp, onClick, onSignOut, openSignInModal }) {
                 </button>
               </div>
             )}
-          </div>
+          </>
         ) : (
           <>
             <button className="header__nav-button" onClick={openSignInModal}>
@@ -134,7 +129,7 @@ function Header({ onSignUp, onClick, onSignOut, openSignInModal }) {
             </button>
           </>
         )}
-      </div>
+      </nav>
     </header>
   );
 }
