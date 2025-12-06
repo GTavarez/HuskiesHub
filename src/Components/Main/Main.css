@@ -40,7 +40,7 @@
 
 .main__image_section_content {
   position: relative;
-  z-index: 2;
+  z-index: 1;
 
   max-width: 700px;
   color: white;
@@ -55,7 +55,6 @@
   font-size: 24px;
   margin: 0;
 }
-
 
 /* ============================= */
 /* BREAKPOINTS                   */
