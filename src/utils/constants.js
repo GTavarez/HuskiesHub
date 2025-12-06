@@ -2,11 +2,16 @@ import team18UGold from "../assets/team2.jpg";
 import team18UPremier from "../assets/team18UPremier.jpg";
 
 const baseUrl = import.meta.env.PROD
-  ? "https://huskieshub-backend-891073803869.us-central1.run.app"
+  ? "https://api.eshuskiesyoffee.com" ||
+    "https://huskieshub-backend-891073803869.us-central1.run.app"
   : "http://localhost:8080";
 
-const defaultImage = `${baseUrl}/images/default`; // your backend default route
+// GridFS default image file
+const defaultImage = "default.avif";
 
+// -------------------
+// PLAYERS DATA
+// -------------------
 const playersData = [
   {
     _id: 1,
@@ -22,7 +27,7 @@ const playersData = [
         gradYear: 2026,
         highSchool: "Immaculate Heart Academy",
         GPA: 3.8,
-        image: `${baseUrl}/images/as`, // ← backend
+        image: "as.jpg",
       },
       {
         _id: 102,
@@ -42,7 +47,7 @@ const playersData = [
         gradYear: 2026,
         highSchool: "Nutley High School",
         GPA: 3.4,
-        image: `${baseUrl}/images/sr`,
+        image: "sr.jpg",
       },
       {
         _id: 104,
@@ -52,7 +57,7 @@ const playersData = [
         gradYear: 2028,
         highSchool: "Wanaque High School",
         GPA: "",
-        image: `${baseUrl}/images/gb`,
+        image: "gb.jpg",
       },
       {
         _id: 105,
@@ -62,7 +67,7 @@ const playersData = [
         gradYear: 2027,
         highSchool: "Pascack Valley High School",
         GPA: 4.0,
-        image: `${baseUrl}/images/aw`,
+        image: "aw.jpg",
       },
       {
         _id: 106,
@@ -72,7 +77,7 @@ const playersData = [
         gradYear: 2026,
         highSchool: "Ridgewood High School",
         GPA: 3.5,
-        image: `${baseUrl}/images/ek`,
+        image: "ek.jpg",
       },
       {
         _id: 107,
@@ -82,7 +87,7 @@ const playersData = [
         gradYear: 2028,
         highSchool: "Butler High School",
         GPA: 3.8,
-        image: `${baseUrl}/images/im`,
+        image: "im.jpg",
       },
       {
         _id: 108,
@@ -92,7 +97,7 @@ const playersData = [
         gradYear: 2029,
         highSchool: "High School",
         GPA: "",
-        image: `${baseUrl}/images/js`,
+        image: "js.jpg",
       },
       {
         _id: 109,
@@ -102,7 +107,7 @@ const playersData = [
         gradYear: 2027,
         highSchool: "Pompton Lakes High School",
         GPA: 3.5,
-        image: `${baseUrl}/images/lf`,
+        image: "lf.jpg",
       },
       {
         _id: 110,
@@ -112,7 +117,7 @@ const playersData = [
         gradYear: 2026,
         highSchool: "Wayne Valley High School",
         GPA: 3.3,
-        image: `${baseUrl}/images/kb`,
+        image: "kb.jpg",
       },
       {
         _id: 111,
@@ -122,7 +127,7 @@ const playersData = [
         gradYear: 2026,
         highSchool: "Fair Lawn High School",
         GPA: 3.8,
-        image: `${baseUrl}/images/nd`,
+        image: "nd.jpg",
       },
       {
         _id: 112,
@@ -132,11 +137,14 @@ const playersData = [
         gradYear: 2027,
         highSchool: "West Milford High School",
         GPA: 3.5,
-        image: `${baseUrl}/images/am`,
+        image: "am.jpg",
       },
     ],
   },
 
+  // -------------------
+  // 18U GOLD
+  // -------------------
   {
     _id: 2,
     name: "Empire State Huskies Yoffee",
@@ -153,7 +161,7 @@ const playersData = [
         GPA: 4.1,
         isCommitted: true,
         committedCollege: "Middlebury College",
-        image: `${baseUrl}/images/ls`,
+        image: "ls.jpg",
       },
       {
         _id: 202,
@@ -163,7 +171,7 @@ const playersData = [
         gradYear: 2027,
         highSchool: "Ramapo High School",
         GPA: 3.8,
-        image: `${baseUrl}/images/th`,
+        image: "th.jpg",
       },
       {
         _id: 203,
@@ -173,7 +181,7 @@ const playersData = [
         gradYear: 2026,
         highSchool: "Fair Lawn High School",
         GPA: 3.8,
-        image: `${baseUrl}/images/nd`,
+        image: "nd.jpg",
       },
       {
         _id: 204,
@@ -195,7 +203,7 @@ const playersData = [
         GPA: 3.75,
         isCommitted: true,
         committedCollege: "Roanoke College",
-        image: `${baseUrl}/images/sb`,
+        image: "sb.jpg",
       },
       {
         _id: 206,
@@ -207,7 +215,7 @@ const playersData = [
         GPA: 3.7,
         isCommitted: true,
         committedCollege: "Washington College",
-        image: `${baseUrl}/images/ac`,
+        image: "ac.jpg",
       },
       {
         _id: 207,
@@ -219,7 +227,7 @@ const playersData = [
         GPA: 4.68,
         isCommitted: true,
         committedCollege: "MIT",
-        image: `${baseUrl}/images/cf`,
+        image: "cf.jpg",
       },
       {
         _id: 208,
@@ -229,7 +237,7 @@ const playersData = [
         gradYear: 2027,
         highSchool: "Pearl River High School",
         GPA: 3.8,
-        image: `${baseUrl}/images/em`,
+        image: "em.jpg",
       },
       {
         _id: 209,
@@ -239,7 +247,7 @@ const playersData = [
         gradYear: 2026,
         highSchool: "Pascack Valley High School",
         GPA: 4.2,
-        image: `${baseUrl}/images/cd`,
+        image: "cd.jpg",
       },
       {
         _id: 210,
@@ -251,13 +259,13 @@ const playersData = [
         GPA: 3.2,
         isCommitted: true,
         committedCollege: "Albertus Magnus College",
-        image: `${baseUrl}/images/af`,
+        image: "af.jpg",
       },
       {
         _id: 211,
         name: "Therese Adams",
         jersey: 21,
-        position: "3B,MIF, OF",
+        position: "3B, MIF, OF",
         gradYear: 2026,
         highSchool: "Ramapo High School",
         GPA: 4.0,
@@ -271,51 +279,42 @@ const playersData = [
         gradYear: 2026,
         highSchool: "Ramsey High School",
         GPA: 4.96,
-        image: `${baseUrl}/images/lk`,
+        image: "lk.jpg",
       },
     ],
   },
 ];
-// coachesData.js
-// Empire State Huskies — Coaches Directory
 
+// -------------------
+// COACHES
+// -------------------
 const coachesData = [
   {
     id: "A",
     name: "Allie Yoffee",
     role: "Head Coach",
-    bio: `Allie Yoffee is the founder and head coach of the Empire State Huskies. 
-With over a decade of coaching experience, she has led numerous teams to 
-state and national championships. Her dedication to player development and 
-passion for the game make her an invaluable asset to the Huskies organization.`,
+    bio: `Allie Yoffee is the founder...`,
     email: "alliey@gmail.com",
     phone: "201-410-0431",
-    image: "allie.jpg", // Replace with your GridFS filename if needed
+    image: defaultImage,
   },
   {
     id: "J",
     name: "Jessica Shulman",
     role: "Assistant Coach",
-    bio: `Jessica Shulman brings a wealth of experience to the Huskies as an 
-assistant coach. A former collegiate athlete, Jessica specializes in hitting 
-mechanics and offensive strategy. Her hands-on approach and ability to connect 
-with players help foster a positive and competitive team environment.`,
+    bio: `Jessica Shulman brings a wealth...`,
     email: "",
     phone: "",
-    image: "jessica.jpg",
+    image: defaultImage,
   },
   {
     id: "M",
     name: "Megan Wargo",
     role: "Pitching Coach",
-    bio: `Megan Wargo is the Huskies' dedicated pitching coach, known for her 
-technical expertise and personalized coaching style. With a background in 
-collegiate softball, Megan focuses on developing pitchers' mechanics, mental 
-toughness, and game strategy. Her commitment to each player's growth is evident 
-in the Huskies' strong pitching performances.`,
+    bio: `Megan Wargo is the Huskies' dedicated pitching coach...`,
     email: "",
     phone: "",
-    image: "megan.jpg",
+    image: defaultImage,
   },
 ];
 
