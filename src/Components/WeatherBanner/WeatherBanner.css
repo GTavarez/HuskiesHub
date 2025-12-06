@@ -1,0 +1,91 @@
+/* ============================= */
+/* WEATHER BANNER                */
+/* ============================= */
+
+.weatherBanner {
+  width: 100%;
+  max-width: 900px;
+  margin: 20px auto;
+  padding: 16px 20px;
+  background: linear-gradient(90deg, #0a192f, #112240);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  color: white;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  animation: fadeIn 0.6s ease-in-out;
+  box-sizing: border-box; /* prevents overflow */
+}
+
+.weatherBanner__temp {
+  font-size: 32px;
+  font-weight: 700;
+  color: #64b5f6;
+}
+
+.weatherBanner__condition {
+  font-size: 20px;
+  opacity: 0.85;
+}
+
+.weatherBanner__alert {
+  font-size: 18px;
+  font-weight: 500;
+  text-align: center;
+}
+
+/* Fade animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ============================= */
+/* RESPONSIVE BREAKPOINTS        */
+/* ============================= */
+
+@media (max-width: 900px) {
+  .weatherBanner {
+    max-width: 600px;
+    padding: 14px 16px;
+    gap: 12px;
+  }
+
+  .weatherBanner__temp {
+    font-size: 26px;
+  }
+
+  .weatherBanner__condition {
+    font-size: 16px;
+  }
+
+  .weatherBanner__alert {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 600px) {
+  .weatherBanner {
+    flex-direction: column;
+    width: 90%;
+    max-width: 90%;
+    padding: 12px;
+    gap: 6px;
+  }
+
+  .weatherBanner__temp {
+    font-size: 24px;
+  }
+
+  .weatherBanner__condition,
+  .weatherBanner__alert {
+    font-size: 14px;
+  }
+}
