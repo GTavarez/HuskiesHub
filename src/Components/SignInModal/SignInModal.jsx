@@ -32,7 +32,7 @@ export default function SignInModal({
       resetForm();
       onResetComplete();
     }
-  }, [shouldResetLoginForm]);
+  }, [shouldResetLoginForm, resetForm, onResetComplete]);
 
   return (
     <ModalWithForm

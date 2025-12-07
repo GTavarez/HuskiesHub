@@ -1,46 +1,52 @@
+/* ============================
+   PROFILE PAGE BASE STYLES
+=============================== */
+
 .profile {
+  width: 100%;
+  max-width: 650px; /* prevents stretching on large screens */
   padding: 40px 20px;
-  width: 650px;
-  height: 100%;
-  margin: 0 auto;
-  margin-top: 200px;
+  margin: 160px auto 40px; /* fixes the huge spacing on mobile */
+  box-sizing: border-box; /* ensures padding never overflows */
 }
 
 .profile__container {
   background: #0a192f;
   padding: 30px;
-  max-width: 650px;
   border-radius: 16px;
   color: white;
   box-shadow: 0 0 25px rgba(0, 0, 0, 0.4);
+  width: 100%; /* <— FIX: previously max-width only */
+  max-width: 650px;
   margin: 0 auto;
-  height: fit-content;
 }
 
-/* HEADER */
+/* ============================
+   HEADER
+=============================== */
+
 .profile__header {
   text-align: center;
   margin-bottom: 30px;
 }
 
-.profile__avatar {
+.profile__avatar,
+.profile__avatar-placeholder {
   width: 120px;
   height: 120px;
   border-radius: 50%;
   object-fit: cover;
   border: 4px solid #64b5f6;
+  margin: 0 auto; /* Centers avatar */
 }
 
 .profile__avatar-placeholder {
-  width: 120px;
-  height: 120px;
   background: #112240;
   color: #64b5f6;
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 48px;
-  border-radius: 50%;
   border: 3px solid #64b5f6;
 }
 
@@ -56,7 +62,10 @@
   margin-bottom: 10px;
 }
 
-/* CARDS */
+/* ============================
+   CARDS
+=============================== */
+
 .profile__card {
   background: #112240;
   padding: 20px;
@@ -70,7 +79,10 @@
   color: #64b5f6;
 }
 
-/* BUTTONS */
+/* ============================
+   BUTTONS
+=============================== */
+
 .profile__edit-btn,
 .profile__claim-btn {
   margin-top: 16px;
@@ -89,9 +101,11 @@
 .profile__claim-btn:hover {
   background: white;
 }
+
 .profile__close-btn {
   position: absolute;
-  right: 56px;
+  right: 20px;
+  top: 20px;
   background: transparent;
   border: none;
   color: #fff;
@@ -106,21 +120,52 @@
   transition: 0.25s;
 }
 
-/* Responsive */
+/* ============================
+   RESPONSIVE FIXES
+=============================== */
+
 @media (max-width: 768px) {
   .profile {
     padding: 20px 14px;
+    margin-top: 140px; /* reduce spacing */
+    max-width: 100%; /* prevents overflow */
   }
 
   .profile__container {
-    padding: 22px 18px;
+    padding: 22px 16px;
+    width: 100%;
   }
 
-  .profile__content {
-    grid-template-columns: minmax(0, 1fr);
+  .profile__name {
+    font-size: 22px;
   }
 
-  .profile__avatar-block {
-    order: -1;
+  .profile__card-title {
+    font-size: 18px;
+  }
+
+  .profile__close-btn {
+    right: 12px;
+    top: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile {
+    margin-top: 120px;
+  }
+
+  .profile__avatar,
+  .profile__avatar-placeholder {
+    width: 100px;
+    height: 100px;
+  }
+
+  .profile__name {
+    font-size: 20px;
+  }
+
+  .profile__email {
+    font-size: 14px;
   }
 }

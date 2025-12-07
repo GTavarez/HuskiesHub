@@ -1,9 +1,6 @@
-import React from "react";
 import "./GameMapModal.css";
 
-function GameMapModal({ address, onClose }) {
-  
-
+function GameMapModal({ onClose }) {
   return (
     <div className="modal__overlay">
       <div className="modal__content map-modal">
@@ -11,7 +8,6 @@ function GameMapModal({ address, onClose }) {
           ×
         </button>
         <h3>Field Location</h3>
-        
       </div>
     </div>
   );

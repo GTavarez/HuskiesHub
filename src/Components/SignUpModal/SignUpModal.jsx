@@ -1,8 +1,8 @@
 import "./SignUpModal.css";
 import ModalWithForm from "../ModalWithForm/ModalWithForm.jsx";
-import React from "react";
+
 import { useForm } from "../../hooks/useForm.js";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 
 function SignUpModal({
   isOpen,
@@ -11,12 +11,14 @@ function SignUpModal({
   onSignInModal,
   onRegister,
 }) {
-  const defaultValues = {
-    name: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-  };
+  const defaultValues = useMemo(
+    () => ({
+      name: "",
+      email: "",
+      password: "",
+    }),
+    []
+  );
 
   const { values, handleChange, setValues } = useForm(defaultValues);
 
@@ -26,7 +28,7 @@ function SignUpModal({
     if (activeModal) {
       setValues(defaultValues); // Reset form when modal opens
     }
-  }, [activeModal, setValues]);
+  }, [activeModal, setValues, defaultValues]);
   const handleSubmit = (e) => {
     e.preventDefault();
     onRegister({

@@ -20,7 +20,7 @@ import Clinics from "../Clinics/Clinics.jsx";
 import Contact from "../Contact/Contact.jsx";
 import EditProfileModal from "../EditProfileModal/EditProfileModal.jsx";
 import Footer from "../Footer/Footer.jsx";
-import { set } from "mongoose";
+
 
 function App() {
   const [user, setUser] = React.useState(null);

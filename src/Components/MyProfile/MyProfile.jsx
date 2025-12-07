@@ -1,7 +1,7 @@
 import React from "react";
 import "./MyProfile.css";
 
-function MyProfile({ currentUser, onEditProfile, onUpdateUser, onClose }) {
+function MyProfile({ currentUser, onUpdateUser, onClose }) {
   const isPlayer = Boolean(currentUser?.playerData);
 
   return (

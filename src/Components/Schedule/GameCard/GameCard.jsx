@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import "./GameCard.css";
 
 function GameCard({ game, onClose }) {
-  const [isMapOpen, setIsMapOpen] = useState(false);
+  const [, setIsMapOpen] = useState(false);
   const modalContentRef = useRef(null);
   const [modalContentHeight, setModalContentHeight] = useState(551);
 

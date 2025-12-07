@@ -1,7 +1,11 @@
+/* ================================
+   ABOUT SECTION MAIN STYLES
+================================ */
 .about__section {
   background-color: #f9fafc;
   padding: 10px 5%;
 }
+
 .about__container {
   display: flex;
   flex-wrap: wrap;
@@ -14,9 +18,10 @@
 
 .about__title {
   flex: 1.2;
-  min-width: 350px;
   color: #0b132b;
+  width: 100%;
 }
+
 .about__divider {
   width: 60px;
   height: 4px;
@@ -24,23 +29,27 @@
   border-radius: 2px;
   margin-bottom: 2rem;
 }
+
 .about__content {
   flex: 1.2;
-  min-width: 350px;
   color: #0b132b;
+  width: 100%;
 }
+
 .about__content p {
   color: #222;
   line-height: 1.7;
   font-size: 1.05rem;
   margin-bottom: 1.2rem;
 }
+
 .about__content h3 {
   font-size: 1.5rem;
   color: #1c7ed6;
   margin-top: 1.8rem;
   margin-bottom: 0.8rem;
 }
+
 .about__list {
   list-style: none;
   padding-left: 0;
@@ -48,11 +57,13 @@
   margin-bottom: 2rem;
   color: #333;
 }
+
 .about__list li {
   margin-bottom: 0.7rem;
   padding-left: 1.5rem;
   position: relative;
 }
+
 .about__list li::before {
   content: "•";
   color: #1c7ed6;
@@ -61,27 +72,36 @@
   left: 0;
   top: 0;
 }
+
 .about__closing {
   font-weight: 500;
   color: #0b132b;
   margin-top: 2rem;
+  text-align: center;
 }
+
+/* ================================
+   ABOUT IMAGE
+================================ */
 .about__image {
   display: flex;
   flex-direction: column;
   gap: 20px;
+  width: 100%;
+  order: -1;
 }
+
 .about__image img {
-  width: 455px;
+  max-width: 100%;
+  height: auto;
   border-radius: 18px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
   object-fit: cover;
-  /* position: absolute; */
-  top: 188px;
-  left: 96px;
-  height: 874px;
-  /* aspect-ratio: 0.0; */
 }
+
+/* ================================
+   MOBILE FIXES (Responsible for removing scroll)
+================================ */
 @media (max-width: 627px) {
   .about__section {
     padding: 60px 5%;
@@ -94,8 +114,10 @@
   }
 
   .about__title {
-    font-size: 2rem;
+    width: 100%;
+    max-width: 100%;
     text-align: center;
+    position: static; /* ⭐ removes the horizontal overflow caused by right: 33px */
   }
 
   .about__divider {
@@ -104,12 +126,11 @@
 
   .about__content {
     width: 100%;
-    min-width: unset;
+    text-align: center;
   }
 
   .about__content h3 {
     font-size: 1.3rem;
-    text-align: center;
   }
 
   .about__content p {
@@ -119,20 +140,5 @@
 
   .about__list {
     margin-left: 1rem;
-  }
-
-  .about__image {
-    order: -1; /* ✅ Moves image above text on mobile */
-    width: 100%;
-  }
-
-  .about__image img {
-    max-width: 100%;
-    height: auto;
-  }
-
-  .about__closing {
-    text-align: center;
-    margin-top: 1.5rem;
   }
 }
