@@ -1,5 +1,5 @@
-import { useParams, Link } from "react-router-dom";
-import { playersData } from "../../utils/constants";
+import { Link } from "react-router-dom";
+
 import "./PlayerProfileModal.css";
 
 function PlayerProfileModal({ onClose, player }) {

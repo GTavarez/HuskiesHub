@@ -1,5 +1,4 @@
 import "./EventsCards.css";
-import example1 from "../../assets/example1.jpg";
 import event1 from "../../assets/event1.jpg";
 import event2 from "../../assets/event2.jpg";
 import event3 from "../../assets/event3.jpg";

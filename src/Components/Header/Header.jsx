@@ -4,7 +4,7 @@ import React from "react";
 import logo from "../../assets/logo.png";
 import CurrentUserContext from "../../context/CurrentUserContext";
 
-function Header({ onSignUp, onClick, onSignOut, openSignInModal }) {
+function Header({ onClick, onSignOut, openSignInModal }) {
   const currentUser = React.useContext(CurrentUserContext);
 
   const [navOpen, setNavOpen] = React.useState(false);
@@ -88,13 +88,25 @@ function Header({ onSignUp, onClick, onSignOut, openSignInModal }) {
         </button>
         {dropdownOpen && (
           <div className="header__nav-dropdown_menu">
-            <Link to="/coaches" className="header__dropdown-link" onClick={closeAllMenus}>
+            <Link
+              to="/coaches"
+              className="header__dropdown-link"
+              onClick={closeAllMenus}
+            >
               Coaches
             </Link>
-            <Link to="/collegecommits" className="header__dropdown-link" onClick={closeAllMenus}>
+            <Link
+              to="/collegecommits"
+              className="header__dropdown-link"
+              onClick={closeAllMenus}
+            >
               College Commits
             </Link>
-            <Link to="/clinics" className="header__dropdown-link" onClick={closeAllMenus}>
+            <Link
+              to="/clinics"
+              className="header__dropdown-link"
+              onClick={closeAllMenus}
+            >
               Clinics
             </Link>
           </div>
