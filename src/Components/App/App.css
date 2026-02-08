@@ -1,0 +1,18 @@
+.page {
+  background: linear-gradient(180deg, #0f253f 0%, #112240 100%);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  color: #fff;
+}
+.page__content {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 40px;
+  box-sizing: border-box;
+  font-family: Cabinet Grotesk;
+  font-weight: bold;
+  font-size: 20px;
+  line-height: 24px;
+  width: 100%;
+}

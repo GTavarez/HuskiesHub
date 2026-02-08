@@ -1,0 +1,126 @@
+.homeBanner {
+  position: relative;
+  height: 500px;
+  width: 100%;
+  overflow: hidden;
+  /*  background: #0a192f; */
+  border-radius: 16px;
+  background: linear-gradient(180deg, #0a192f, #112240);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+  margin: 20px auto;
+  max-width: 1150px;
+}
+.homeBanner__wrapper {
+  background: #ffffff;
+  padding: 30px 0;
+  display: flex;
+  justify-content: center;
+}
+.homeBannerWrapper::after {
+  content: "";
+  display: block;
+  height: 1px;
+  width: 90%;
+  background: #e5e7eb;
+  margin: 25px auto 0;
+  border-radius: 50px;
+}
+.bannerSlide {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  background-repeat: no-repeat;
+  transition: opacity 1.2s ease-in-out;
+}
+
+.bannerSlide.active {
+  opacity: 1;
+}
+
+/* Dark gradient overlay */
+.homeBanner::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(10, 25, 47, 0.4),
+    rgba(10, 25, 47, 0.9)
+  );
+  pointer-events: none;
+}
+
+/* Text */
+.bannerContent {
+  position: absolute;
+  bottom: 60px;
+  left: 50px;
+  z-index: 1;
+  color: white;
+}
+
+.bannerTitle {
+  font-size: 48px;
+  font-weight: 800;
+  color: #64b5f6;
+}
+
+.bannerSubtitle {
+  margin-top: 10px;
+  font-size: 22px;
+  color: #dbeafe;
+}
+
+/* Navigation dots */
+.bannerDots {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  z-index: 1;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #ffffff55;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.dot.active {
+  background: #64b5f6;
+  transform: scale(1.3);
+}
+.homeBanner {
+  height: 400px;
+}
+
+@media (max-width: 768px) {
+  .homeBanner {
+    height: 300px;
+  }
+  .bannerTitle {
+    font-size: 32px;
+  }
+  .bannerSubtitle {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .homeBanner {
+    height: 220px;
+  }
+  .bannerTitle {
+    font-size: 24px;
+  }
+  .bannerSubtitle {
+    font-size: 14px;
+  }
+}

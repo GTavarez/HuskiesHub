@@ -1,0 +1,153 @@
+.contact {
+  min-height: 100vh;
+  padding: 100px 6vw 80px;
+  background: radial-gradient(circle at top left, #1e293b 0%, #020617 60%);
+  color: #f9fafb;
+}
+
+.contact__wrapper {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: 40px;
+}
+
+.contact__title {
+  font-size: 2.1rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.contact__subtitle {
+  font-size: 0.98rem;
+  color: #9ca3af;
+  margin-bottom: 20px;
+}
+
+.contact__details {
+  font-size: 0.9rem;
+  color: #e5e7eb;
+  margin-bottom: 24px;
+}
+
+.contact__details p {
+  margin-bottom: 4px;
+}
+
+.contact__form {
+  background: rgba(15, 23, 42, 0.95);
+  border-radius: 18px;
+  padding: 18px 20px;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  box-shadow: 0 18px 35px rgba(15, 23, 42, 0.8);
+}
+
+.contact__field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 14px;
+}
+
+.contact__field label {
+  font-size: 0.85rem;
+  color: #cbd5f5;
+}
+
+.contact__field input,
+.contact__field textarea {
+  background: #020617;
+  border-radius: 10px;
+  border: 1px solid rgba(75, 85, 99, 0.9);
+  padding: 8px 10px;
+  font-size: 0.9rem;
+  color: #f9fafb;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+.contact__field input:focus,
+.contact__field textarea:focus {
+  border-color: #38bdf8;
+  box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.4);
+  background: #020617;
+}
+
+.contact__submit {
+  margin-top: 4px;
+  width: 100%;
+  border-radius: 999px;
+  padding: 10px 0;
+  border: none;
+  background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+  color: #020617;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.contact__submit:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 28px rgba(56, 189, 248, 0.4);
+}
+
+.contact__map-wrapper {
+  display: flex;
+  align-items: stretch;
+}
+
+.contact__map-card {
+  width: 100%;
+  background: rgba(15, 23, 42, 0.95);
+  border-radius: 18px;
+  padding: 16px 16px 18px;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  box-shadow: 0 18px 35px rgba(15, 23, 42, 0.8);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.contact__map-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #e5e7eb;
+}
+
+.contact__map-frame {
+  width: 100%;
+  height: 260px;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.contact__map-directions {
+  align-self: flex-end;
+  margin-top: 4px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: none;
+  background: #111827;
+  color: #e5e7eb;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.contact__map-directions:hover {
+  background: #38bdf8;
+  color: #020617;
+}
+
+@media (max-width: 900px) {
+  .contact__wrapper {
+    grid-template-columns: 1fr;
+  }
+
+  .contact__map-frame {
+    height: 220px;
+  }
+}

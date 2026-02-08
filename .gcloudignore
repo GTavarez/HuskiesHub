@@ -1,0 +1,18 @@
+// Ignore unnecessary files when deploying to Cloud Run
+.gcloudignore
+.git
+.gitignore
+node_modules
+npm-debug.log
+Dockerfile
+Dockerfile.*
+docker-compose.yaml
+docker-compose.yml
+*.md
+dist
+.vscode
+.idea
+coverage
+*.log
+.env
+.env.*

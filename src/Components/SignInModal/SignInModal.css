@@ -1,0 +1,23 @@
+.modal__signin__auth-buttons {
+  display: flex;
+  gap: 16px;
+  margin-top: 10px;
+}
+.modal__signin-button {
+  margin: 0;
+  height: 36px;
+  border: none;
+  width: 124px;
+  background-color: #64b5f6;
+  color: #ffff;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.modal__signup-button {
+  background-color: transparent;
+  cursor: pointer;
+  color: #ffff;
+}
+.modal__input:active {
+  background-color: #0a192f;
+}

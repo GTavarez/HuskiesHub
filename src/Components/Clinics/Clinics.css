@@ -1,0 +1,83 @@
+.clinics {
+  padding: 40px 20px;
+  max-width: 900px;
+  margin: 0 auto;
+  color: #e6f1ff;
+}
+
+.clinics__title {
+  text-align: center;
+  font-size: 42px;
+  margin-bottom: 40px;
+  color: #64b5f6;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.clinic__card {
+  background: #0a192f;
+  border: 1px solid #1e2a47;
+  border-radius: 16px;
+  padding: 30px;
+  margin-bottom: 40px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  transition: transform 0.2s ease;
+}
+
+.clinic__card:hover {
+  transform: translateY(-4px);
+}
+
+.clinic__header {
+  font-size: 30px;
+  color: #ff4d4d;
+  margin-bottom: 10px;
+}
+
+.clinic__subheader {
+  font-size: 18px;
+  color: #a8b2d1;
+  margin-bottom: 20px;
+}
+
+.clinic__section {
+  font-size: 20px;
+  margin-top: 20px;
+  color: #64b5f6;
+}
+
+.clinic__info ul {
+  margin: 10px 0;
+  padding-left: 20px;
+}
+
+.clinic__list-indent {
+  padding-left: 30px;
+}
+
+.clinic__price {
+  font-size: 20px;
+  color: #ffcc66;
+  margin-top: 20px;
+}
+
+.clinic__note {
+  font-size: 14px;
+  color: #a8b2d1;
+  margin-top: 5px;
+}
+
+.clinic__cta {
+  margin-top: 20px;
+  font-size: 18px;
+  color: #fff;
+}
+
+.clinic__contact {
+  margin-top: 25px;
+  font-size: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  color: #64b5f6;
+}
