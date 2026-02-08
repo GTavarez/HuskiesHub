@@ -1,0 +1,120 @@
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #0000004d;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  visibility: hidden;
+  z-index: 1;
+}
+.modal_opened {
+  visibility: visible;
+}
+.modal__title {
+  margin: 0;
+  padding-bottom: 24px;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+}
+.modal__close {
+  position: absolute;
+  border: none;
+  background-repeat: no-repeat;
+  background-color: transparent;
+  width: 16px;
+  height: 16px;
+  right: 30px;
+  top: 22px;
+  cursor: pointer;
+  background-image: url(../../assets/close.png);
+}
+.modal__content {
+  position: relative;
+  background-color: #0a192f;
+  width: 496px;
+  box-sizing: border-box;
+  font-family: Cabinet Grotesk;
+  font-weight: Bold;
+  font-size: 16px;
+  line-height: 20px;
+  border-radius: 20px;
+  padding: 28px 28px;
+  border: 1px solid rgba(100, 181, 246, 0.4);
+  box-shadow: 0 0 25px rgba(100, 181, 246, 0.25);
+}
+.modal__content_type_signup {
+  width: 496px;
+  padding: 28px 28px 36px;
+}
+.modal__form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  gap: 24px;
+  font-family: Cabinet Grotesk;
+  font-weight: Bold;
+  font-size: 16px;
+  line-height: 20px;
+}
+.modal__input {
+  display: block;
+  width: 100%;
+  padding-top: 8px;
+  border: none;
+  color: #9ca3af;
+  background-color: #0a192f !important;
+}
+
+.modal__input:-webkit-autofill {
+  background-color: #0a192f !important;
+  transition: all 999999999s;
+}
+
+.modal__input:active {
+  background-color: #0a192f;
+}
+.modal__input:focus {
+  background-color: #0a192f;
+}
+.modal__label {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+  color: #fff;
+  background-color: #0a192f;
+}
+
+.modal__submit {
+  margin: 0;
+  height: 36px;
+  border: none;
+  width: 124px;
+  background-color: #64b5f6;
+  color: #ffff;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.modal__submit:hover {
+  background-color: #42a5f5;
+}
+.modal__auth-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+.modal__login-button {
+  margin: 0;
+  height: 36px;
+  border: none;
+  width: 124px;
+  background-color: transparent;
+  color: #ffff;
+  cursor: pointer;
+  width: fit-content;
+}
