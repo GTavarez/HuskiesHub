@@ -10,7 +10,10 @@ import CollegeCommits from "../CollegeCommits/CollegeCommits.jsx";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import { useState } from "react";
 import React from "react";
-import { getCurrentUser, signin, signup } from "../../utils/auth.js";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { signin, signup, getCurrentUser } from "../../api/auth.js";
+import { queryKeys } from "../../api/queryKeys.js";
+import { useToast } from "../../context/ToastContext.js";
 
 import CurrentUserContext from "../../context/CurrentUserContext.js";
 import MyProfile from "../MyProfile/MyProfile.jsx";
@@ -20,19 +23,34 @@ import Clinics from "../Clinics/Clinics.jsx";
 import Contact from "../Contact/Contact.jsx";
 import EditProfileModal from "../EditProfileModal/EditProfileModal.jsx";
 import Footer from "../Footer/Footer.jsx";
-
+import { useEffect } from "react";
 
 function App() {
+  const queryClient = useQueryClient();
+  const { pushToast } = useToast();
+  const [token, setToken] = useState(() => localStorage.getItem("jwt"));
   const [user, setUser] = React.useState(null);
   const [activeModal, setActiveModal] = React.useState("");
-  
+
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
   const [selectedPlayer, setSelectedPlayer] = React.useState(null);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
-  
+
   const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
   const [editMode, setEditMode] = useState(null);
-  const token = localStorage.getItem("jwt");
+  const hasShownSessionToast = React.useRef(false);
+
+  const {
+    data: currentUser,
+    isLoading: isUserLoading,
+    isError: isUserError,
+    error: currentUserError,
+  } = useQuery({
+    queryKey: queryKeys.currentUser(token),
+    queryFn: () => getCurrentUser(token),
+    enabled: Boolean(token),
+    retry: 1,
+  });
   const openSignUpModal = () => {
     setActiveModal("Sign up");
   };
@@ -64,52 +82,70 @@ function App() {
     setUser(updatedUser);
     setIsEditProfileOpen(false);
   };
+  useEffect(() => {
+    if (!currentUser) return;
+    setUser(currentUser);
+    setIsLoggedIn(true);
+  }, [currentUser]);
+
+  useEffect(() => {
+    if (!token || !isUserError) return;
+    if (currentUserError?.status === 401 && !hasShownSessionToast.current) {
+      pushToast({
+        type: "error",
+        message: "Your session expired. Please sign in again.",
+      });
+      hasShownSessionToast.current = true;
+    }
+    localStorage.removeItem("jwt");
+    setToken(null);
+    setIsLoggedIn(false);
+    setUser(null);
+    queryClient.removeQueries({ queryKey: ["currentUser"] });
+  }, [currentUserError, isUserError, pushToast, queryClient, token]);
+
+  const signInMutation = useMutation({
+    mutationFn: signin,
+    onSuccess: (data) => {
+      hasShownSessionToast.current = false;
+      localStorage.setItem("jwt", data.token);
+      setToken(data.token);
+      setActiveModal("");
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.currentUser(data.token),
+      });
+      pushToast({ type: "success", message: "Welcome back!" });
+    },
+    onError: (error) => {
+      pushToast({
+        type: "error",
+        message: error?.message || "Login failed.",
+      });
+    },
+  });
+
+  const signUpMutation = useMutation({
+    mutationFn: signup,
+    onSuccess: (_, variables) => {
+      signInMutation.mutate({
+        email: variables.email,
+        password: variables.password,
+      });
+    },
+    onError: (error) => {
+      pushToast({
+        type: "error",
+        message: error?.message || "Registration failed.",
+      });
+    },
+  });
+
   const handleSignUp = ({ name, email, password, confirmPassword }) => {
-    signup({ name, email, password, confirmPassword })
-      .then(() => {
-        setActiveModal("sign in");
-        return signin({ email, password }).then((data) => {
-          localStorage.setItem("jwt", data.token);
-          setIsLoggedIn(true);
-          setUser(data.user);
-          setActiveModal("");
-        });
-      })
-      .catch((err) => {
-        console.error("Registration error", err);
-      });
+    signUpMutation.mutate({ name, email, password, confirmPassword });
   };
+
   const handleSignIn = ({ email, password }) => {
-    signin({ email, password })
-      .then((data) => {
-        localStorage.setItem("jwt", data.token);
-        setIsLoggedIn(true);
-        return getCurrentUser(data.token);
-      })
-      .then((userData) => {
-        /* const testPlayer = {
-          _id: 101,
-          name: "Antonella Sottile",
-          jersey: 1,
-          position: "P, CF",
-          gradYear: 2026,
-          highSchool: "Immaculate Heart Academy",
-          GPA: 3.8,
-          image: "as.jpg",
-        };
-
-        const injectedUser = {
-          ...userData.user,
-          playerData: testPlayer,
-        }; */
-
-        setUser(userData);
-        setIsLoggedIn(true);
-        setActiveModal("");
-      })
-      .catch((error) => {
-        console.error("Login error", error.message);
-      });
+    signInMutation.mutate({ email, password });
   };
   const switchToSignUp = () => {
     setTimeout(() => {
@@ -125,11 +161,17 @@ function App() {
   };
 
   const handleSignOut = () => {
+    hasShownSessionToast.current = false;
     localStorage.removeItem("jwt");
+    setToken(null);
     setIsLoggedIn(false);
     setUser(null);
+    queryClient.removeQueries({ queryKey: ["currentUser"] });
   };
 
+  if (isUserLoading && token) {
+    return <div>Loading...</div>;
+  }
   return (
     <BrowserRouter>
       <CurrentUserContext.Provider value={user}>
@@ -159,6 +201,7 @@ function App() {
                   isLoggedIn={isLoggedIn}
                   openLogin={switchToLogIn}
                   isProfileModalOpen={isProfileModalOpen}
+                  currentUser={user}
                 />
               }
             />

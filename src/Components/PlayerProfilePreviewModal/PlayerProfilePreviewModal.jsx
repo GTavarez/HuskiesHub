@@ -11,7 +11,7 @@ function PlayerProfilePreviewModal({ onClose, player, openLogin }) {
     if (withoutExt.startsWith("http")) return withoutExt + ".jpg";
 
     // otherwise add backend
-    return `nnnhttps://api.eshuskiesyoffee.com/images/${withoutExt}.jpg`;
+    return `https://api.eshuskiesyoffee.com/images/${withoutExt}.jpg`;
   };
   return (
     <div className="modal__overlay">

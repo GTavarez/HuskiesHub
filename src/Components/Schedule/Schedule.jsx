@@ -1,29 +1,33 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
-import { getSchedule } from "../../utils/api";
+import { useQuery } from "@tanstack/react-query";
+import { getSchedule } from "../../api/schedule";
+import { queryKeys } from "../../api/queryKeys";
 import GameCard from "../Schedule/GameCard/GameCard.jsx";
 import "./Schedule.css";
 
 function Schedule() {
-  const [events, setEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  useEffect(() => {
-    getSchedule()
-      .then((data) => {
-        const formatted = data.map((game) => ({
-          id: game.id,
-          title: game.summary,
-          start: game.start?.dateTime || game.start?.date,
-          end: game.end?.dateTime || game.end?.date,
-          location: game.location || "Location TBA",
-        }));
-        setEvents(formatted);
-      })
-      .catch((err) => console.error("Error fetching schedule:", err));
-  }, []);
+  const {
+    data: events = [],
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: queryKeys.schedule(),
+    queryFn: getSchedule,
+    select: (data) =>
+      data.map((game) => ({
+        id: game.id,
+        title: game.summary,
+        start: game.start?.dateTime || game.start?.date,
+        end: game.end?.dateTime || game.end?.date,
+        location: game.location || "Location TBA",
+      })),
+  });
 
   const handleEventClick = (info) => {
     const clickedEvent = {
@@ -40,6 +44,18 @@ function Schedule() {
   return (
     <section className="schedule">
       <h2 className="schedule__title">Team Schedule</h2>
+
+      {isLoading && (
+        <p style={{ textAlign: "center", color: "#ccc" }}>
+          Loading schedule...
+        </p>
+      )}
+
+      {isError && (
+        <p style={{ textAlign: "center", color: "#f2b8b5" }}>
+          {error?.message || "Failed to load schedule."}
+        </p>
+      )}
 
       <FullCalendar
         plugins={[dayGridPlugin]}

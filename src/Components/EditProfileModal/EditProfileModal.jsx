@@ -1,11 +1,16 @@
 import React, { useState } from "react";
-import { updateUserProfile, uploadAvatar } from "../../utils/auth.js";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { updateUserProfile, uploadAvatar } from "../../api/auth.js";
+import { queryKeys } from "../../api/queryKeys.js";
+import { useToast } from "../../context/ToastContext.js";
 import "./EditProfileModal.css";
 
 function EditProfileModal({ currentUser, token, onClose, onUpdate }) {
   const [name, setName] = useState(currentUser?.name || "");
   const [avatarPreview, setAvatarPreview] = useState(currentUser?.avatar || "");
   const [avatarFile, setAvatarFile] = useState(null);
+  const queryClient = useQueryClient();
+  const { pushToast } = useToast();
 
   const handleAvatarChange = (e) => {
     const file = e.target.files[0];
@@ -15,26 +20,53 @@ function EditProfileModal({ currentUser, token, onClose, onUpdate }) {
     }
   };
 
+  const updateProfileMutation = useMutation({
+    mutationFn: ({ nextName, nextAvatar }) =>
+      updateUserProfile(nextName, nextAvatar, token),
+    onSuccess: (_, variables) => {
+      onUpdate({
+        _id: currentUser._id,
+        name: variables.nextName,
+        avatar: variables.nextAvatar,
+      });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.currentUser(token),
+      });
+      pushToast({ type: "success", message: "Profile updated." });
+      onClose();
+    },
+    onError: (error) => {
+      pushToast({
+        type: "error",
+        message: error?.message || "Profile update failed.",
+      });
+    },
+  });
+
+  const uploadAvatarMutation = useMutation({
+    mutationFn: (file) => uploadAvatar(file, token),
+  });
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    let newAvatar = currentUser.avatar;
     try {
-      let newAvatar = currentUser.avatar;
-
-      // Upload avatar if changed
       if (avatarFile) {
-        const avatarRes = await uploadAvatar(avatarFile, token);
+        const avatarRes = await uploadAvatarMutation.mutateAsync(avatarFile);
         newAvatar = avatarRes.avatar;
         setAvatarPreview(newAvatar);
       }
 
-      // Update profile
-      await updateUserProfile(name, newAvatar, token);
-
-      onUpdate({ _id: currentUser._id, name, avatar: newAvatar });
-      onClose();
+      updateProfileMutation.mutate({
+        nextName: name,
+        nextAvatar: newAvatar,
+      });
     } catch (err) {
-      console.error("Profile update error:", err);
+      pushToast({
+        type: "error",
+        message: err?.message || "Avatar upload failed.",
+      });
     }
   };
 

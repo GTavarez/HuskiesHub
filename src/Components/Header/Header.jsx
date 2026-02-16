@@ -83,7 +83,12 @@ function Header({ onClick, onSignOut, openSignInModal }) {
         </Link>
 
         {/* DROPDOWN */}
-        <button className="header__nav-dropbuttons" onClick={toggleDropdown}>
+        <button
+          className={
+            dropdownOpen ? "header__nav-dropbuttons header__nav-dropbuttons-open" : "header__nav-dropbuttons"
+          }
+          onClick={toggleDropdown}
+        >
           More ▼
         </button>
         {dropdownOpen && (
