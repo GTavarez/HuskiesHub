@@ -1,48 +1,40 @@
 // src/components/WeatherBanner/WeatherBanner.jsx
-import React, { useEffect, useState } from "react";
+import React from "react";
+import { useQuery } from "@tanstack/react-query";
+import { getWeatherByCoords, getWeatherForDefault } from "../../api/weather";
+import { queryKeys } from "../../api/queryKeys";
 import "./WeatherBanner.css";
 
 const apiKey = import.meta.env.VITE_OPENWEATHER_API_KEY;
 
-function WeatherBanner() {
-  const [weather, setWeather] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    if (!apiKey) {
-      console.error("❌ Missing OpenWeather API key.");
-      return;
-    }
-
+const getCurrentPosition = () =>
+  new Promise((resolve, reject) => {
     navigator.geolocation.getCurrentPosition(
-      async (position) => {
-        const { latitude, longitude } = position.coords;
-
-        try {
-          const response = await fetch(
-            `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=imperial&appid=${apiKey}`
-          );
-          const data = await response.json();
-          setWeather(data);
-        } catch (err) {
-          console.error("Weather fetch error:", err);
-        }
-
-        setLoading(false);
-      },
-      () => {
-        console.warn("⚠️ Location blocked, using default NJ");
-        fetch(
-          `https://api.openweathermap.org/data/2.5/weather?lat=40.9&lon=-74.2&units=imperial&appid=${apiKey}`
-        )
-          .then((res) => res.json())
-          .then((data) => setWeather(data))
-          .finally(() => setLoading(false));
-      }
+      (position) => resolve(position),
+      (error) => reject(error)
     );
-  }, []);
+  });
 
-  if (loading || !weather) return null;
+function WeatherBanner() {
+  const {
+    data: weather,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: queryKeys.weather("geo", "geo"),
+    enabled: Boolean(apiKey),
+    queryFn: async () => {
+      try {
+        const position = await getCurrentPosition();
+        const { latitude, longitude } = position.coords;
+        return getWeatherByCoords(latitude, longitude, apiKey);
+      } catch {
+        return getWeatherForDefault(apiKey);
+      }
+    },
+  });
+
+  if (!apiKey || isLoading || !weather || isError) return null;
 
   const condition = weather.weather[0].main;
   const temp = Math.round(weather.main.temp);

@@ -1,7 +1,7 @@
 .schedule {
   background-color: #0a192f;
   min-height: 100vh;
-  padding: 0px 5%;
+  padding: 20px 6% 60px;
   color: #ffffff;
 }
 
@@ -10,6 +10,7 @@
   font-size: 36px;
   margin-bottom: 20px;
   color: #ffffff;
+  letter-spacing: 0.5px;
 }
 
 .schedule__actions {
@@ -38,6 +39,114 @@
   color: #b0b9c1;
   font-size: 18px;
   margin-top: 20px;
+}
+
+/* ===== FullCalendar Theme Polish ===== */
+.fc {
+  --fc-border-color: rgba(148, 163, 184, 0.2);
+  --fc-page-bg-color: transparent;
+  --fc-neutral-bg-color: rgba(148, 163, 184, 0.08);
+  --fc-today-bg-color: rgba(100, 181, 246, 0.12);
+  --fc-event-bg-color: #64b5f6;
+  --fc-event-border-color: transparent;
+  --fc-event-text-color: #0a192f;
+}
+
+.fc .fc-toolbar {
+  margin-bottom: 18px;
+  gap: 10px;
+}
+
+.fc .fc-toolbar-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #eaf2ff;
+}
+
+.fc .fc-button {
+  background: #112240;
+  border: 1px solid rgba(100, 181, 246, 0.3);
+  color: #eaf2ff;
+  font-weight: 600;
+  padding: 8px 12px;
+  border-radius: 10px;
+  transition: 0.2s ease;
+}
+
+.fc .fc-button:hover {
+  background: #1b2d4a;
+}
+
+.fc .fc-button-primary:disabled {
+  background: #0b1b2f;
+  color: #6b7c93;
+}
+
+.fc .fc-col-header-cell {
+  background: rgba(17, 34, 64, 0.85);
+}
+
+.fc .fc-col-header-cell-cushion {
+  color: #cbd5f5;
+  font-weight: 600;
+  padding: 10px 0;
+}
+
+.fc .fc-daygrid-day-number {
+  color: #e2e8f0;
+  font-weight: 600;
+  padding: 6px;
+}
+
+.fc .fc-daygrid-day.fc-day-today {
+  background: rgba(100, 181, 246, 0.18);
+  box-shadow: inset 0 0 0 1px rgba(100, 181, 246, 0.45);
+}
+
+.fc .fc-daygrid-day {
+  background: rgba(12, 24, 44, 0.85);
+}
+
+.fc .fc-daygrid-day-frame {
+  margin: 8px;
+  border-radius: 14px;
+  background: radial-gradient(circle at top, rgba(22, 44, 75, 0.98), rgba(12, 24, 44, 0.96));
+  border: 1px solid rgba(100, 181, 246, 0.2);
+  box-shadow: 0 10px 24px rgba(3, 6, 14, 0.35);
+  padding: 8px;
+}
+
+.fc .fc-daygrid-day.fc-day-today .fc-daygrid-day-frame {
+  border-color: rgba(255, 215, 0, 0.7);
+  box-shadow: 0 12px 26px rgba(255, 215, 0, 0.25);
+}
+
+.fc .fc-daygrid-day-number {
+  color: #e2e8f0;
+  font-weight: 700;
+  padding: 6px 10px;
+  display: inline-block;
+  background: rgba(10, 25, 47, 0.6);
+  border-radius: 10px;
+  border: 1px solid rgba(100, 181, 246, 0.2);
+}
+
+.fc .fc-daygrid-day-events {
+  margin-top: 8px;
+}
+
+.fc .fc-daygrid-event {
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-weight: 700;
+  font-size: 12px;
+  background: linear-gradient(90deg, #64b5f6, #ffd700);
+  color: #0a192f;
+  box-shadow: 0 8px 18px rgba(100, 181, 246, 0.35);
+}
+
+.fc .fc-event-time {
+  font-weight: 700;
 }
 /* Day cell hover effect (applies to each calendar day) */
 .fc-daygrid-day:hover {
