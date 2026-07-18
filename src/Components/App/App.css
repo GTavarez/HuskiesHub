@@ -16,3 +16,10 @@
   line-height: 24px;
   width: 100%;
 }
+
+.main__content {
+  background:
+    radial-gradient(circle at 20% 0%, rgba(100, 181, 246, 0.08), transparent 40%),
+    radial-gradient(circle at 80% 15%, rgba(255, 215, 0, 0.05), transparent 32%),
+    linear-gradient(180deg, #edf2f8 0%, #e6edf6 55%, #e1e9f4 100%);
+}
