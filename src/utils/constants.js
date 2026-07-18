@@ -1,9 +1,8 @@
+import { apiBaseUrl } from "./config.js";
 import team18UGold from "../assets/team2.jpg";
 import team18UPremier from "../assets/team18UPremier.jpg";
 
-const baseUrl = import.meta.env.PROD
-  ? "https://huskieshub-backend-891073803869.us-central1.run.app"
-  : "http://localhost:8080";
+const baseUrl = apiBaseUrl;
 
 // GridFS default image file
 const defaultImage = "default.avif";
