@@ -7,9 +7,9 @@ RUN npm ci
 
 COPY . .
 
-ARG VITE_API_URL
-ARG VITE_SOCKET_URL
-ARG VITE_MEDIA_BASE_URL
+ARG VITE_API_URL=https://huskieshub-backend-891073803869.us-central1.run.app
+ARG VITE_SOCKET_URL=https://huskieshub-backend-891073803869.us-central1.run.app
+ARG VITE_MEDIA_BASE_URL=https://huskieshub-backend-891073803869.us-central1.run.app
 ARG VITE_OPENWEATHER_API_KEY
 ARG VITE_GOOGLE_MAPS_API_KEY
 
