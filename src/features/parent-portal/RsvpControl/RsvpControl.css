@@ -1,0 +1,40 @@
+.rsvp-control {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+.rsvp-control__button {
+  border: 1px solid rgba(100, 181, 246, 0.3);
+  background: rgba(9, 20, 39, 0.9);
+  color: #d5e4fb;
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.rsvp-control__button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.rsvp-control__button--active.rsvp-control__button--yes {
+  background: #2e7d32;
+  color: #f8fbff;
+  border-color: #2e7d32;
+}
+
+.rsvp-control__button--active.rsvp-control__button--maybe {
+  background: #a67c00;
+  color: #f8fbff;
+  border-color: #a67c00;
+}
+
+.rsvp-control__button--active.rsvp-control__button--no {
+  background: #8b2c2c;
+  color: #f8fbff;
+  border-color: #8b2c2c;
+}

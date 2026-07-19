@@ -1,0 +1,43 @@
+.bi-dashboard__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.bi-dashboard__tile {
+  margin-bottom: 0;
+}
+
+.bi-dashboard__tile-label {
+  margin: 0;
+  color: #b9c8de;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.bi-dashboard__tile-value {
+  margin: 8px 0 0;
+  color: #f8fbff;
+  font-size: 1.7rem;
+  font-weight: 700;
+}
+
+.bi-dashboard__tile-caveat {
+  margin: 8px 0 0;
+  color: #8ea2c0;
+  font-size: 0.75rem;
+  font-style: italic;
+}
+
+@media (max-width: 900px) {
+  .bi-dashboard__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 560px) {
+  .bi-dashboard__grid {
+    grid-template-columns: 1fr;
+  }
+}
