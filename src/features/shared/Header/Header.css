@@ -418,6 +418,13 @@
     width: 100%;
     max-height: calc(100vh - 84px);
     overflow-y: auto;
+    /* Explicit z-index, not inherited — Safari has a separate, related bug
+       where a position: fixed element nested inside a position: sticky
+       ancestor doesn't reliably paint within that ancestor's stacking
+       context, letting sibling content (the hero image) render on top of
+       it instead of underneath. An explicit value here bypasses the
+       ancestor-inheritance path that bug breaks. */
+    z-index: 10000;
     background-color: #0a192f;
     flex-direction: column;
     align-items: flex-start;
