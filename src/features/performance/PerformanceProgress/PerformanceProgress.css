@@ -1,0 +1,38 @@
+.metric-chart__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.metric-chart {
+  background: rgba(9, 20, 39, 0.9);
+  border: 1px solid rgba(100, 181, 246, 0.2);
+  border-radius: 10px;
+  padding: 14px 16px;
+  color: #f8fbff;
+}
+
+.metric-chart__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 6px;
+  text-transform: capitalize;
+}
+
+.metric-chart__table {
+  margin-top: 8px;
+  color: #b9c8de;
+  font-size: 0.85rem;
+}
+
+.metric-chart__table summary {
+  cursor: pointer;
+  color: #8bd8ff;
+}
+
+.metric-chart__table ul {
+  margin: 8px 0 0;
+  padding-left: 18px;
+}

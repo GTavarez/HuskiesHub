@@ -49,10 +49,12 @@ Softball-inspired typography
 
 🔐 Environment Variables (Frontend)
 
-Create .env at project root:
+Create `.env` at project root:
 
-VITE_API_BASE=https://your-cloudrun-backend-url
-VITE_GOOGLE_MAPS_KEY=your_google_maps_api_key
+VITE_API_URL=https://your-cloudrun-backend-url
+VITE_SOCKET_URL=https://your-cloudrun-backend-url
+VITE_MEDIA_BASE_URL=https://your-cloudrun-backend-url
+VITE_GOOGLE_MAPS_API_KEY=your_google_maps_api_key
 
 ⚠ The frontend never stores private secrets (no service account keys).
 
@@ -94,7 +96,7 @@ src/
 
 The frontend connects to your backend here:
 
-VITE_API_BASE=https://huskieshub-backend-xxx.run.app
+VITE_API_URL=https://huskieshub-backend-xxx.run.app
 
 Example Calls
 
@@ -108,7 +110,7 @@ await api.getSchedule();
 
 Fetch player image
 
-`${VITE_API_BASE}/images/ac.jpg`
+`${VITE_API_URL}/images/ac.jpg`
 
 🎥 Media & Images
 
@@ -141,7 +143,7 @@ Trigger schedule refresh
 Uses:
 
 POST /admin?slug=<slug>
-x-admin-secret: (sent by backend)
+Authorization: Bearer <jwt> (admin-role user; sent automatically once signed in)
 
 📅 Google Calendar Integration (Frontend)
 
@@ -181,6 +183,17 @@ npm run build
 
 Vite outputs to /dist.
 
+Container Build
+
+The frontend includes a production `Dockerfile` and `nginx.conf` for SPA hosting on Cloud Run.
+Set these build variables before deploy:
+
+- `VITE_API_URL`
+- `VITE_SOCKET_URL`
+- `VITE_MEDIA_BASE_URL`
+- `VITE_OPENWEATHER_API_KEY` (optional)
+- `VITE_GOOGLE_MAPS_API_KEY` (optional)
+
 Deploy to Cloud Run (Static Hosting)
 
 Your Dockerfile typically looks like:
@@ -195,7 +208,8 @@ gcloud run deploy huskieshub-frontend \
  --source . \
  --region=us-central1 \
  --platform=managed \
- --allow-unauthenticated
+ --allow-unauthenticated \
+ --set-build-env-vars "VITE_API_URL=$VITE_API_URL,VITE_SOCKET_URL=$VITE_SOCKET_URL,VITE_MEDIA_BASE_URL=$VITE_MEDIA_BASE_URL"
 
 🏷️ GitHub Release Notes Template
 v1.0.0 — Production Frontend Release
