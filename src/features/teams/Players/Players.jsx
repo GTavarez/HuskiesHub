@@ -57,14 +57,21 @@ function Players({
   const handleBack = () => {
     navigate("/teams");
   };
-  const currentUserTeamId = currentUser?.teamId || currentUser?.team?._id;
-  const isTeamMember =
+  // Mirrors the backend's canAccessTeam (src/common/utils/ownership.js) —
+  // admin can view any team's chat; coach/player only their own team;
+  // parent only a team one of their children is actually on. This is a UI
+  // gate only, the server independently re-validates on connect.
+  const canAccessThisTeamChat = Boolean(
     isLoggedIn &&
-    currentUserTeamId &&
-    team?._id &&
-    String(currentUserTeamId) === String(team._id);
-  console.log("currentUser.teamId:", currentUser?.teamId);
-  console.log("team._id:", team?._id);
+      team?._id &&
+      (currentUser?.role === "admin" ||
+        (["coach", "player"].includes(currentUser?.role) &&
+          String(currentUser?.teamId) === String(team._id)) ||
+        (currentUser?.role === "parent" &&
+          (currentUser?.childrenData || []).some(
+            (child) => String(child.teamId) === String(team._id)
+          )))
+  );
 
   if (isTeamLoading || isPlayersLoading) {
     return (
@@ -101,11 +108,11 @@ function Players({
             }`}
             onClick={() => {
               if (!isLoggedIn) return openLogin?.();
-              if (!isTeamMember) return;
+              if (!canAccessThisTeamChat) return;
               setActiveTab("chat");
             }}
             type="button"
-            disabled={!isLoggedIn || !isTeamMember}
+            disabled={!isLoggedIn || !canAccessThisTeamChat}
           >
             Team Chat
           </button>
@@ -167,8 +174,8 @@ function Players({
 
           {/* ✅ CHAT TAB */}
           {activeTab === "chat" &&
-            (isLoggedIn && isTeamMember ? (
-              <TeamChat teamId={currentUser?.teamId || currentUser?.team?._id} />
+            (canAccessThisTeamChat ? (
+              <TeamChat teamId={team._id} />
             ) : (
               <p style={{ color: "#9fbad1", textAlign: "center" }}>
                 You must be logged in and on this team to access the chat.

@@ -1,8 +1,21 @@
 .header {
+  /* Scoped tokens — same palette already used across the app (portal.css,
+     App.css), just centralized here so this file isn't full of repeated
+     literals. Not an app-wide design-token system, deliberately scoped. */
+  --header-accent: #64b5f6;
+  --header-accent-soft: rgba(100, 181, 246, 0.15);
+  --header-accent-border: rgba(100, 181, 246, 0.4);
+  --header-gold: #ffd700;
+  --header-bg-from: #0b1b2f;
+  --header-bg-mid: #0e2140;
+  --header-surface: #0f1f36;
+  --header-text: #ffffff;
+  --header-text-muted: #cbd5f5;
+
   display: flex;
   align-items: center;
   height: 104px;
-  background: linear-gradient(90deg, #0b1b2f 0%, #0e2140 55%, #0b1b2f 100%);
+  background: linear-gradient(90deg, var(--header-bg-from) 0%, var(--header-bg-mid) 55%, var(--header-bg-from) 100%);
   justify-content: space-between;
   box-shadow: 0 12px 30px rgba(3, 6, 14, 0.5);
   position: sticky;
@@ -12,7 +25,7 @@
   overflow-x: clip;
   box-sizing: border-box;
   padding: 0 32px;
-  border-bottom: 1px solid rgba(100, 181, 246, 0.12);
+  border-bottom: 1px solid var(--header-accent-soft);
 }
 
 .header__logo {
@@ -21,17 +34,7 @@
   border-radius: 50%;
   box-shadow: 0 6px 18px rgba(100, 181, 246, 0.25);
 }
-/* .header__title {
-  color: white;
-  font-size: 48px;
-  margin-left: 0px;
-  align-items: center;
-  display: flex;
-} */
-.header__spacer {
-  display: flex;
-  flex-direction: row;
-}
+
 .header__nav {
   margin-left: auto;
   margin-right: 10px;
@@ -47,15 +50,16 @@
 .header__nav-button {
   background-color: transparent;
   border: none;
-  color: #ffffff;
+  color: var(--header-text);
   font-size: 19px;
   cursor: pointer;
   font-weight: 600;
 }
+
 .header__nav-dropbuttons {
-  background: rgba(100, 181, 246, 0.1);
+  background: var(--header-accent-soft);
   color: #eaf2ff;
-  border: 1px solid rgba(100, 181, 246, 0.4);
+  border: 1px solid var(--header-accent-border);
   cursor: pointer;
   border-radius: 999px;
   font-size: 17px;
@@ -63,14 +67,20 @@
   padding: 10px 18px;
   transition: 0.2s ease;
 }
+
+.header__nav-dropbuttons:hover {
+  border-color: var(--header-accent);
+}
+
 .header__nav-dropbuttons-open {
   color: #0a192f;
-  background-color: #64b5f6;
-  border: 1px solid #64b5f6;
+  background-color: var(--header-accent);
+  border: 1px solid var(--header-accent);
   font-size: 16px;
 }
+
 .header__nav-link {
-  color: #ffffff;
+  color: var(--header-text);
   text-decoration: none;
   font-size: 19px;
   display: flex;
@@ -88,33 +98,49 @@
   bottom: -6px;
   width: 0;
   height: 2px;
-  background: linear-gradient(90deg, #64b5f6, #ffd700);
+  background: linear-gradient(90deg, var(--header-accent), var(--header-gold));
   transition: width 0.25s ease;
 }
 
 .header__nav-link:hover::after {
   width: 100%;
 }
-/* .header__nav-dropdown_menu {
-  position: absolute;
-  background-color: #112240;
-  border-radius: 8px;
-  top: 40px;
-  left: auto;
-  right: 0;
-  box-shadow: 0px 6px 14px rgba(0, 0, 0, 0.15);
-  min-width: 170px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 4px 0;
-  animation: fadeIn 0.2s ease-in-out;
-} */
+
+/* The logged-in user's primary portal (Parent/Coach/Admin/College Coach) —
+   promoted to a top-level pill so it's one click away instead of buried in
+   the profile dropdown. */
+.header__nav-portal-link {
+  background: linear-gradient(90deg, var(--header-accent), var(--header-gold));
+  color: #0a192f;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 16px;
+  border-radius: 999px;
+  padding: 10px 20px;
+  transition: filter 0.2s ease, transform 0.2s ease;
+}
+
+.header__nav-portal-link:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+}
+
+@keyframes header-dropdown-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .header__nav-dropdown_menu {
   position: absolute;
   top: 56px;
   right: 0;
-  background: #0f1f36;
+  background: var(--header-surface);
   border-radius: 14px;
   min-width: 210px;
   max-width: 90vw; /* prevents overflow */
@@ -125,35 +151,30 @@
   gap: 4px;
   padding: 10px;
   box-shadow: 0 18px 30px rgba(3, 6, 14, 0.5);
-  border: 1px solid rgba(100, 181, 246, 0.15);
+  border: 1px solid var(--header-accent-soft);
+  animation: header-dropdown-in 0.15s ease-out;
 }
 
-.header__dropdown_button {
-  border: none;
-  background: none;
-  padding: 10px 14px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background-color 0.15s ease-in-out;
-}
-.header__dropdown_button:hover {
-  background-color: rgba(100, 181, 246, 0.1);
-  color: #64b5f6;
-}
 .header__dropdown-link {
-  color: #ffffff;
+  color: var(--header-text);
   text-decoration: none;
   font-size: 17px;
   padding: 10px 12px;
   border-radius: 8px;
   transition: 0.2s ease;
+  border: none;
+  background: none;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
 }
 
 .header__dropdown-link:hover {
-  background: rgba(100, 181, 246, 0.15);
+  background: var(--header-accent-soft);
 }
+
 .header__signup_button {
-  background: linear-gradient(90deg, #64b5f6, #ffd700);
+  background: linear-gradient(90deg, var(--header-accent), var(--header-gold));
   color: #0a192f;
   border: none;
   border-radius: 999px;
@@ -163,63 +184,80 @@
   transition: background-color 0.15s ease-in-out;
   font-weight: 700;
 }
+
 .header__image {
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
-  cursor: pointer;
-  border: 2px solid #64b5f6;
+  border: 2px solid var(--header-accent);
   box-shadow: 0 6px 16px rgba(100, 181, 246, 0.25);
 }
-.header__avatar-placeholder {
-  width: 40px;
-  height: 40px;
-  background-color: #64b5f6;
-  color: white;
+
+.header__initials {
+  font-size: 15px;
   border-radius: 50%;
+  font-weight: bold;
+  color: white;
+  background-color: var(--header-accent);
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+/* Single cohesive control (avatar + name + chevron) instead of a bare
+   avatar circle — makes the logged-in state read as one clickable "user
+   menu" rather than an unlabeled icon. */
+.header__user-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid transparent;
+  border-radius: 999px;
+  padding: 4px 12px 4px 4px;
   cursor: pointer;
-  font-weight: bold;
+  transition: 0.2s ease;
+}
+
+.header__user-chip:hover {
+  background: var(--header-accent-soft);
+  border-color: var(--header-accent-border);
+}
+
+.header__user-chip-name {
+  color: var(--header-text);
+  font-weight: 600;
+  font-size: 15px;
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.header__user-chip-chevron {
+  color: var(--header-text-muted);
+  font-size: 12px;
 }
 
 .header__profile-menu {
   position: absolute;
   top: 56px;
   right: 0;
-  background: #0f1f36;
-  border: none;
+  background: var(--header-surface);
   border-radius: 12px;
   padding: 10px;
   display: flex;
   flex-direction: column;
   gap: 8px;
   box-shadow: 0 18px 30px rgba(3, 6, 14, 0.5);
-  border: 1px solid rgba(100, 181, 246, 0.15);
+  border: 1px solid var(--header-accent-soft);
+  animation: header-dropdown-in 0.15s ease-out;
 }
 
 .header__profile-menu .header__dropdown-link {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 8px;
-  text-align: left;
-  background-color: transparent;
-  color: #cbd5f5;
-}
-.header__initials {
-  font-size: 16px;
-  border-radius: 50%;
-  font-weight: bold;
-  color: white;
-  background-color: #64b5f6;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
+  color: var(--header-text-muted);
 }
 
 /* ----------------------------- */
@@ -266,6 +304,10 @@
   .header__nav-button,
   .header__nav-link {
     font-size: 15px;
+  }
+
+  .header__user-chip-name {
+    display: none;
   }
 }
 
@@ -314,6 +356,7 @@
     font-size: 12px;
   }
 }
+
 /* HAMBURGER BUTTON */
 .header__hamburger {
   display: none;
@@ -343,6 +386,7 @@
 .bar3.open {
   transform: rotate(-45deg) translate(5px, -5px);
 }
+
 /* MOBILE NAV */
 @media (max-width: 768px) {
   .header__hamburger {
@@ -372,5 +416,11 @@
     top: 0;
     right: 0;
     max-width: 100%;
+  }
+
+  .header__nav-portal-link {
+    width: 100%;
+    text-align: center;
+    box-sizing: border-box;
   }
 }

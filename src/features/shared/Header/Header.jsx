@@ -6,12 +6,22 @@ import CurrentUserContext from "../../../context/CurrentUserContext";
 import { resolveMediaUrl } from "../../../utils/media.js";
 import { routeConfig } from "../../../routes/routeConfig.js";
 
+const MORE_LINKS = routeConfig.filter((route) => route.group === "more");
+
 function Header({ onClick, onSignOut, openSignInModal }) {
   const currentUser = React.useContext(CurrentUserContext);
 
   const [navOpen, setNavOpen] = React.useState(false);
   const [dropdownOpen, setDropdownOpen] = React.useState(false);
   const [profileOpen, setProfileOpen] = React.useState(false);
+  const navRef = React.useRef(null);
+
+  const portalLink = routeConfig.find(
+    (route) =>
+      route.group === "profile" &&
+      Array.isArray(route.roles) &&
+      route.roles.includes(currentUser?.role)
+  );
 
   const toggleHamburger = () => {
     setNavOpen((prev) => !prev);
@@ -21,10 +31,12 @@ function Header({ onClick, onSignOut, openSignInModal }) {
 
   const toggleDropdown = () => {
     setDropdownOpen((prev) => !prev);
+    setProfileOpen(false);
   };
 
   const toggleProfileMenu = () => {
     setProfileOpen((prev) => !prev);
+    setDropdownOpen(false);
   };
 
   const closeAllMenus = () => {
@@ -33,6 +45,20 @@ function Header({ onClick, onSignOut, openSignInModal }) {
     setProfileOpen(false);
   };
 
+  // Close any open dropdown when clicking outside the nav — previously the
+  // only way to close one was clicking a link inside it.
+  React.useEffect(() => {
+    if (!dropdownOpen && !profileOpen) return undefined;
+    const handleClickOutside = (event) => {
+      if (navRef.current && !navRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+        setProfileOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [dropdownOpen, profileOpen]);
+
   const renderImage = () => {
     if (currentUser?.avatar) {
       return (
@@ -40,7 +66,6 @@ function Header({ onClick, onSignOut, openSignInModal }) {
           src={resolveMediaUrl(currentUser.avatar)}
           alt={currentUser.name}
           className="header__image"
-          onClick={toggleProfileMenu}
         />
       );
     }
@@ -48,11 +73,7 @@ function Header({ onClick, onSignOut, openSignInModal }) {
       ? currentUser.name.charAt(0).toUpperCase()
       : "?";
 
-    return (
-      <div className="header__initials" onClick={toggleProfileMenu}>
-        {firstLetter}
-      </div>
-    );
+    return <div className="header__initials">{firstLetter}</div>;
   };
 
   return (
@@ -69,7 +90,7 @@ function Header({ onClick, onSignOut, openSignInModal }) {
       </button>
 
       {/* NAVIGATION */}
-      <nav className={navOpen ? "header__nav open" : "header__nav"}>
+      <nav className={navOpen ? "header__nav open" : "header__nav"} ref={navRef}>
         <Link to="/" className="header__nav-link" onClick={closeAllMenus}>
           Home
         </Link>
@@ -84,6 +105,16 @@ function Header({ onClick, onSignOut, openSignInModal }) {
           Schedule
         </Link>
 
+        {currentUser && portalLink && (
+          <Link
+            to={portalLink.path}
+            className="header__nav-portal-link"
+            onClick={closeAllMenus}
+          >
+            {portalLink.label}
+          </Link>
+        )}
+
         {/* DROPDOWN */}
         <button
           className={
@@ -91,38 +122,31 @@ function Header({ onClick, onSignOut, openSignInModal }) {
           }
           onClick={toggleDropdown}
         >
-          More ▼
+          More ▾
         </button>
         {dropdownOpen && (
           <div className="header__nav-dropdown_menu">
-            <Link
-              to="/coaches"
-              className="header__dropdown-link"
-              onClick={closeAllMenus}
-            >
-              Coaches
-            </Link>
-            <Link
-              to="/collegecommits"
-              className="header__dropdown-link"
-              onClick={closeAllMenus}
-            >
-              College Commits
-            </Link>
-            <Link
-              to="/clinics"
-              className="header__dropdown-link"
-              onClick={closeAllMenus}
-            >
-              Clinics
-            </Link>
+            {MORE_LINKS.map((route) => (
+              <Link
+                key={route.path}
+                to={route.path}
+                className="header__dropdown-link"
+                onClick={closeAllMenus}
+              >
+                {route.label}
+              </Link>
+            ))}
           </div>
         )}
 
         {/* PROFILE MENU */}
         {currentUser ? (
           <>
-            {renderImage()}
+            <button className="header__user-chip" onClick={toggleProfileMenu} type="button">
+              {renderImage()}
+              <span className="header__user-chip-name">{currentUser.name}</span>
+              <span className="header__user-chip-chevron">▾</span>
+            </button>
             {profileOpen && (
               <div className="header__profile-menu">
                 <Link
@@ -132,23 +156,6 @@ function Header({ onClick, onSignOut, openSignInModal }) {
                 >
                   My Profile
                 </Link>
-                {routeConfig
-                  .filter(
-                    (route) =>
-                      route.group === "profile" &&
-                      Array.isArray(route.roles) &&
-                      route.roles.includes(currentUser?.role)
-                  )
-                  .map((route) => (
-                    <Link
-                      key={route.path}
-                      to={route.path}
-                      className="header__dropdown-link"
-                      onClick={closeAllMenus}
-                    >
-                      {route.label}
-                    </Link>
-                  ))}
                 <button onClick={onSignOut} className="header__dropdown-link">
                   Log Out
                 </button>
