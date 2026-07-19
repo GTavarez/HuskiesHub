@@ -214,6 +214,7 @@ function App() {
                 openLogin={switchToLogIn}
                 isProfileModalOpen={isProfileModalOpen}
                 currentUser={user}
+                token={token}
               />
             }
           />
