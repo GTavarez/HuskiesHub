@@ -411,16 +411,30 @@
     display: flex;
   }
 
-  .header__nav-dropdown_menu {
+  .header__nav-dropdown_menu,
+  .header__profile-menu {
     position: relative;
     top: 0;
     right: 0;
     max-width: 100%;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .header__nav-portal-link {
     width: 100%;
     text-align: center;
     box-sizing: border-box;
+  }
+
+  .header__user-chip {
+    width: 100%;
+    box-sizing: border-box;
+    justify-content: flex-start;
+  }
+
+  .header__user-chip-name {
+    display: inline-block;
+    max-width: none;
   }
 }
