@@ -4,8 +4,6 @@
 .gitignore
 node_modules
 npm-debug.log
-Dockerfile
-Dockerfile.*
 docker-compose.yaml
 docker-compose.yml
 *.md
