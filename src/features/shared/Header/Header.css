@@ -335,6 +335,11 @@
     gap: 6px;
   }
 
+  .header__nav.open {
+    top: 76px;
+    max-height: calc(100vh - 76px);
+  }
+
   .header__nav-button,
   .header__nav-link {
     font-size: 14px;
@@ -401,10 +406,18 @@
   }
 
   .header__nav {
-    position: absolute;
-    top: 100px;
+    /* position: fixed (not absolute) deliberately — Safari has a long-standing
+       WebKit bug where content overflowing a position: sticky ancestor's own
+       box (this panel extends well below .header's height) fails to paint
+       reliably, even with overflow: visible set on the ancestor. Anchoring to
+       the viewport instead of the sticky header sidesteps that entirely. */
+    position: fixed;
+    top: 84px;
+    left: 0;
     right: 0;
     width: 100%;
+    max-height: calc(100vh - 84px);
+    overflow-y: auto;
     background-color: #0a192f;
     flex-direction: column;
     align-items: flex-start;
