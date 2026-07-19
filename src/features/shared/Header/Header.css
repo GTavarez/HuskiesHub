@@ -23,6 +23,12 @@
   z-index: 9999;
   width: 100%;
   overflow-x: clip;
+  /* Explicitly kept visible: per the CSS Overflow spec, a lone overflow-x
+     forces the browser to implicitly constrain overflow-y too, which clips
+     the mobile dropdown nav (a position:absolute child extending well below
+     this element's own height) in strict engines like Safari — even though
+     Chromium leaves it alone. Declaring both axes explicitly avoids that. */
+  overflow-y: visible;
   box-sizing: border-box;
   padding: 0 32px;
   border-bottom: 1px solid var(--header-accent-soft);
