@@ -22,6 +22,7 @@ const queryKeys = {
   recruitingProfile: (playerId) => ["recruitingProfile", playerId],
   recruitingSearch: (criteria) => ["recruitingSearch", criteria],
   pendingCollegeCoachRequests: () => ["pendingCollegeCoachRequests"],
+  pendingRoleRequests: () => ["pendingRoleRequests"],
   performanceEntries: (playerId) => ["performanceEntries", playerId],
   performanceGoals: (playerId) => ["performanceGoals", playerId],
   analyticsDashboard: () => ["analyticsDashboard"],

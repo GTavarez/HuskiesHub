@@ -10,6 +10,7 @@ import ProductsPanel from "../ProductsPanel/ProductsPanel.jsx";
 import RegistrationsPanel from "../RegistrationsPanel/RegistrationsPanel.jsx";
 import WaiverPanel from "../WaiverPanel/WaiverPanel.jsx";
 import CollegeCoachApprovalsPanel from "../CollegeCoachApprovalsPanel/CollegeCoachApprovalsPanel.jsx";
+import RoleRequestsPanel from "../RoleRequestsPanel/RoleRequestsPanel.jsx";
 import TournamentsPanel from "../TournamentsPanel/TournamentsPanel.jsx";
 import CoachPaymentsPanel from "../CoachPaymentsPanel/CoachPaymentsPanel.jsx";
 import LessonSlotsPanel from "../LessonSlotsPanel/LessonSlotsPanel.jsx";
@@ -26,6 +27,7 @@ const TABS = [
   { key: "products", label: "Products" },
   { key: "registrations", label: "Registrations & Payments" },
   { key: "waiver", label: "Waiver" },
+  { key: "role-requests", label: "Role Requests" },
   { key: "college-coach", label: "College Coach Approvals" },
   { key: "tournaments", label: "Tournaments" },
   { key: "coach-payments", label: "Coach Payments" },
@@ -167,6 +169,7 @@ function AdminDashboard({ token }) {
         {activeTab === "products" && <ProductsPanel token={token} />}
         {activeTab === "registrations" && <RegistrationsPanel token={token} />}
         {activeTab === "waiver" && <WaiverPanel token={token} />}
+        {activeTab === "role-requests" && <RoleRequestsPanel token={token} />}
         {activeTab === "college-coach" && (
           <CollegeCoachApprovalsPanel token={token} />
         )}

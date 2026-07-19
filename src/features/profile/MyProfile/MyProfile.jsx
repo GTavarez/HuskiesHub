@@ -5,6 +5,7 @@ import "../../shared/portal.css";
 import { resolveMediaUrl } from "../../../utils/media.js";
 import RecruitingProfileEditor from "../../recruiting/RecruitingProfileEditor/RecruitingProfileEditor.jsx";
 import CollegeCoachAccessRequest from "../../recruiting/CollegeCoachAccessRequest/CollegeCoachAccessRequest.jsx";
+import RoleAccessRequest from "../RoleAccessRequest/RoleAccessRequest.jsx";
 import PerformanceProgress from "../../performance/PerformanceProgress/PerformanceProgress.jsx";
 
 function MyProfile({ currentUser, token, onUpdateUser, onClose }) {
@@ -50,6 +51,13 @@ function MyProfile({ currentUser, token, onUpdateUser, onClose }) {
             Edit Profile
           </button>
         </div>
+
+        {currentUser?.role === "fan" && (
+          <div className="portal__section">
+            <h3 className="profile__card-title">Get Access</h3>
+            <RoleAccessRequest currentUser={currentUser} token={token} />
+          </div>
+        )}
 
         {/* GUEST INFO */}
         {!isPlayer && (
