@@ -17,6 +17,7 @@ function Players({
   isProfileModalOpen,
   openLogin,
   currentUser,
+  token,
 }) {
   const [activeTab, setActiveTab] = useState("players");
   const { teamsId } = useParams();
@@ -191,7 +192,12 @@ function Players({
       {selectedPlayer &&
         isProfileModalOpen &&
         (isLoggedIn ? (
-          <PlayerProfileModal player={selectedPlayer} onClose={onClose} />
+          <PlayerProfileModal
+            player={selectedPlayer}
+            onClose={onClose}
+            currentUser={currentUser}
+            token={token}
+          />
         ) : (
           <PlayerProfilePreviewModal
             player={selectedPlayer}
