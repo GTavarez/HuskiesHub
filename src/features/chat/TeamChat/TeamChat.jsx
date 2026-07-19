@@ -28,7 +28,7 @@ function TeamChat({ teamId }) {
   useEffect(() => {
     if (!token || !teamId) return;
     const socket = io(socketUrl, {
-      auth: { token },
+      auth: { token, teamId },
     });
     socketRef.current = socket;
 
