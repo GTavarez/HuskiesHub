@@ -52,11 +52,11 @@ function Main() {
       <section className="main__stats">
         <div className="main__stats_inner">
           <div className="main__stat">
-            <p className="main__stat-number">2</p>
+            <p className="main__stat-number">5</p>
             <p className="main__stat-label">Competitive Teams</p>
           </div>
           <div className="main__stat">
-            <p className="main__stat-number">10+</p>
+            <p className="main__stat-number">20+</p>
             <p className="main__stat-label">College Commits</p>
           </div>
           <div className="main__stat">
