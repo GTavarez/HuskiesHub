@@ -75,7 +75,7 @@ function Main() {
       <AboutTeam />
       <section className="main__contact-cta">
         <div className="main__contact-cta_inner">
-          <h2 className="main__contact-cta_title">Ready to become a Husky?</h2>
+          <h2 className="main__contact-cta_title">Ready to join the Huskies family?</h2>
           <p className="main__contact-cta_copy">
             Reach out to the coaching staff for tryout details and program info.
           </p>
