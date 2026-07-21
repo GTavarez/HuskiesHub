@@ -164,10 +164,22 @@ function Header({ onClick, onSignOut, openSignInModal }) {
           </>
         ) : (
           <>
-            <button className="header__nav-button" onClick={openSignInModal}>
+            <button
+              className="header__nav-button"
+              onClick={() => {
+                openSignInModal();
+                closeAllMenus();
+              }}
+            >
               Login
             </button>
-            <button className="header__signup_button" onClick={onClick}>
+            <button
+              className="header__signup_button"
+              onClick={() => {
+                onClick();
+                closeAllMenus();
+              }}
+            >
               Join Team
             </button>
           </>
