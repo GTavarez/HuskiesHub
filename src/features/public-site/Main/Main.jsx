@@ -4,8 +4,23 @@ import AboutTeam from "../AboutTeam/AboutTeam.jsx";
 import HomeBanner from "../HomeBanner/HomeBanner.jsx";
 import WeatherBanner from "../WeatherBanner/WeatherBanner.jsx";
 import { Link } from "react-router-dom";
+import { useContext } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { getTeams } from "../../../api/teams.js";
+import { queryKeys } from "../../../api/queryKeys.js";
+import CurrentUserContext from "../../../context/CurrentUserContext.js";
 
-function Main() {
+function centsToDollars(cents) {
+  return `$${(cents / 100).toFixed(2)}`;
+}
+
+function Main({ onJoinClick }) {
+  const currentUser = useContext(CurrentUserContext);
+  const { data: teams = [] } = useQuery({
+    queryKey: queryKeys.teams(),
+    queryFn: getTeams,
+  });
+
   return (
     <main className="main__content">
       <WeatherBanner />
@@ -46,6 +61,43 @@ function Main() {
             <span className="main__quick-title">Contact Coaches</span>
             <span className="main__quick-copy">Questions, tryouts, and training</span>
           </Link>
+        </div>
+      </section>
+
+      <section className="main__registration">
+        <div className="main__registration_inner">
+          <h2 className="main__registration_title">Team Registration</h2>
+          <p className="main__registration_subtitle">
+            {currentUser
+              ? "Head to your portal to register your player for the season."
+              : "Create an account to register your player for the season."}
+          </p>
+          <div className="main__registration_grid">
+            {teams.map((team) => (
+              <div key={team._id} className="main__registration_card">
+                <h3 className="main__registration_card-name">{team.name}</h3>
+                <p className="main__registration_card-age">Age Group: {team.ageGroup}</p>
+                <p className="main__registration_card-fee">
+                  {team.registrationFeeCents > 0
+                    ? `Registration: ${centsToDollars(team.registrationFeeCents)}`
+                    : "Registration fee: TBD"}
+                </p>
+                {currentUser ? (
+                  <Link to="/profile" className="main__registration_card-btn">
+                    Register
+                  </Link>
+                ) : (
+                  <button
+                    type="button"
+                    className="main__registration_card-btn"
+                    onClick={onJoinClick}
+                  >
+                    Register
+                  </button>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 

@@ -125,6 +125,73 @@
   line-height: 1.45;
 }
 
+.main__registration {
+  background: transparent;
+  padding: 10px 40px 20px;
+}
+
+.main__registration_inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.main__registration_title {
+  color: #0b1b48;
+  font-size: 1.8rem;
+  margin: 0 0 8px;
+}
+
+.main__registration_subtitle {
+  color: #44526a;
+  margin: 0 0 20px;
+}
+
+.main__registration_grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 14px;
+  text-align: left;
+}
+
+.main__registration_card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: #ffffff;
+  border: 1px solid rgba(100, 181, 246, 0.25);
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+.main__registration_card-name {
+  color: #0b1b48;
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+.main__registration_card-age,
+.main__registration_card-fee {
+  color: #44526a;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.main__registration_card-btn {
+  margin-top: 8px;
+  align-self: flex-start;
+  background: linear-gradient(90deg, #64b5f6, #ffd700);
+  color: #0a192f;
+  border: none;
+  border-radius: 999px;
+  padding: 8px 18px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+}
+
 .main__stats {
   background: transparent;
   padding: 0 40px 20px;
