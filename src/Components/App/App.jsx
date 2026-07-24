@@ -196,7 +196,7 @@ function App() {
           onSignOut={handleSignOut}
         />
         <Routes>
-          <Route path="/" element={<Main />} />
+          <Route path="/" element={<Main onJoinClick={openSignUpModal} />} />
           <Route path="/schedule" element={<Schedule />} />
           <Route path="/teams" element={<Teams />} />
           <Route path="/clinics" element={<Clinics />} />
