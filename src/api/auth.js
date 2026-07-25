@@ -14,6 +14,20 @@ const signin = ({ email, password }) =>
     body: JSON.stringify({ email, password }),
   });
 
+const forgotPassword = ({ email }) =>
+  apiFetch("/forgot-password", {
+    method: "POST",
+    headers: { accept: "application/json" },
+    body: JSON.stringify({ email }),
+  });
+
+const resetPassword = ({ token, password, confirmPassword }) =>
+  apiFetch("/reset-password", {
+    method: "POST",
+    headers: { accept: "application/json" },
+    body: JSON.stringify({ token, password, confirmPassword }),
+  });
+
 const getCurrentUser = (token) =>
   apiFetch("/me", {
     method: "GET",
@@ -43,4 +57,12 @@ const uploadAvatar = (file, token) => {
   });
 };
 
-export { signup, signin, getCurrentUser, updateUserProfile, uploadAvatar };
+export {
+  signup,
+  signin,
+  forgotPassword,
+  resetPassword,
+  getCurrentUser,
+  updateUserProfile,
+  uploadAvatar,
+};

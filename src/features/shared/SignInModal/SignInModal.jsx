@@ -8,6 +8,7 @@ export default function SignInModal({
   onClose,
   onSignUpModal,
   onSignIn,
+  onForgotPassword,
   shouldResetLoginForm,
   onResetComplete,
 }) {
@@ -87,6 +88,17 @@ export default function SignInModal({
           }}
         >
           Or Sign up
+        </button>
+
+        <button
+          type="button"
+          className="modal__signup-button"
+          onClick={() => {
+            onForgotPassword();
+            onClose();
+          }}
+        >
+          Forgot password?
         </button>
       </div>
     </ModalWithForm>
