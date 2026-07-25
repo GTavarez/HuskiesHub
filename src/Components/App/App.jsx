@@ -4,6 +4,8 @@ import Schedule from "../../features/schedule/Schedule/Schedule.jsx";
 import Main from "../../features/public-site/Main/Main.jsx";
 import SignUpModal from "../../features/shared/SignUpModal/SignUpModal.jsx";
 import SignInModal from "../../features/shared/SignInModal/SignInModal.jsx";
+import ForgotPasswordModal from "../../features/shared/ForgotPasswordModal/ForgotPasswordModal.jsx";
+import ResetPasswordPage from "../../features/shared/ResetPasswordPage/ResetPasswordPage.jsx";
 import Players from "../../features/teams/Players/Players.jsx";
 import Teams from "../../features/teams/Teams/Teams.jsx";
 import CollegeCommits from "../../features/public-site/CollegeCommits/CollegeCommits.jsx";
@@ -163,6 +165,9 @@ function App() {
   const switchToSignIn = () => {
     setTimeout(() => setActiveModal("Sign in"));
   };
+  const switchToForgotPassword = () => {
+    setTimeout(() => setActiveModal("Forgot Password"));
+  };
   const switchToLogIn = () => {
     closeFullProfileModal();
     setActiveModal("Sign in");
@@ -203,6 +208,10 @@ function App() {
           <Route path="/coaches" element={<Coaches />} />
           <Route path="/collegecommits" element={<CollegeCommits />} />
           <Route path="/contact" element={<Contact />} />
+          <Route
+            path="/reset-password"
+            element={<ResetPasswordPage onLoginClick={openSignInModal} />}
+          />
           <Route
             path="/teams/:teamsId"
             element={
@@ -313,6 +322,14 @@ function App() {
           onClose={closeActiveModal}
           onSignUpModal={switchToSignUp}
           onSignIn={handleSignIn}
+          onForgotPassword={switchToForgotPassword}
+        />
+      )}
+      {activeModal === "Forgot Password" && (
+        <ForgotPasswordModal
+          isOpen={activeModal === "Forgot Password"}
+          onClose={closeActiveModal}
+          onBackToSignIn={switchToSignIn}
         />
       )}
       {isEditProfileOpen && (
