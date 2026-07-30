@@ -4,7 +4,12 @@ import { getRegistrations, createRegistration } from "../../../api/registrations
 import { getTeam } from "../../../api/teams.js";
 import { getProducts } from "../../../api/products.js";
 import { getLessonSlots } from "../../../api/lessonSlots.js";
-import { createCheckoutSession, getBalance, getPaymentHistory } from "../../../api/payments.js";
+import {
+  createCheckoutSession,
+  createSetupSession,
+  getBalance,
+  getPaymentHistory,
+} from "../../../api/payments.js";
 import { queryKeys } from "../../../api/queryKeys.js";
 import { useToast } from "../../../context/ToastContext.js";
 import { CURRENT_SEASON } from "../../../constants/season.js";
@@ -88,6 +93,16 @@ function PaymentsPanel({ currentUser, token }) {
     },
   });
 
+  const setupMutation = useMutation({
+    mutationFn: (registrationId) => createSetupSession({ registrationId }, token),
+    onSuccess: ({ url }) => {
+      window.location.href = url;
+    },
+    onError: (error) => {
+      pushToast({ type: "error", message: error?.message || "Failed to start autopay setup." });
+    },
+  });
+
   const balanceFor = (registrationId) =>
     balances.find((b) => b.registrationId === registrationId);
 
@@ -163,6 +178,11 @@ function PaymentsPanel({ currentUser, token }) {
           )}
           {registrations.map((registration) => {
             const balance = balanceFor(registration._id);
+            const registrationFeeBalanceCents = balance?.balanceCents ?? registration.registrationFeeCents;
+            const registrationFeePaid = registrationFeeBalanceCents <= 0;
+            const autopayComplete =
+              registration.autopayInstallmentsCompleted >= registration.autopayTotalInstallments;
+
             return (
               <div key={registration._id} className="portal__card">
                 <div className="portal__card-header">
@@ -172,10 +192,10 @@ function PaymentsPanel({ currentUser, token }) {
                 <p className="portal__card-meta">
                   Registration fee: {centsToDollars(registration.registrationFeeCents)}
                   {" · "}
-                  Balance: {centsToDollars(balance?.balanceCents ?? registration.registrationFeeCents)}
+                  Balance: {centsToDollars(registrationFeeBalanceCents)}
                 </p>
 
-                {(balance?.balanceCents ?? registration.registrationFeeCents) > 0 && (
+                {!registrationFeePaid && (
                   <button
                     type="button"
                     className="portal__button"
@@ -204,6 +224,35 @@ function PaymentsPanel({ currentUser, token }) {
                   >
                     Pay Deposit ({centsToDollars(registration.depositAmountCents)})
                   </button>
+                )}
+
+                {registrationFeePaid && registration.autopayAmountCents > 0 && (
+                  <div style={{ marginTop: 12 }}>
+                    <strong>Monthly Payment Plan: </strong>
+                    {autopayComplete ? (
+                      "Season fully paid ✓"
+                    ) : registration.autopayEnabled ? (
+                      <>
+                        {centsToDollars(registration.autopayAmountCents)}/month — {registration.autopayInstallmentsCompleted} of{" "}
+                        {registration.autopayTotalInstallments} payments made
+                      </>
+                    ) : (
+                      <>
+                        {centsToDollars(registration.autopayAmountCents)}/month for{" "}
+                        {registration.autopayTotalInstallments} months
+                        <div style={{ marginTop: 8 }}>
+                          <button
+                            type="button"
+                            className="portal__button"
+                            disabled={setupMutation.isPending}
+                            onClick={() => setupMutation.mutate(registration._id)}
+                          >
+                            {setupMutation.isPending ? "Starting..." : "Set Up Monthly Payments"}
+                          </button>
+                        </div>
+                      </>
+                    )}
+                  </div>
                 )}
               </div>
             );
