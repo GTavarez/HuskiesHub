@@ -24,11 +24,12 @@ function RoleAccessRequest({ currentUser, token }) {
     queryFn: getTeams,
   });
 
-  const { data: teamPlayers = [] } = useQuery({
+  const { data: teamPlayers = [], isLoading: teamPlayersLoading } = useQuery({
     queryKey: queryKeys.teamPlayers(teamId),
     queryFn: () => getTeamPlayers(teamId),
     enabled: Boolean(teamId),
   });
+  const teamHasNoPlayers = Boolean(teamId) && !teamPlayersLoading && teamPlayers.length === 0;
 
   const requestMutation = useMutation({
     mutationFn: (payload) => submitRoleRequest(payload, token),
@@ -191,6 +192,12 @@ function RoleAccessRequest({ currentUser, token }) {
               </option>
             ))}
           </select>
+          {teamHasNoPlayers && (
+            <p className="portal__empty">
+              No players are on this team's roster yet. Contact us at cesportstraining@gmail.com and
+              we'll get you added.
+            </p>
+          )}
         </>
       )}
 
@@ -246,6 +253,12 @@ function RoleAccessRequest({ currentUser, token }) {
               Add
             </button>
           </div>
+          {teamHasNoPlayers && (
+            <p className="portal__empty">
+              No players are on this team's roster yet. Contact us at cesportstraining@gmail.com and
+              we'll get your child added.
+            </p>
+          )}
         </>
       )}
 
