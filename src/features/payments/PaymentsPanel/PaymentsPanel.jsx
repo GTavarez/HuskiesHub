@@ -1,19 +1,10 @@
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  getRegistrations,
-  createRegistration,
-  updateRegistration,
-} from "../../../api/registrations.js";
+import { getRegistrations, createRegistration } from "../../../api/registrations.js";
 import { getTeam } from "../../../api/teams.js";
 import { getProducts } from "../../../api/products.js";
 import { getLessonSlots } from "../../../api/lessonSlots.js";
-import {
-  createCheckoutSession,
-  createSetupSession,
-  getBalance,
-  getPaymentHistory,
-} from "../../../api/payments.js";
+import { createCheckoutSession, getBalance, getPaymentHistory } from "../../../api/payments.js";
 import { queryKeys } from "../../../api/queryKeys.js";
 import { useToast } from "../../../context/ToastContext.js";
 import { CURRENT_SEASON } from "../../../constants/season.js";
@@ -94,25 +85,6 @@ function PaymentsPanel({ currentUser, token }) {
     },
     onError: (error) => {
       pushToast({ type: "error", message: error?.message || "Failed to start checkout." });
-    },
-  });
-
-  const setupMutation = useMutation({
-    mutationFn: (registrationId) => createSetupSession({ registrationId }, token),
-    onSuccess: ({ url }) => {
-      window.location.href = url;
-    },
-    onError: (error) => {
-      pushToast({ type: "error", message: error?.message || "Failed to start autopay setup." });
-    },
-  });
-
-  const autopayAmountMutation = useMutation({
-    mutationFn: ({ registrationId, autopayAmountCents, autopayDayOfMonth }) =>
-      updateRegistration(registrationId, { autopayAmountCents, autopayDayOfMonth }, token),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.registrations(selectedPlayerId) });
-      pushToast({ type: "success", message: "Autopay settings saved." });
     },
   });
 
@@ -233,37 +205,6 @@ function PaymentsPanel({ currentUser, token }) {
                     Pay Deposit ({centsToDollars(registration.depositAmountCents)})
                   </button>
                 )}
-
-                <div style={{ marginTop: 12 }}>
-                  <strong>Autopay: </strong>
-                  {registration.autopayEnabled ? "Enabled" : "Not set up"}
-                  {!registration.autopayEnabled && (
-                    <>
-                      <div className="portal__row" style={{ marginTop: 8 }}>
-                        <input
-                          className="portal__input"
-                          type="number"
-                          placeholder="Monthly amount ($)"
-                          onBlur={(e) =>
-                            autopayAmountMutation.mutate({
-                              registrationId: registration._id,
-                              autopayAmountCents: Math.round(Number(e.target.value) * 100),
-                              autopayDayOfMonth: registration.autopayDayOfMonth,
-                            })
-                          }
-                        />
-                        <button
-                          type="button"
-                          className="portal__button"
-                          disabled={setupMutation.isPending}
-                          onClick={() => setupMutation.mutate(registration._id)}
-                        >
-                          Set Up Autopay
-                        </button>
-                      </div>
-                    </>
-                  )}
-                </div>
               </div>
             );
           })}
