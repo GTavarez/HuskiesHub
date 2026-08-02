@@ -8,6 +8,7 @@ import TeamChat from "../../chat/TeamChat/TeamChat";
 import { useQuery } from "@tanstack/react-query";
 import { getTeam, getTeamPlayers } from "../../../api/teams";
 import { resolveImageUrl } from "../../../utils/media";
+import { generateTeamRosterPdf } from "../../../utils/teamRosterPdf";
 
 function Players({
   onViewProfile,
@@ -20,6 +21,7 @@ function Players({
   token,
 }) {
   const [activeTab, setActiveTab] = useState("players");
+  const [isGeneratingRoster, setIsGeneratingRoster] = useState(false);
   const { teamsId } = useParams();
 
   const {
@@ -74,6 +76,27 @@ function Players({
           )))
   );
 
+  // Coaches/admins only — this is a printable sheet for the bench, not a
+  // public download.
+  const canDownloadRoster = Boolean(
+    isLoggedIn &&
+      team?._id &&
+      (currentUser?.role === "admin" ||
+        (currentUser?.role === "coach" && String(currentUser?.teamId) === String(team._id)))
+  );
+
+  const handleDownloadRoster = async () => {
+    setIsGeneratingRoster(true);
+    try {
+      await generateTeamRosterPdf({
+        teamName: `${team.name} ${team.ageGroup}`,
+        players,
+      });
+    } finally {
+      setIsGeneratingRoster(false);
+    }
+  };
+
   if (isTeamLoading || isPlayersLoading) {
     return (
       <p style={{ textAlign: "center", color: "#ccc" }}>Loading team...</p>
@@ -122,6 +145,17 @@ function Players({
         <button className="players__back-btn" onClick={handleBack}>
           ← Back to Teams
         </button>
+
+        {canDownloadRoster && (
+          <button
+            type="button"
+            className="players__back-btn"
+            onClick={handleDownloadRoster}
+            disabled={isGeneratingRoster}
+          >
+            {isGeneratingRoster ? "Generating..." : "Download Team Roster PDF"}
+          </button>
+        )}
 
         <h2>{team ? `${team.name} ${team.ageGroup}` : "Teams"}</h2>
         <div className="players__divider"></div>
