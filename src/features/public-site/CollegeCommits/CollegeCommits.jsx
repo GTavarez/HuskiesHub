@@ -24,10 +24,11 @@ function CollegeCommits() {
                 src={resolveImageUrl(player.image) || "/default.avif"}
                 alt={player.name}
                 className="commit__image"
+                style={player.imagePosition ? { objectPosition: player.imagePosition } : undefined}
               />
               <h3 className="commit__name">{player.name}</h3>
               <p className="commit__details">
-                #{player.jersey} | {player.position} | {player.gradYear}
+                #{player.jersey} | {player.position} | Class of {player.gradYear}
               </p>
               <p className="commit__college">
                 🎓 Committed To: <span>{player.committedCollege || "TBA"}</span>
