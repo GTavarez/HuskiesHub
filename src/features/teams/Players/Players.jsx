@@ -5,10 +5,23 @@ import PlayerProfileModal from "../PlayerProfile/PlayerProfileModal";
 import PlayerProfilePreviewModal from "../PlayerProfilePreviewModal/PlayerProfilePreviewModal";
 import { useState } from "react";
 import TeamChat from "../../chat/TeamChat/TeamChat";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getTeam, getTeamPlayers } from "../../../api/teams";
+import { createPlayer } from "../../../api/players";
 import { resolveImageUrl } from "../../../utils/media";
 import { generateTeamRosterPdf } from "../../../utils/teamRosterPdf";
+import { useToast } from "../../../context/ToastContext.js";
+
+const NEW_PLAYER_DEFAULTS = {
+  name: "",
+  jersey: "",
+  position: "",
+  gradYear: "",
+  highSchool: "",
+  GPA: "",
+  battingThrowing: "",
+  contactEmail: "",
+};
 
 function Players({
   onViewProfile,
@@ -22,7 +35,11 @@ function Players({
 }) {
   const [activeTab, setActiveTab] = useState("players");
   const [isGeneratingRoster, setIsGeneratingRoster] = useState(false);
+  const [isAddingPlayer, setIsAddingPlayer] = useState(false);
+  const [newPlayerForm, setNewPlayerForm] = useState(NEW_PLAYER_DEFAULTS);
   const { teamsId } = useParams();
+  const queryClient = useQueryClient();
+  const { pushToast } = useToast();
 
   const {
     data: team,
@@ -97,6 +114,42 @@ function Players({
     }
   };
 
+  const createPlayerMutation = useMutation({
+    mutationFn: (payload) => createPlayer(payload, token),
+    onSuccess: (created) => {
+      queryClient.invalidateQueries({ queryKey: ["teamPlayers", teamsId] });
+      pushToast({ type: "success", message: `${created.name} added to the roster.` });
+      setNewPlayerForm(NEW_PLAYER_DEFAULTS);
+      setIsAddingPlayer(false);
+    },
+    onError: (error) => {
+      pushToast({ type: "error", message: error?.message || "Failed to add player." });
+    },
+  });
+
+  const handleNewPlayerFieldChange = (field) => (e) => {
+    setNewPlayerForm((prev) => ({ ...prev, [field]: e.target.value }));
+  };
+
+  const handleAddPlayerSubmit = (e) => {
+    e.preventDefault();
+    if (!newPlayerForm.name.trim()) {
+      pushToast({ type: "error", message: "Name is required." });
+      return;
+    }
+    createPlayerMutation.mutate({
+      name: newPlayerForm.name.trim(),
+      teamId: team._id,
+      jersey: newPlayerForm.jersey === "" ? undefined : Number(newPlayerForm.jersey),
+      position: newPlayerForm.position || undefined,
+      gradYear: newPlayerForm.gradYear === "" ? undefined : Number(newPlayerForm.gradYear),
+      highSchool: newPlayerForm.highSchool || undefined,
+      GPA: newPlayerForm.GPA || undefined,
+      battingThrowing: newPlayerForm.battingThrowing || undefined,
+      contactEmail: newPlayerForm.contactEmail || undefined,
+    });
+  };
+
   if (isTeamLoading || isPlayersLoading) {
     return (
       <p style={{ textAlign: "center", color: "#ccc" }}>Loading team...</p>
@@ -157,9 +210,99 @@ function Players({
           </button>
         )}
 
+        {canDownloadRoster && (
+          <button
+            type="button"
+            className="players__back-btn"
+            onClick={() => setIsAddingPlayer((prev) => !prev)}
+          >
+            {isAddingPlayer ? "Cancel" : "+ Add Player"}
+          </button>
+        )}
+
         <h2>{team ? `${team.name} ${team.ageGroup}` : "Teams"}</h2>
         <div className="players__divider"></div>
       </header>
+
+      {canDownloadRoster && isAddingPlayer && (
+        <form className="portal__form" onSubmit={handleAddPlayerSubmit} style={{ maxWidth: 480, margin: "0 auto 24px" }}>
+          <label className="portal__label" htmlFor="new-player-name">Name *</label>
+          <input
+            id="new-player-name"
+            className="portal__input"
+            value={newPlayerForm.name}
+            onChange={handleNewPlayerFieldChange("name")}
+            required
+          />
+
+          <label className="portal__label" htmlFor="new-player-jersey">Jersey #</label>
+          <input
+            id="new-player-jersey"
+            className="portal__input"
+            type="number"
+            value={newPlayerForm.jersey}
+            onChange={handleNewPlayerFieldChange("jersey")}
+          />
+
+          <label className="portal__label" htmlFor="new-player-position">Position</label>
+          <input
+            id="new-player-position"
+            className="portal__input"
+            value={newPlayerForm.position}
+            onChange={handleNewPlayerFieldChange("position")}
+          />
+
+          <label className="portal__label" htmlFor="new-player-gradyear">Grad Year</label>
+          <input
+            id="new-player-gradyear"
+            className="portal__input"
+            type="number"
+            value={newPlayerForm.gradYear}
+            onChange={handleNewPlayerFieldChange("gradYear")}
+          />
+
+          <label className="portal__label" htmlFor="new-player-highschool">High School</label>
+          <input
+            id="new-player-highschool"
+            className="portal__input"
+            value={newPlayerForm.highSchool}
+            onChange={handleNewPlayerFieldChange("highSchool")}
+          />
+
+          <label className="portal__label" htmlFor="new-player-gpa">GPA</label>
+          <input
+            id="new-player-gpa"
+            className="portal__input"
+            value={newPlayerForm.GPA}
+            onChange={handleNewPlayerFieldChange("GPA")}
+          />
+
+          <label className="portal__label" htmlFor="new-player-bats">Bats/Throws (e.g. R/R)</label>
+          <input
+            id="new-player-bats"
+            className="portal__input"
+            value={newPlayerForm.battingThrowing}
+            onChange={handleNewPlayerFieldChange("battingThrowing")}
+          />
+
+          <label className="portal__label" htmlFor="new-player-email">Contact Email</label>
+          <input
+            id="new-player-email"
+            className="portal__input"
+            value={newPlayerForm.contactEmail}
+            onChange={handleNewPlayerFieldChange("contactEmail")}
+          />
+
+          <button
+            type="submit"
+            className="portal__button"
+            disabled={createPlayerMutation.isPending}
+            style={{ marginTop: 12 }}
+          >
+            {createPlayerMutation.isPending ? "Adding..." : "Add Player"}
+          </button>
+        </form>
+      )}
 
       {team ? (
         <>
