@@ -16,6 +16,8 @@ const EDIT_FIELDS = [
   { name: "state", label: "State", type: "text" },
   { name: "GPA", label: "GPA", type: "text" },
   { name: "committedCollege", label: "Committed College", type: "text" },
+  { name: "battingThrowing", label: "Bats/Throws (e.g. R/R)", type: "text" },
+  { name: "contactEmail", label: "Contact Email", type: "text" },
 ];
 
 function PlayerProfileModal({ onClose, player, currentUser, token }) {
@@ -72,6 +74,8 @@ function PlayerProfileModal({ onClose, player, currentUser, token }) {
       GPA: displayPlayer.GPA || "",
       isCommitted: Boolean(displayPlayer.isCommitted),
       committedCollege: displayPlayer.committedCollege || "",
+      battingThrowing: displayPlayer.battingThrowing || "",
+      contactEmail: displayPlayer.contactEmail || "",
     });
     setIsEditing(true);
   };
