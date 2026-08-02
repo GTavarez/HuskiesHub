@@ -4,6 +4,7 @@ import { getProfile, upsertProfile } from "../../../api/recruitingProfiles.js";
 import { queryKeys } from "../../../api/queryKeys.js";
 import { useToast } from "../../../context/ToastContext.js";
 import { isAllowedVideoUrl, ALLOWED_HOSTS } from "../../../utils/videoUrlAllowlist.js";
+import { generatePlayerProfilePdf } from "../../../utils/playerProfilePdf.js";
 
 const EMPTY_FORM = {
   satScore: "",
@@ -16,7 +17,7 @@ const EMPTY_FORM = {
   visible: false,
 };
 
-function RecruitingProfileEditor({ playerId, token }) {
+function RecruitingProfileEditor({ playerId, token, player, teamName }) {
   const queryClient = useQueryClient();
   const { pushToast } = useToast();
   const [form, setForm] = useState(EMPTY_FORM);
@@ -100,6 +101,19 @@ function RecruitingProfileEditor({ playerId, token }) {
 
   return (
     <form className="portal__form" onSubmit={handleSubmit}>
+      {player && (
+        <button
+          type="button"
+          className="portal__button"
+          style={{ marginBottom: 12 }}
+          onClick={() =>
+            generatePlayerProfilePdf({ player, recruitingProfile: profile, teamName })
+          }
+        >
+          Download Player Profile PDF
+        </button>
+      )}
+
       <label className="portal__label" htmlFor="rp-sat">
         SAT Score
       </label>

@@ -94,7 +94,11 @@ function MyProfile({ currentUser, token, onUpdateUser, onClose }) {
         {isPlayer && (
           <div className="portal__section">
             <h3 className="profile__card-title">Recruiting Profile</h3>
-            <RecruitingProfileEditor playerId={currentUser.playerData._id} token={token} />
+            <RecruitingProfileEditor
+              playerId={currentUser.playerData._id}
+              token={token}
+              player={currentUser.playerData}
+            />
           </div>
         )}
 

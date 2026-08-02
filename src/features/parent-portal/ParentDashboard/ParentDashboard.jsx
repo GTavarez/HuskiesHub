@@ -134,7 +134,11 @@ function ParentDashboard({ currentUser, token }) {
               </>
             )}
             {recruitingPlayerId && (
-              <RecruitingProfileEditor playerId={recruitingPlayerId} token={token} />
+              <RecruitingProfileEditor
+                playerId={recruitingPlayerId}
+                token={token}
+                player={children.find((child) => child._id === recruitingPlayerId)}
+              />
             )}
           </div>
         )}
