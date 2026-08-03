@@ -195,30 +195,32 @@ function Players({
           </button>
         </div>
 
-        <button className="players__back-btn" onClick={handleBack}>
-          ← Back to Teams
-        </button>
-
-        {canDownloadRoster && (
-          <button
-            type="button"
-            className="players__back-btn"
-            onClick={handleDownloadRoster}
-            disabled={isGeneratingRoster}
-          >
-            {isGeneratingRoster ? "Generating..." : "Download Team Roster PDF"}
+        <div className="players__header-actions">
+          <button className="players__back-btn" onClick={handleBack}>
+            ← Back to Teams
           </button>
-        )}
 
-        {canDownloadRoster && (
-          <button
-            type="button"
-            className="players__back-btn"
-            onClick={() => setIsAddingPlayer((prev) => !prev)}
-          >
-            {isAddingPlayer ? "Cancel" : "+ Add Player"}
-          </button>
-        )}
+          {canDownloadRoster && (
+            <button
+              type="button"
+              className="players__back-btn"
+              onClick={handleDownloadRoster}
+              disabled={isGeneratingRoster}
+            >
+              {isGeneratingRoster ? "Generating..." : "Download Team Roster PDF"}
+            </button>
+          )}
+
+          {canDownloadRoster && (
+            <button
+              type="button"
+              className="players__back-btn"
+              onClick={() => setIsAddingPlayer((prev) => !prev)}
+            >
+              {isAddingPlayer ? "Cancel" : "+ Add Player"}
+            </button>
+          )}
+        </div>
 
         <h2>{team ? `${team.name} ${team.ageGroup}` : "Teams"}</h2>
         <div className="players__divider"></div>
