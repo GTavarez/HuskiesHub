@@ -1,10 +1,20 @@
+import { Link } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { getTeams } from "../../../api/teams";
+import { queryKeys } from "../../../api/queryKeys";
 import "./Teams.css";
 
-// Public team listing is paused while the club finalizes its Fall 2026
-// roster — internal team/player management (rosters, chat, registration)
-// keeps working normally for admins/coaches/parents; this only hides the
-// public marketing grid until real teams are ready to announce.
 function Teams() {
+  const {
+    data: teams = [],
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: queryKeys.teams(),
+    queryFn: getTeams,
+  });
+
   return (
     <section className="teams__section">
       <div className="teams__header">
@@ -12,9 +22,35 @@ function Teams() {
         <div className="teams__divider"></div>
       </div>
 
-      <p style={{ textAlign: "center", color: "#ccc" }}>
-        Fall 2026 teams coming soon...
-      </p>
+      {isLoading && (
+        <p style={{ textAlign: "center", color: "#ccc" }}>
+          Loading teams...
+        </p>
+      )}
+
+      {isError && (
+        <p style={{ textAlign: "center", color: "#f2b8b5" }}>
+          {error?.message || "Failed to load teams."}
+        </p>
+      )}
+
+      <div className="teams__grid">
+        {teams.map((team) => (
+          <Link key={team._id} to={`/teams/${team._id}`} className="team__card">
+            <div className="team__banner">
+              <img
+                src={team.banner || "/assets/team2.jpg"}
+                alt={`${team.name} banner`}
+              />
+            </div>
+            <div className="team__content">
+              <h3>{team.name}</h3>
+              <p className="team__age">Age Group: {team.ageGroup}</p>
+              <button className="team__btn">View Team</button>
+            </div>
+          </Link>
+        ))}
+      </div>
     </section>
   );
 }
