@@ -10,7 +10,9 @@
   justify-content: center;
   align-items: center; /* <-- CENTER vertically */
   padding: 20px;
-  z-index: 2000;
+  /* Must beat .header's z-index: 9999 (Header.css) — this modal was
+     previously rendering behind the sticky site header. */
+  z-index: 10000;
   overflow-y: auto; /* <-- modal scrolls INSIDE */
 }
 
@@ -102,6 +104,17 @@
   object-fit: cover;
   border-radius: 16px;
   box-shadow: 0 4px 15px rgba(100, 181, 246, 0.25);
+}
+
+/* Shown instead of a broken/blank box when the player has no photo on file. */
+.profile__hero_initials {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #112240;
+  color: #64b5f6;
+  font-size: 96px;
+  font-weight: 700;
 }
 
 .profile__info h1 {
@@ -324,6 +337,10 @@
     height: 160px;
   }
 
+  .profile__hero_initials {
+    font-size: 56px;
+  }
+
   .profile__info h1 {
     font-size: 26px;
   }
@@ -368,6 +385,10 @@
   .profilePlayer__container {
     border-radius: 10px;
     padding: 14px;
+  }
+
+  .profile__hero_initials {
+    font-size: 48px;
   }
 
   .profile__hero_img {

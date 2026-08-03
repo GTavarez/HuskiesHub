@@ -167,6 +167,21 @@ function PlayerProfileModal({ onClose, player, currentUser, token }) {
   }
 
   const displayed = displayPlayer;
+  const photoUrl = resolveImageUrl(displayed.image);
+  const initial = displayed.name ? displayed.name.charAt(0).toUpperCase() : "?";
+
+  // Build each line from only the pieces that actually have data, instead of
+  // rendering stray separators ("# •", "from .") around blank fields.
+  const jerseyPositionParts = [
+    displayed.jersey ? `#${displayed.jersey}` : null,
+    displayed.position || null,
+  ].filter(Boolean);
+  const schoolGradParts = [
+    displayed.highSchool || null,
+    displayed.gradYear ? `Class of ${displayed.gradYear}` : null,
+  ].filter(Boolean);
+  const bioPositionText = displayed.position ? displayed.position.toLowerCase() : "player";
+  const bioSchoolClause = displayed.highSchool ? ` from ${displayed.highSchool}` : "";
 
   return (
     <div className="profile__overlay" onClick={onClose}>
@@ -180,20 +195,20 @@ function PlayerProfileModal({ onClose, player, currentUser, token }) {
 
         {/* HERO SECTION */}
         <div className="profile__hero">
-          <img
-            src={resolveImageUrl(displayed.image)}
-            alt={displayed.name}
-            className="profile__hero_img"
-          />
+          {photoUrl ? (
+            <img
+              src={photoUrl}
+              alt={displayed.name}
+              className="profile__hero_img"
+            />
+          ) : (
+            <div className="profile__hero_img profile__hero_initials">{initial}</div>
+          )}
 
           <div className="profile__info">
             <h1>{displayed.name}</h1>
-            <h3>
-              #{displayed.jersey} • {displayed.position}
-            </h3>
-            <p>
-              {displayed.highSchool} — Class of {displayed.gradYear}
-            </p>
+            {jerseyPositionParts.length > 0 && <h3>{jerseyPositionParts.join(" • ")}</h3>}
+            {schoolGradParts.length > 0 && <p>{schoolGradParts.join(" — ")}</p>}
 
             {displayed.isCommitted && (
               <p className="profile__commit">
@@ -217,8 +232,8 @@ function PlayerProfileModal({ onClose, player, currentUser, token }) {
         <div className="profile__section">
           <h2>About {displayed.name}</h2>
           <p>
-            {displayed.name} is a dedicated {displayed.position?.toLowerCase()} from{" "}
-            {displayed.highSchool}. Known for their strong work ethic and
+            {displayed.name} is a dedicated {bioPositionText}
+            {bioSchoolClause}. Known for their strong work ethic and
             leadership, {displayed.name.split(" ")[0]} represents the Empire
             State Huskies with pride and passion.
           </p>

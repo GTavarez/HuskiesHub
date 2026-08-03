@@ -9,7 +9,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 9999;
+  /* Tied with .header's z-index (9999) previously — bumped so this modal is
+     unambiguously on top regardless of DOM paint order. */
+  z-index: 10000;
 }
 .modal__container {
   background: #111217;
