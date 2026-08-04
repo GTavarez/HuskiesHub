@@ -97,12 +97,16 @@ function RegistrationRow({ registration, token }) {
 function TeamPricingEditor({ team, token }) {
   const queryClient = useQueryClient();
   const { pushToast } = useToast();
+  const [name, setName] = useState(team.name || "");
+  const [ageGroup, setAgeGroup] = useState(team.ageGroup || "");
   const [fee, setFee] = useState(String(team.registrationFeeCents / 100));
   const [deposit, setDeposit] = useState(String(team.depositAmountCents / 100));
   const [autopayAmount, setAutopayAmount] = useState(String(team.autopayAmountCents / 100));
   const [autopayDay, setAutopayDay] = useState(String(team.autopayDayOfMonth));
 
   useEffect(() => {
+    setName(team.name || "");
+    setAgeGroup(team.ageGroup || "");
     setFee(String(team.registrationFeeCents / 100));
     setDeposit(String(team.depositAmountCents / 100));
     setAutopayAmount(String(team.autopayAmountCents / 100));
@@ -113,16 +117,22 @@ function TeamPricingEditor({ team, token }) {
     mutationFn: (payload) => updateTeam(team._id, payload, token),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.teams() });
-      pushToast({ type: "success", message: "Team pricing saved." });
+      pushToast({ type: "success", message: "Team details saved." });
     },
     onError: (error) => {
-      pushToast({ type: "error", message: error?.message || "Failed to save pricing." });
+      pushToast({ type: "error", message: error?.message || "Failed to save team details." });
     },
   });
 
   const handleSave = (e) => {
     e.preventDefault();
+    if (!name.trim()) {
+      pushToast({ type: "error", message: "Team name is required." });
+      return;
+    }
     updateMutation.mutate({
+      name: name.trim(),
+      ageGroup: ageGroup.trim(),
       registrationFeeCents: Math.round(Number(fee) * 100),
       depositAmountCents: Math.round(Number(deposit) * 100),
       autopayAmountCents: Math.round(Number(autopayAmount) * 100),
@@ -132,7 +142,28 @@ function TeamPricingEditor({ team, token }) {
 
   return (
     <form className="portal__form" onSubmit={handleSave} style={{ marginBottom: 16 }}>
-      <h3 className="portal__section-title">Team Pricing — {team.name}</h3>
+      <h3 className="portal__section-title">Team Details — {team.name}</h3>
+
+      <label className="portal__label" htmlFor="team-name">
+        Team Name
+      </label>
+      <input
+        id="team-name"
+        className="portal__input"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+      />
+
+      <label className="portal__label" htmlFor="team-age-group">
+        Age Group
+      </label>
+      <input
+        id="team-age-group"
+        className="portal__input"
+        value={ageGroup}
+        onChange={(e) => setAgeGroup(e.target.value)}
+        placeholder="e.g. 14U"
+      />
 
       <label className="portal__label" htmlFor="team-fee">
         Registration Fee ($)
@@ -181,7 +212,7 @@ function TeamPricingEditor({ team, token }) {
       />
 
       <button type="submit" className="portal__button" disabled={updateMutation.isPending}>
-        {updateMutation.isPending ? "Saving..." : "Save Pricing"}
+        {updateMutation.isPending ? "Saving..." : "Save Team Details"}
       </button>
     </form>
   );

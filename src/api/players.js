@@ -16,4 +16,10 @@ const updatePlayer = (playerId, payload, token) =>
     body: JSON.stringify(payload),
   });
 
-export { createPlayer, updatePlayer };
+const deletePlayer = (playerId, token) =>
+  apiFetch(`/api/players/${playerId}`, {
+    method: "DELETE",
+    headers: authHeaders(token),
+  });
+
+export { createPlayer, updatePlayer, deletePlayer };
