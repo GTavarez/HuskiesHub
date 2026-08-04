@@ -7,7 +7,7 @@ import { useState } from "react";
 import TeamChat from "../../chat/TeamChat/TeamChat";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getTeam, getTeamPlayers } from "../../../api/teams";
-import { createPlayer } from "../../../api/players";
+import { createPlayer, deletePlayer } from "../../../api/players";
 import { resolveImageUrl } from "../../../utils/media";
 import { generateTeamRosterPdf } from "../../../utils/teamRosterPdf";
 import { useToast } from "../../../context/ToastContext.js";
@@ -126,6 +126,28 @@ function Players({
       pushToast({ type: "error", message: error?.message || "Failed to add player." });
     },
   });
+
+  const deletePlayerMutation = useMutation({
+    mutationFn: (playerId) => deletePlayer(playerId, token),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["teamPlayers", teamsId] });
+      pushToast({ type: "success", message: "Player removed from the roster." });
+    },
+    onError: (error) => {
+      pushToast({ type: "error", message: error?.message || "Failed to delete player." });
+    },
+  });
+
+  const handleDeletePlayer = (player) => {
+    if (
+      !window.confirm(
+        `Remove ${player.name} from this team's roster? Their profile and history stay in the system — they just won't show on the roster anymore.`
+      )
+    ) {
+      return;
+    }
+    deletePlayerMutation.mutate(player._id);
+  };
 
   const handleNewPlayerFieldChange = (field) => (e) => {
     setNewPlayerForm((prev) => ({ ...prev, [field]: e.target.value }));
@@ -346,6 +368,17 @@ function Players({
                     >
                       View Profile
                     </button>
+
+                    {canDownloadRoster && (
+                      <button
+                        type="button"
+                        className="player__delete-btn"
+                        onClick={() => handleDeletePlayer(player)}
+                        disabled={deletePlayerMutation.isPending}
+                      >
+                        Remove from Roster
+                      </button>
+                    )}
                   </div>
                 ))}
               </div>

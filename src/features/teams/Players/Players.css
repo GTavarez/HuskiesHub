@@ -144,6 +144,31 @@
   background: linear-gradient(90deg, #ffd700, #64b5f6);
   box-shadow: 0 0 14px rgba(100, 181, 246, 0.5);
 }
+
+.player__delete-btn {
+  display: block;
+  width: 100%;
+  background: transparent;
+  color: #f2b8b5;
+  border: 1px solid #f2b8b5;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 12px;
+  cursor: pointer;
+  transition: 0.25s ease;
+  margin-top: 6px;
+}
+
+.player__delete-btn:hover {
+  background: #f2b8b5;
+  color: #0a192f;
+}
+
+.player__delete-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
 .players__tabs {
   display: flex;
   gap: 10px;
