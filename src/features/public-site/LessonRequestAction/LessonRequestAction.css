@@ -1,0 +1,61 @@
+.lesson-action {
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0a192f;
+  padding: 40px 20px;
+}
+
+.lesson-action__card {
+  background: #112240;
+  border-radius: 16px;
+  padding: 32px;
+  max-width: 480px;
+  width: 100%;
+  text-align: center;
+  color: #f5f5f5;
+}
+
+.lesson-action__card h2 {
+  color: #64b5f6;
+  margin: 0 0 16px;
+}
+
+.lesson-action__summary {
+  color: #dbeafe;
+  margin: 8px 0;
+}
+
+.lesson-action__buttons {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.lesson-action__confirm-btn,
+.lesson-action__decline-btn {
+  border: none;
+  border-radius: 999px;
+  padding: 12px 28px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.lesson-action__confirm-btn {
+  background: linear-gradient(90deg, #64b5f6, #ffd700);
+  color: #0a192f;
+}
+
+.lesson-action__decline-btn {
+  background: transparent;
+  border: 1px solid #f2b8b5;
+  color: #f2b8b5;
+}
+
+.lesson-action__confirm-btn:disabled,
+.lesson-action__decline-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

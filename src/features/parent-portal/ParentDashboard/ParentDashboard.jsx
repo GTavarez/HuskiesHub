@@ -4,6 +4,7 @@ import { getEvents } from "../../../api/events.js";
 import { getAnnouncements } from "../../../api/announcements.js";
 import { getDocuments, downloadDocumentBlobUrl } from "../../../api/documents.js";
 import { queryKeys } from "../../../api/queryKeys.js";
+import { resolveMediaUrl } from "../../../utils/media.js";
 import RsvpControl from "../RsvpControl/RsvpControl.jsx";
 import PaymentsPanel from "../../payments/PaymentsPanel/PaymentsPanel.jsx";
 import RecruitingProfileEditor from "../../recruiting/RecruitingProfileEditor/RecruitingProfileEditor.jsx";
@@ -77,18 +78,28 @@ function ParentDashboard({ currentUser, token }) {
                 <span className={`portal__badge portal__badge--${event.type}`}>
                   {event.type}
                 </span>
+                {event.status === "cancelled" && (
+                  <span
+                    className="portal__badge"
+                    style={{ background: "rgba(229, 115, 115, 0.25)", color: "#e57373" }}
+                  >
+                    cancelled
+                  </span>
+                )}
                 <strong>{event.title}</strong>
               </div>
               <p className="portal__card-meta">
                 {new Date(event.startsAt).toLocaleString()}
                 {event.location ? ` · ${event.location}` : ""}
               </p>
-              <RsvpControl
-                event={event}
-                currentUserId={currentUser._id}
-                token={token}
-                teamId={teamId}
-              />
+              {event.status !== "cancelled" && (
+                <RsvpControl
+                  event={event}
+                  currentUserId={currentUser._id}
+                  token={token}
+                  teamId={teamId}
+                />
+              )}
             </div>
           ))}
         </div>
@@ -102,6 +113,13 @@ function ParentDashboard({ currentUser, token }) {
             <div key={announcement._id} className="portal__card">
               <strong>{announcement.title}</strong>
               <p className="portal__card-body">{announcement.body}</p>
+              {announcement.imageUrl && (
+                <img
+                  src={resolveMediaUrl(announcement.imageUrl)}
+                  alt=""
+                  style={{ maxWidth: "100%", maxHeight: 300, borderRadius: 8, marginTop: 8 }}
+                />
+              )}
             </div>
           ))}
         </div>

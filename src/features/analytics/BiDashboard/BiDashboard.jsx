@@ -11,6 +11,18 @@ const formatCents = (cents) =>
 
 const formatPercent = (value) => (value === null || value === undefined ? "No data yet" : `${value}%`);
 
+// Alert dates come back as plain "YYYY-MM-DD" (no time) — parsing that string
+// directly through `new Date` would shift a day early in timezones behind
+// UTC, so build the date from local-time parts instead.
+const formatAlertDate = (dateStr) => {
+  const [year, month, day] = dateStr.split("-").map(Number);
+  return new Date(year, month - 1, day).toLocaleDateString(undefined, {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+  });
+};
+
 function StatTile({ label, value, caveat }) {
   return (
     <div className="portal__card bi-dashboard__tile">
@@ -59,6 +71,18 @@ function BiDashboard({ token }) {
         <StatTile label="Pending Hotel Reservations" value={data.pendingHotelReservations} />
         <StatTile label="Weather Alerts (7 days)" value={weatherSummary} />
       </div>
+
+      {data.weather?.configured && data.weather.alerts.length > 0 && (
+        <div className="bi-dashboard__weather-list">
+          {data.weather.alerts.map((alert, i) => (
+            <div key={`${alert.date}-${alert.location}-${i}`} className="bi-dashboard__weather-row">
+              <span className="bi-dashboard__weather-condition">{alert.condition}</span>
+              <span className="bi-dashboard__weather-date">{formatAlertDate(alert.date)}</span>
+              <span className="bi-dashboard__weather-location">{alert.location}</span>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

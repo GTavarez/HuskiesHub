@@ -4,11 +4,17 @@ import AttendanceRecorder from "../AttendanceRecorder/AttendanceRecorder.jsx";
 import PlayerNotes from "../PlayerNotes/PlayerNotes.jsx";
 import PerformanceLogger from "../../performance/PerformanceLogger/PerformanceLogger.jsx";
 import AiAssistant from "../../analytics/AiAssistant/AiAssistant.jsx";
+import CoachAvailability from "../CoachAvailability/CoachAvailability.jsx";
+import CoachContactsPanel from "../CoachContactsPanel/CoachContactsPanel.jsx";
+import AnnouncementsPanel from "../../admin/AnnouncementsPanel/AnnouncementsPanel.jsx";
 import "../../shared/portal.css";
 
 const TABS = [
   { key: "plans", label: "Practice Plans" },
+  { key: "announcements", label: "Announcements" },
+  { key: "availability", label: "Availability" },
   { key: "attendance", label: "Attendance" },
+  { key: "contacts", label: "Contacts" },
   { key: "notes", label: "Player Notes" },
   { key: "performance", label: "Performance" },
   { key: "assistant", label: "Assistant" },
@@ -56,9 +62,16 @@ function CoachDashboard({ currentUser, token }) {
         </div>
 
         {activeTab === "plans" && <PracticePlans teamId={teamId} token={token} />}
+        {activeTab === "announcements" && (
+          <AnnouncementsPanel token={token} lockedTeamId={teamId} />
+        )}
+        {activeTab === "availability" && (
+          <CoachAvailability teamId={teamId} token={token} />
+        )}
         {activeTab === "attendance" && (
           <AttendanceRecorder teamId={teamId} token={token} />
         )}
+        {activeTab === "contacts" && <CoachContactsPanel teamId={teamId} token={token} />}
         {activeTab === "notes" && <PlayerNotes teamId={teamId} token={token} />}
         {activeTab === "performance" && (
           <PerformanceLogger teamId={teamId} token={token} />

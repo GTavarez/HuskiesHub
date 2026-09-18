@@ -10,35 +10,15 @@ function GameCard({ game, onClose }) {
     game.location
   )}&output=embed`;
 
-  //  Get directions when the button is clicked
+  // window.open must run synchronously inside the click handler — browsers
+  // only allow a popup as a direct response to a user gesture. Waiting on
+  // navigator.geolocation.getCurrentPosition() first (which is async) broke
+  // that chain, so the browser silently blocked the popup with no visible
+  // error. Omitting "origin" isn't a loss either — Google Maps already uses
+  // the device's current location as the starting point automatically.
   const handleGetDirections = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const origin = `${position.coords.latitude},${position.coords.longitude}`;
-          const destination = encodeURIComponent(game.location);
-          window.open(
-            `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}`,
-            "_blank"
-          );
-        },
-        () => {
-          // fallback if user denies geolocation
-          const destination = encodeURIComponent(game.location);
-          window.open(
-            `https://www.google.com/maps/dir/?api=1&destination=${destination}`,
-            "_blank"
-          );
-        }
-      );
-    } else {
-      // no geolocation support
-      const destination = encodeURIComponent(game.location);
-      window.open(
-        `https://www.google.com/maps/dir/?api=1&destination=${destination}`,
-        "_blank"
-      );
-    }
+    const destination = encodeURIComponent(game.location);
+    window.open(`https://www.google.com/maps/dir/?api=1&destination=${destination}`, "_blank");
   };
 
   function handleResize() {

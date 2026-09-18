@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./MyProfile.css";
 import "../../shared/portal.css";
 import { resolveMediaUrl } from "../../../utils/media.js";
@@ -59,12 +59,45 @@ function MyProfile({ currentUser, token, onUpdateUser, onClose }) {
           </div>
         )}
 
-        {/* GUEST INFO */}
-        {!isPlayer && (
+        {/* GUEST INFO — only actually true for an unapproved "fan" account;
+            approved parent/coach/admin accounts get a link to their real
+            portal instead of an incorrect "you're a guest" message. */}
+        {currentUser?.role === "fan" && (
           <div className="profile__card">
             <h3 className="profile__card-title">Account Details</h3>
             <p>You are logged in as a guest.</p>
             <p>You can browse teams and view the schedule.</p>
+          </div>
+        )}
+
+        {currentUser?.role === "parent" && (
+          <div className="profile__card">
+            <h3 className="profile__card-title">Account Details</h3>
+            <p>You're signed in as a parent.</p>
+            <p>
+              Head to your <Link to="/parent">Parent Portal</Link> to register your
+              player, manage payments, and view your team's chat.
+            </p>
+          </div>
+        )}
+
+        {currentUser?.role === "coach" && (
+          <div className="profile__card">
+            <h3 className="profile__card-title">Account Details</h3>
+            <p>You're signed in as a coach.</p>
+            <p>
+              Head to your <Link to="/coach">Coach Portal</Link> to manage your team.
+            </p>
+          </div>
+        )}
+
+        {currentUser?.role === "admin" && (
+          <div className="profile__card">
+            <h3 className="profile__card-title">Account Details</h3>
+            <p>You're signed in as an admin.</p>
+            <p>
+              Head to the <Link to="/admin">Admin Dashboard</Link> to manage the club.
+            </p>
           </div>
         )}
 

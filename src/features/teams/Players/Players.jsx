@@ -4,11 +4,14 @@ import { useParams, useNavigate } from "react-router-dom";
 import PlayerProfileModal from "../PlayerProfile/PlayerProfileModal";
 import PlayerProfilePreviewModal from "../PlayerProfilePreviewModal/PlayerProfilePreviewModal";
 import { useState } from "react";
-import TeamChat from "../../chat/TeamChat/TeamChat";
+import ChatHub from "../../chat/ChatHub/ChatHub";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getTeam, getTeamPlayers } from "../../../api/teams";
 import { createPlayer, deletePlayer } from "../../../api/players";
-import { resolveImageUrl } from "../../../utils/media";
+import { getCoaches } from "../../../api/users.js";
+import { getAnnouncements } from "../../../api/announcements.js";
+import { queryKeys } from "../../../api/queryKeys.js";
+import { resolveImageUrl, resolveMediaUrl } from "../../../utils/media";
 import { generateTeamRosterPdf } from "../../../utils/teamRosterPdf";
 import { useToast } from "../../../context/ToastContext.js";
 
@@ -70,6 +73,18 @@ function Players({
         return true;
       });
     },
+  });
+
+  const { data: allCoaches = [] } = useQuery({
+    queryKey: queryKeys.coaches(),
+    queryFn: getCoaches,
+  });
+  const teamCoaches = allCoaches.filter((coach) => coach.teamId?._id === teamsId);
+
+  const { data: announcements = [] } = useQuery({
+    queryKey: queryKeys.announcements(teamsId),
+    queryFn: () => getAnnouncements(teamsId, token),
+    enabled: Boolean(isLoggedIn && token && teamsId),
   });
 
   const navigate = useNavigate();
@@ -215,6 +230,19 @@ function Players({
           >
             Team Chat
           </button>
+
+          <button
+            className={`players__tab ${
+              activeTab === "announcements" ? "players__tab_active" : ""
+            }`}
+            onClick={() => {
+              if (!isLoggedIn) return openLogin?.();
+              setActiveTab("announcements");
+            }}
+            type="button"
+          >
+            Announcements
+          </button>
         </div>
 
         <div className="players__header-actions">
@@ -333,14 +361,40 @@ function Players({
           {/* ✅ PLAYERS TAB */}
           {activeTab === "players" && (
             <div className="players__team__block">
+              {teamCoaches.length > 0 && (
+                <div className="players__coaches">
+                  <h3 className="players__coaches-title">Coaching Staff</h3>
+                  <div className="players__coaches-list">
+                    {teamCoaches.map((coach) => (
+                      <div key={coach._id} className="players__coach-card">
+                        <strong>{coach.name}</strong>
+                        {coach.coachTitle && <span> — {coach.coachTitle}</span>}
+                        {coach.email && (
+                          <a className="players__coach-link" href={`mailto:${coach.email}`}>
+                            ✉ {coach.email}
+                          </a>
+                        )}
+                        {coach.phone && (
+                          <a className="players__coach-link" href={`tel:${coach.phone}`}>
+                            ☎ {coach.phone}
+                          </a>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
               <div className="players__team__grid">
                 {players.map((player) => (
                   <div key={player._id} className="player__card">
                     <div className="player__image">
-                      <img
-                        src={resolveImageUrl(player.image)}
-                        alt={player.name}
-                      />
+                      {resolveImageUrl(player.image) ? (
+                        <img src={resolveImageUrl(player.image)} alt={player.name} />
+                      ) : (
+                        <div className="player__image-placeholder">
+                          {player.name?.charAt(0).toUpperCase() || "?"}
+                        </div>
+                      )}
                     </div>
 
                     <h4>{player.name}</h4>
@@ -388,10 +442,44 @@ function Players({
           {/* ✅ CHAT TAB */}
           {activeTab === "chat" &&
             (canAccessThisTeamChat ? (
-              <TeamChat teamId={team._id} />
+              <ChatHub
+                teamId={team._id}
+                token={token}
+                currentUser={currentUser}
+                canManageGroups={["coach", "admin"].includes(currentUser?.role)}
+              />
             ) : (
               <p style={{ color: "#9fbad1", textAlign: "center" }}>
                 You must be logged in and on this team to access the chat.
+              </p>
+            ))}
+
+          {activeTab === "announcements" &&
+            (isLoggedIn ? (
+              <div className="players__team__block">
+                {announcements.length === 0 && (
+                  <p className="portal__empty">No announcements yet.</p>
+                )}
+                {announcements.map((announcement) => (
+                  <div key={announcement._id} className="portal__card">
+                    <strong>{announcement.title}</strong>
+                    <p className="portal__card-meta">
+                      {new Date(announcement.createdAt).toLocaleString()}
+                    </p>
+                    <p className="portal__card-body">{announcement.body}</p>
+                    {announcement.imageUrl && (
+                      <img
+                        src={resolveMediaUrl(announcement.imageUrl)}
+                        alt=""
+                        style={{ maxWidth: "100%", maxHeight: 300, borderRadius: 8, marginTop: 8 }}
+                      />
+                    )}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p style={{ color: "#9fbad1", textAlign: "center" }}>
+                You must be logged in to see announcements.
               </p>
             ))}
         </>

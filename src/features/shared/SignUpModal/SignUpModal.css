@@ -7,3 +7,16 @@
   display: flex;
   gap: 16px;
 }
+
+.modal__checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.modal__coach-note {
+  display: block;
+  font-size: 12px;
+  color: #9ca3af;
+  margin-top: 4px;
+}

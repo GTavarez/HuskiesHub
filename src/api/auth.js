@@ -1,10 +1,10 @@
 import { apiFetch } from "./client";
 
-const signup = ({ name, email, password, confirmPassword }) =>
+const signup = ({ name, email, password, confirmPassword, phone }) =>
   apiFetch("/signup", {
     method: "POST",
     headers: { accept: "application/json" },
-    body: JSON.stringify({ name, email, password, confirmPassword }),
+    body: JSON.stringify({ name, email, password, confirmPassword, phone }),
   });
 
 const signin = ({ email, password }) =>
@@ -36,13 +36,22 @@ const getCurrentUser = (token) =>
     },
   });
 
-const updateUserProfile = (name, avatar, token) =>
+const updateUserProfile = (name, avatar, token, phone, bio, coachTitle) =>
   apiFetch("/me", {
     method: "PATCH",
     headers: {
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify({ name, avatar }),
+    body: JSON.stringify({ name, avatar, phone, bio, coachTitle }),
+  });
+
+const changePassword = ({ currentPassword, newPassword, confirmNewPassword }, token) =>
+  apiFetch("/me/password", {
+    method: "PATCH",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ currentPassword, newPassword, confirmNewPassword }),
   });
 
 const uploadAvatar = (file, token) => {
@@ -64,5 +73,6 @@ export {
   resetPassword,
   getCurrentUser,
   updateUserProfile,
+  changePassword,
   uploadAvatar,
 };

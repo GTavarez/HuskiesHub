@@ -67,6 +67,44 @@
 
 /* GRID LAYOUT — condensed so a full roster reads as close to one page as
    reasonably possible rather than a long scroll. */
+/* COACHING STAFF */
+.players__coaches {
+  margin-bottom: 20px;
+}
+
+.players__coaches-title {
+  color: #64b5f6;
+  font-size: 16px;
+  margin: 0 0 10px;
+}
+
+.players__coaches-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.players__coach-card {
+  background: linear-gradient(145deg, #101f36, #0d1628);
+  border-radius: 12px;
+  padding: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 13px;
+}
+
+.players__coach-link {
+  color: #64b5f6;
+  text-decoration: none;
+  font-size: 12px;
+}
+
+.players__coach-link:hover {
+  text-decoration: underline;
+}
+
 .players__team__grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
@@ -103,6 +141,25 @@
 }
 
 .player__card:hover .player__image img {
+  border-color: #ffd700;
+}
+
+.player__image-placeholder {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  border: 2px solid #64b5f6;
+  margin: 0 auto 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #112240;
+  color: #64b5f6;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.player__card:hover .player__image-placeholder {
   border-color: #ffd700;
 }
 

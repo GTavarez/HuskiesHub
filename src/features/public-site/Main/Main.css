@@ -1,4 +1,38 @@
 /* ============================= */
+/* COMPETITIVE EDGE TRAINING BANNER */
+/* ============================= */
+
+.main__cet-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  background: linear-gradient(90deg, #0b1b48, #16305e);
+  color: #fff;
+  text-decoration: none;
+  padding: 12px 20px;
+  text-align: center;
+  transition: 0.2s ease;
+}
+
+.main__cet-banner:hover {
+  background: linear-gradient(90deg, #16305e, #0b1b48);
+}
+
+.main__cet-banner-text {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.main__cet-banner-cta {
+  color: #ffd700;
+  font-weight: 700;
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+/* ============================= */
 /* MAIN HERO IMAGE               */
 /* ============================= */
 

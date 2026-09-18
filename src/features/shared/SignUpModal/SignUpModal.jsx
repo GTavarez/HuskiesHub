@@ -2,7 +2,10 @@ import "./SignUpModal.css";
 import ModalWithForm from "../ModalWithForm/ModalWithForm.jsx";
 
 import { useForm } from "../../../hooks/useForm.js";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { getTeams } from "../../../api/teams.js";
+import { queryKeys } from "../../../api/queryKeys.js";
 
 function SignUpModal({
   isOpen,
@@ -15,18 +18,29 @@ function SignUpModal({
     () => ({
       name: "",
       email: "",
+      phone: "",
       password: "",
     }),
     []
   );
 
   const { values, handleChange, setValues } = useForm(defaultValues);
+  const [isCoach, setIsCoach] = useState(false);
+  const [coachTeamId, setCoachTeamId] = useState("");
+
+  const { data: teams = [] } = useQuery({
+    queryKey: queryKeys.teams(),
+    queryFn: getTeams,
+    enabled: isCoach,
+  });
 
   const passwordMatches = values.password === values.confirmPassword;
 
   useEffect(() => {
     if (activeModal) {
       setValues(defaultValues); // Reset form when modal opens
+      setIsCoach(false);
+      setCoachTeamId("");
     }
   }, [activeModal, setValues, defaultValues]);
   const handleSubmit = (e) => {
@@ -34,8 +48,10 @@ function SignUpModal({
     onRegister({
       name: values.name,
       email: values.email,
+      phone: values.phone,
       password: values.password,
       confirmPassword: values.confirmPassword,
+      coachTeamId: isCoach ? coachTeamId : null,
     });
   };
   return (
@@ -78,6 +94,48 @@ function SignUpModal({
           onChange={handleChange}
         />
       </label>
+      <label className="modal__label">
+        Phone{" "}
+        <input
+          className="modal__input"
+          type="tel"
+          name="phone"
+          id="phone"
+          maxLength="20"
+          placeholder="Phone (optional)"
+          value={values.phone}
+          onChange={handleChange}
+        />
+      </label>
+      <label className="modal__label modal__checkbox-label">
+        <input
+          type="checkbox"
+          checked={isCoach}
+          onChange={(e) => setIsCoach(e.target.checked)}
+        />{" "}
+        I'm a Huskies Coach
+      </label>
+      {isCoach && (
+        <label className="modal__label">
+          Which team do you coach?{" "}
+          <select
+            className="modal__input"
+            value={coachTeamId}
+            onChange={(e) => setCoachTeamId(e.target.value)}
+            required
+          >
+            <option value="">Select a team…</option>
+            {teams.map((team) => (
+              <option key={team._id} value={team._id}>
+                {team.name}
+              </option>
+            ))}
+          </select>
+          <span className="modal__coach-note">
+            A club admin will approve coach access before your dashboard unlocks.
+          </span>
+        </label>
+      )}
       <label className="modal__label">
         Password{" "}
         <input

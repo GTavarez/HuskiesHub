@@ -1,0 +1,449 @@
+.lesson-booking {
+  background: #0a0a0a;
+  color: #f0f0f0;
+  padding: 0 0 60px;
+}
+
+/* Re-skins the shared LessonSlotBooking component (default Huskies navy) to
+   match this page's red/black branding, scoped so it doesn't leak out. */
+.lesson-booking__cet-theme .lesson-slot-booking {
+  background: #0a0a0a;
+  padding: 40px 32px 0;
+}
+
+.lesson-booking__cet-theme .lesson-slot-booking__title,
+.lesson-booking__cet-theme .lesson-slot-booking__form-title {
+  color: #e2222f;
+}
+
+.lesson-booking__cet-theme .lesson-slot-booking__subtitle {
+  color: #c7c7c7;
+}
+
+.lesson-booking__cet-theme .lesson-slot-booking__slots,
+.lesson-booking__cet-theme .lesson-slot-booking__form {
+  background: #1a1a1a;
+  border-color: rgba(216, 30, 44, 0.25);
+}
+
+.lesson-booking__cet-theme .lesson-slot-booking__empty {
+  color: #999999;
+}
+
+.lesson-booking__cet-theme .lesson-slot-booking__schedule-table th {
+  background: #0a0a0a;
+  color: #e2222f;
+  border-color: rgba(216, 30, 44, 0.2);
+}
+
+.lesson-booking__cet-theme .lesson-slot-booking__schedule-table td {
+  border-color: rgba(216, 30, 44, 0.15);
+}
+
+.lesson-booking__cet-theme .lesson-slot-booking__schedule-time {
+  color: #e5e5e5;
+  background: rgba(216, 30, 44, 0.08);
+}
+
+.lesson-booking__cet-theme .lesson-slot-booking__schedule-note {
+  color: #999999;
+}
+
+.lesson-booking__cet-theme .lesson-slot-booking__label {
+  color: #e5e5e5;
+}
+
+.lesson-booking__cet-theme .lesson-slot-booking__input {
+  background: #0a0a0a;
+  border-color: rgba(216, 30, 44, 0.4);
+}
+
+.lesson-booking__cet-theme .lesson-slot-booking__input:focus {
+  border-color: #e2222f;
+}
+
+.lesson-booking__cet-theme .lesson-slot-booking__submit {
+  background: #e2222f;
+  color: #ffffff;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  border-radius: 999px;
+}
+
+.lesson-booking__cet-theme .lesson-slot-booking__submit:hover:not(:disabled) {
+  filter: none;
+  background: #b81926;
+}
+
+.lesson-booking__hero {
+  background: linear-gradient(135deg, #161616, #0a0a0a);
+  border-bottom: 1px solid rgba(216, 30, 44, 0.35);
+  padding: 64px 32px;
+  text-align: center;
+}
+
+.lesson-booking__hero-title {
+  color: #ffffff;
+  font-size: 2.6rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  margin: 0 0 12px;
+}
+
+.lesson-booking__hero-tagline {
+  color: #f0f0f0;
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin: 0 auto 12px;
+  max-width: 640px;
+}
+
+.lesson-booking__hero-copy {
+  color: #b0b0b0;
+  font-size: 1rem;
+  margin: 0 auto 16px;
+  max-width: 640px;
+  line-height: 1.5;
+}
+
+.lesson-booking__hero-philosophy {
+  color: #e2222f;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  margin: 0;
+}
+
+.lesson-booking__section-title {
+  color: #e2222f;
+  font-size: 1.7rem;
+  font-weight: 800;
+  text-align: center;
+  margin: 0 0 16px;
+}
+
+.lesson-booking__why {
+  padding: 48px 32px;
+  border-bottom: 1px solid rgba(216, 30, 44, 0.2);
+}
+
+.lesson-booking__why-inner {
+  max-width: 760px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.lesson-booking__why-copy {
+  color: #c7c7c7;
+  font-size: 1.02rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.lesson-booking__phases {
+  padding: 48px 32px;
+  background: #121212;
+  border-bottom: 1px solid rgba(216, 30, 44, 0.2);
+}
+
+.lesson-booking__phases-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.lesson-booking__phases-tagline {
+  color: #ffffff;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  margin: 0 0 28px;
+}
+
+.lesson-booking__phases-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  text-align: left;
+}
+
+.lesson-booking__phase-card {
+  background: #1a1a1a;
+  border: 1px solid rgba(216, 30, 44, 0.35);
+  border-radius: 12px;
+  padding: 18px;
+}
+
+.lesson-booking__phase-number {
+  color: #e2222f;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.lesson-booking__phase-name {
+  color: #ffffff;
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin: 4px 0 2px;
+}
+
+.lesson-booking__phase-season {
+  color: #999999;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.lesson-booking__phase-focus {
+  color: #c7c7c7;
+  font-size: 0.88rem;
+  margin: 10px 0 0;
+  line-height: 1.4;
+}
+
+.lesson-booking__section-title--left {
+  text-align: left;
+}
+
+.lesson-booking__foundation {
+  padding: 56px 32px;
+  text-align: center;
+  background: linear-gradient(135deg, #1a1a1a, #0a0a0a);
+  border-bottom: 1px solid rgba(216, 30, 44, 0.35);
+}
+
+.lesson-booking__foundation-inner {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.lesson-booking__foundation-title {
+  color: #ffffff;
+  font-size: 1.9rem;
+  font-weight: 800;
+  margin: 0 0 16px;
+}
+
+.lesson-booking__foundation-copy {
+  color: #c7c7c7;
+  font-size: 1rem;
+  line-height: 1.6;
+  margin: 0 0 24px;
+}
+
+.lesson-booking__foundation-btn {
+  display: inline-block;
+  background: #e2222f;
+  color: #ffffff;
+  border: none;
+  border-radius: 999px;
+  padding: 16px 36px;
+  font-weight: 800;
+  font-size: 1.05rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: 0.2s ease;
+}
+
+.lesson-booking__foundation-btn:hover {
+  background: #b81926;
+}
+
+.lesson-booking__pricing {
+  padding: 48px 32px;
+  background: #121212;
+  border-bottom: 1px solid rgba(216, 30, 44, 0.2);
+}
+
+.lesson-booking__pricing-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.lesson-booking__pricing-subtitle {
+  color: #999999;
+  font-size: 0.95rem;
+  margin: 0 0 28px;
+}
+
+.lesson-booking__pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+  text-align: left;
+}
+
+.lesson-booking__pricing-card {
+  background: #1a1a1a;
+  border: 1px solid rgba(216, 30, 44, 0.35);
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+.lesson-booking__pricing-name {
+  color: #ffffff;
+  font-size: 1.15rem;
+  font-weight: 800;
+  margin: 0 0 4px;
+}
+
+.lesson-booking__pricing-price {
+  color: #e2222f;
+  font-size: 1.5rem;
+  font-weight: 900;
+  margin: 0 0 12px;
+}
+
+.lesson-booking__pricing-copy {
+  color: #c7c7c7;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin: 0 0 12px;
+}
+
+.lesson-booking__pricing-bullets {
+  margin: 0 0 12px;
+}
+
+.lesson-booking__pricing-bullets-title {
+  color: #ffffff;
+  font-size: 0.82rem;
+  font-weight: 700;
+  margin: 0 0 6px;
+}
+
+.lesson-booking__pricing-bullets ul {
+  margin: 0;
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.lesson-booking__pricing-bullets li {
+  color: #c7c7c7;
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+.lesson-booking__pricing-extra {
+  color: #999999;
+  font-size: 0.78rem;
+  font-style: italic;
+  line-height: 1.4;
+  margin: 0 0 16px;
+}
+
+.lesson-booking__founding-counter {
+  color: #ffffff;
+  background: rgba(216, 30, 44, 0.15);
+  border: 1px solid rgba(216, 30, 44, 0.4);
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.4;
+  margin: 0 0 16px;
+}
+
+.lesson-booking__pricing-btn {
+  display: block;
+  width: 100%;
+  text-align: center;
+  margin-top: auto;
+  background: #e2222f;
+  color: #ffffff;
+  border: none;
+  border-radius: 999px;
+  padding: 12px 20px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.lesson-booking__pricing-btn:hover:not(:disabled) {
+  background: #b81926;
+}
+
+.lesson-booking__pricing-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.lesson-booking__about {
+  padding: 48px 32px;
+}
+
+.lesson-booking__about-inner {
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  align-items: flex-start;
+  gap: 32px;
+}
+
+.lesson-booking__about-photo {
+  flex-shrink: 0;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: #1a1a1a;
+  border: 2px solid #e2222f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #e2222f;
+  font-size: 1.8rem;
+  font-weight: 800;
+}
+
+.lesson-booking__about-text {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.lesson-booking__about-copy {
+  color: #c7c7c7;
+  font-size: 1rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.lesson-booking__about-tagline {
+  color: #e2222f;
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  margin: 6px 0 0;
+}
+
+@media (max-width: 640px) {
+  .lesson-booking__about-inner {
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+  }
+
+  .lesson-booking__about-text {
+    text-align: left;
+  }
+
+  .lesson-booking__section-title--left {
+    text-align: center;
+  }
+}
+
+.lesson-booking__cet-theme {
+  padding-bottom: 40px;
+}

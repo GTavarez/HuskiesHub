@@ -47,9 +47,10 @@ function Contact() {
           </p>
 
           <div className="contact__details">
-            <p><strong>Email:</strong> info@huskieshub.com</p>
-            <p><strong>Phone:</strong> (555) 555-5555</p>
-            <p><strong>Primary Area:</strong> {facilityAddress}</p>
+            <p><strong>Contact:</strong> Allie Yoffee</p>
+            <p><strong>Email:</strong> yoffeeallie@gmail.com</p>
+            <p><strong>Phone:</strong> 973-800-0356</p>
+            <p><strong>Primary Area:</strong> Bergen and Passaic County, NJ</p>
           </div>
 
           <form className="contact__form" onSubmit={handleSubmit}>

@@ -9,13 +9,70 @@ import {
   runAutopay,
   sendReminders,
   exportQuickbooksCsvBlobUrl,
+  getFallWinterPaymentLink,
 } from "../../../api/payments.js";
+import { exportContactsCsvBlobUrl } from "../../../api/players.js";
 import { queryKeys } from "../../../api/queryKeys.js";
 import { useToast } from "../../../context/ToastContext.js";
 import { CURRENT_SEASON } from "../../../constants/season.js";
 
 function centsToDollars(cents) {
   return `$${(cents / 100).toFixed(2)}`;
+}
+
+// Admin-only lookup of the standalone Fall/Winter Stripe Payment Link —
+// deliberately not shown anywhere on the public site (owner asked it not be
+// posted publicly), but admins need a reliable place to find the current
+// link instead of relying on chat history/copy-pasted URLs going stale.
+function FallWinterLinkCard({ token }) {
+  const { pushToast } = useToast();
+  const [copied, setCopied] = useState(false);
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["fallWinterPaymentLink"],
+    queryFn: () => getFallWinterPaymentLink(token),
+    enabled: Boolean(token),
+  });
+
+  const handleCopy = async () => {
+    if (!data?.url) return;
+    try {
+      await navigator.clipboard.writeText(data.url);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      pushToast({ type: "error", message: "Couldn't copy — copy the link manually." });
+    }
+  };
+
+  return (
+    <div className="portal__form" style={{ marginBottom: 16 }}>
+      <h3 className="portal__section-title">Fall/Winter Only Registration Link ($2,500)</h3>
+      <p style={{ color: "#9fbad1", fontSize: 14, marginTop: -4 }}>
+        Not posted publicly — share this directly with families registering for Fall/Winter
+        only. It doesn't expire and payments made through it auto-match to the family's
+        account when possible.
+      </p>
+      {isLoading ? (
+        <p className="portal__empty">Loading…</p>
+      ) : data?.url ? (
+        <div className="portal__row" style={{ gap: 8, flexWrap: "wrap" }}>
+          <input
+            className="portal__input"
+            readOnly
+            value={data.url}
+            onFocus={(e) => e.target.select()}
+            style={{ flex: 1, minWidth: 240 }}
+          />
+          <button type="button" className="portal__button" onClick={handleCopy}>
+            {copied ? "Copied!" : "Copy Link"}
+          </button>
+        </div>
+      ) : (
+        <p className="portal__empty">No link configured yet.</p>
+      )}
+    </div>
+  );
 }
 
 function RegistrationRow({ registration, token }) {
@@ -52,12 +109,13 @@ function RegistrationRow({ registration, token }) {
     <div className="portal__card">
       <div className="portal__card-header">
         <span className="portal__badge">{registration.status}</span>
-        <strong>{registration.season}</strong>
+        <strong>{registration.playerName || "Unknown player"}</strong> — {registration.season}
       </div>
       <p className="portal__card-meta">
         Fee: {centsToDollars(registration.registrationFeeCents)} · Balance:{" "}
         {centsToDollars(balance?.balanceCents ?? registration.registrationFeeCents)} · Autopay:{" "}
-        {registration.autopayEnabled ? "on" : "off"}
+        {registration.autopayEnabled ? "on" : "off"} · Uniform:{" "}
+        {registration.uniformOptIn ? "included" : "opted out"}
       </p>
       <button
         type="button"
@@ -103,6 +161,7 @@ function TeamPricingEditor({ team, token }) {
   const [deposit, setDeposit] = useState(String(team.depositAmountCents / 100));
   const [autopayAmount, setAutopayAmount] = useState(String(team.autopayAmountCents / 100));
   const [autopayDay, setAutopayDay] = useState(String(team.autopayDayOfMonth));
+  const [uniformFee, setUniformFee] = useState(String((team.uniformFeeCents ?? 55000) / 100));
 
   useEffect(() => {
     setName(team.name || "");
@@ -111,6 +170,7 @@ function TeamPricingEditor({ team, token }) {
     setDeposit(String(team.depositAmountCents / 100));
     setAutopayAmount(String(team.autopayAmountCents / 100));
     setAutopayDay(String(team.autopayDayOfMonth));
+    setUniformFee(String((team.uniformFeeCents ?? 55000) / 100));
   }, [team]);
 
   const updateMutation = useMutation({
@@ -137,6 +197,7 @@ function TeamPricingEditor({ team, token }) {
       depositAmountCents: Math.round(Number(deposit) * 100),
       autopayAmountCents: Math.round(Number(autopayAmount) * 100),
       autopayDayOfMonth: Number(autopayDay),
+      uniformFeeCents: Math.round(Number(uniformFee) * 100),
     });
   };
 
@@ -211,6 +272,18 @@ function TeamPricingEditor({ team, token }) {
         onChange={(e) => setAutopayDay(e.target.value)}
       />
 
+      <label className="portal__label" htmlFor="team-uniform-fee">
+        Uniform Package ($) — included by default, discounted off the monthly balance if a
+        family opts out at registration
+      </label>
+      <input
+        id="team-uniform-fee"
+        className="portal__input"
+        type="number"
+        value={uniformFee}
+        onChange={(e) => setUniformFee(e.target.value)}
+      />
+
       <button type="submit" className="portal__button" disabled={updateMutation.isPending}>
         {updateMutation.isPending ? "Saving..." : "Save Team Details"}
       </button>
@@ -225,12 +298,16 @@ function CreateRegistrationForm({ team, token }) {
   const [season, setSeason] = useState(CURRENT_SEASON);
   const [fee, setFee] = useState(String(team.registrationFeeCents / 100));
   const [deposit, setDeposit] = useState(String(team.depositAmountCents / 100));
+  const [customAutopayAmount, setCustomAutopayAmount] = useState("");
+  const [customInstallments, setCustomInstallments] = useState("");
 
   useEffect(() => {
     setPlayerId("");
     setSeason(CURRENT_SEASON);
     setFee(String(team.registrationFeeCents / 100));
     setDeposit(String(team.depositAmountCents / 100));
+    setCustomAutopayAmount("");
+    setCustomInstallments("");
   }, [team]);
 
   const { data: players = [] } = useQuery({
@@ -262,6 +339,12 @@ function CreateRegistrationForm({ team, token }) {
       season: season.trim(),
       registrationFeeCents: Math.round(Number(fee) * 100),
       depositAmountCents: Math.round(Number(deposit) * 100),
+      ...(customAutopayAmount !== ""
+        ? { autopayAmountCents: Math.round(Number(customAutopayAmount) * 100) }
+        : {}),
+      ...(customInstallments !== ""
+        ? { autopayTotalInstallments: Number(customInstallments) }
+        : {}),
     });
   };
 
@@ -319,6 +402,31 @@ function CreateRegistrationForm({ team, token }) {
         onChange={(e) => setDeposit(e.target.value)}
       />
 
+      <label className="portal__label" htmlFor="new-reg-custom-autopay">
+        Custom Monthly Autopay ($) — leave blank to use team default
+      </label>
+      <input
+        id="new-reg-custom-autopay"
+        className="portal__input"
+        type="number"
+        placeholder={String(team.autopayAmountCents / 100)}
+        value={customAutopayAmount}
+        onChange={(e) => setCustomAutopayAmount(e.target.value)}
+      />
+
+      <label className="portal__label" htmlFor="new-reg-custom-installments">
+        Custom Number of Installments — leave blank to use team default
+      </label>
+      <input
+        id="new-reg-custom-installments"
+        className="portal__input"
+        type="number"
+        min="1"
+        placeholder={String(team.autopayTotalInstallments)}
+        value={customInstallments}
+        onChange={(e) => setCustomInstallments(e.target.value)}
+      />
+
       <button type="submit" className="portal__button" disabled={createMutation.isPending}>
         {createMutation.isPending ? "Creating..." : "Create Registration"}
       </button>
@@ -331,6 +439,7 @@ function RegistrationsPanel({ token }) {
   const [teamId, setTeamId] = useState("");
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
+  const [uniformFilter, setUniformFilter] = useState("all");
 
   const { data: teams = [] } = useQuery({
     queryKey: queryKeys.teams(),
@@ -342,6 +451,13 @@ function RegistrationsPanel({ token }) {
     queryKey: queryKeys.registrations(undefined),
     queryFn: () => getRegistrations({ teamId }, token),
     enabled: Boolean(teamId && token),
+  });
+
+  const optedOutCount = registrations.filter((r) => !r.uniformOptIn).length;
+  const visibleRegistrations = registrations.filter((registration) => {
+    if (uniformFilter === "included") return registration.uniformOptIn;
+    if (uniformFilter === "opted_out") return !registration.uniformOptIn;
+    return true;
   });
 
   const runAutopayMutation = useMutation({
@@ -383,8 +499,22 @@ function RegistrationsPanel({ token }) {
     }
   };
 
+  const handleExportContactsCsv = async () => {
+    try {
+      const url = await exportContactsCsvBlobUrl(token);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "huskieshub-player-contacts.csv";
+      link.click();
+    } catch (error) {
+      pushToast({ type: "error", message: error?.message || "Failed to export contacts." });
+    }
+  };
+
   return (
     <div>
+      <FallWinterLinkCard token={token} />
+
       <div className="portal__row" style={{ marginBottom: 16, flexWrap: "wrap", gap: 8 }}>
         <button
           type="button"
@@ -420,6 +550,9 @@ function RegistrationsPanel({ token }) {
         <button type="button" className="portal__button" onClick={handleExportCsv}>
           Export QuickBooks CSV
         </button>
+        <button type="button" className="portal__button" onClick={handleExportContactsCsv}>
+          Export Player Contacts CSV
+        </button>
       </div>
 
       <label className="portal__label" htmlFor="registrations-team">
@@ -446,11 +579,45 @@ function RegistrationsPanel({ token }) {
         </div>
       )}
 
+      {teamId && registrations.length > 0 && (
+        <div className="portal__row" style={{ marginTop: 16, gap: 8, alignItems: "center" }}>
+          <label className="portal__label" htmlFor="uniform-filter" style={{ margin: 0 }}>
+            Uniform
+          </label>
+          <select
+            id="uniform-filter"
+            className="portal__select"
+            value={uniformFilter}
+            onChange={(e) => setUniformFilter(e.target.value)}
+          >
+            <option value="all">All ({registrations.length})</option>
+            <option value="included">Included ({registrations.length - optedOutCount})</option>
+            <option value="opted_out">Opted out ({optedOutCount})</option>
+          </select>
+          <span style={{ color: "#9fbad1", fontSize: 14 }}>
+            {optedOutCount} of {registrations.length} opted out of the uniform package
+          </span>
+        </div>
+      )}
+
+      {teamId && optedOutCount > 0 && (
+        <p style={{ marginTop: 8, color: "#f2b8b5", fontSize: 14 }}>
+          Opted out:{" "}
+          {registrations
+            .filter((r) => !r.uniformOptIn)
+            .map((r) => r.playerName || "Unknown player")
+            .join(", ")}
+        </p>
+      )}
+
       <div style={{ marginTop: 16 }}>
         {teamId && registrations.length === 0 && (
           <p className="portal__empty">No registrations for this team yet.</p>
         )}
-        {registrations.map((registration) => (
+        {teamId && registrations.length > 0 && visibleRegistrations.length === 0 && (
+          <p className="portal__empty">No registrations match this filter.</p>
+        )}
+        {visibleRegistrations.map((registration) => (
           <RegistrationRow key={registration._id} registration={registration} token={token} />
         ))}
       </div>

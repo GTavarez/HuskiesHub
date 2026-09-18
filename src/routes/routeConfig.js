@@ -13,6 +13,15 @@ const routeConfig = [
     group: "more",
   },
   { path: "/clinics", label: "Clinics", roles: "public", group: "more" },
+  {
+    path: "/competitive-edge-training",
+    label: "Competitive Edge Training",
+    roles: "public",
+    group: "more",
+    // Opens as its own tab/landing page — a distinct program/brand, not just
+    // another page of the Huskies site.
+    newTab: true,
+  },
   { path: "/contact", label: "Contact", roles: "public", group: "more" },
   {
     path: "/profile",

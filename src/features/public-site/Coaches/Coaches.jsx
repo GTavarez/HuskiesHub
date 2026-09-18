@@ -1,10 +1,16 @@
 import "./Coaches.css";
 import React from "react";
-import { coachesData } from "../../../utils/constants.js";
+import { useQuery } from "@tanstack/react-query";
+import { getCoaches } from "../../../api/users.js";
+import { queryKeys } from "../../../api/queryKeys.js";
 import CoachCard from "../CoachCard/CoachCard.jsx";
-import { resolveImageUrl } from "../../../utils/media.js";
 
 function Coaches() {
+  const { data: coaches = [], isLoading } = useQuery({
+    queryKey: queryKeys.coaches(),
+    queryFn: getCoaches,
+  });
+
   return (
     <section className="coaches">
       <div className="coaches__header">
@@ -15,13 +21,11 @@ function Coaches() {
         </p>
       </div>
 
+      {isLoading && <p style={{ textAlign: "center" }}>Loading coaches...</p>}
+
       <div className="coaches__grid">
-        {coachesData.map((coach) => (
-          <CoachCard
-            key={coach.id}
-            coach={coach}
-            cleanImage={(image) => resolveImageUrl(image, "images")}
-          />
+        {coaches.map((coach) => (
+          <CoachCard key={coach._id} coach={coach} />
         ))}
       </div>
     </section>

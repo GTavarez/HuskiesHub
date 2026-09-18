@@ -9,11 +9,13 @@ import ResetPasswordPage from "../../features/shared/ResetPasswordPage/ResetPass
 import Players from "../../features/teams/Players/Players.jsx";
 import Teams from "../../features/teams/Teams/Teams.jsx";
 import CollegeCommits from "../../features/public-site/CollegeCommits/CollegeCommits.jsx";
-import { Routes, Route, BrowserRouter } from "react-router-dom";
+import { Routes, Route, BrowserRouter, useLocation } from "react-router-dom";
+import { trackPageView } from "../../utils/analytics.js";
 import { useState } from "react";
 import React from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { signin, signup, getCurrentUser } from "../../api/auth.js";
+import { submitRoleRequest } from "../../api/roleRequests.js";
 import { queryKeys } from "../../api/queryKeys.js";
 import { useToast } from "../../context/ToastContext.js";
 
@@ -23,7 +25,14 @@ import ProtectedRoute from "../../features/shared/ProtectedRoute/ProtectedRoute.
 import Coaches from "../../features/public-site/Coaches/Coaches.jsx";
 import Clinics from "../../features/public-site/Clinics/Clinics.jsx";
 import Contact from "../../features/public-site/Contact/Contact.jsx";
+import LessonBooking from "../../features/public-site/LessonBooking/LessonBooking.jsx";
+import AssessmentRegistrationForm from "../../features/public-site/CetAssessment/AssessmentRegistrationForm.jsx";
+import AssessmentConfirmation from "../../features/public-site/CetAssessment/AssessmentConfirmation.jsx";
+import LessonRequestAction from "../../features/public-site/LessonRequestAction/LessonRequestAction.jsx";
+import CetHeader from "../../features/public-site/CetLayout/CetHeader.jsx";
+import CetFooter from "../../features/public-site/CetLayout/CetFooter.jsx";
 import EditProfileModal from "../../features/profile/EditProfileModal/EditProfileModal.jsx";
+import ForcePasswordChangeModal from "../../features/shared/ForcePasswordChangeModal/ForcePasswordChangeModal.jsx";
 import Footer from "../../features/shared/Footer/Footer.jsx";
 import AdminDashboard from "../../features/admin/AdminDashboard/AdminDashboard.jsx";
 import ParentDashboard from "../../features/parent-portal/ParentDashboard/ParentDashboard.jsx";
@@ -35,6 +44,18 @@ import { routeConfig } from "../../routes/routeConfig.js";
 import { useEffect } from "react";
 
 const rolesFor = (path) => routeConfig.find((route) => route.path === path)?.roles;
+
+// Must render inside <BrowserRouter> (useLocation requires Router context).
+// gtag's automatic pageview is disabled in index.html, so this is the only
+// thing sending page_view events — without it GA would only ever see one
+// pageview per visit, no matter how much of the SPA a visitor navigates.
+function AnalyticsTracker() {
+  const location = useLocation();
+  useEffect(() => {
+    trackPageView(location.pathname + location.search);
+  }, [location.pathname, location.search]);
+  return null;
+}
 
 function App() {
   const queryClient = useQueryClient();
@@ -114,6 +135,11 @@ function App() {
     queryClient.removeQueries({ queryKey: ["currentUser"] });
   }, [currentUserError, isUserError, pushToast, queryClient, token]);
 
+  // Set by handleSignUp when the signup form's "I'm a Huskies Coach" checkbox
+  // was checked — read once signInMutation's auto-login (after signup)
+  // succeeds and a token is available, then cleared.
+  const pendingCoachTeamId = React.useRef(null);
+
   const signInMutation = useMutation({
     mutationFn: signin,
     onSuccess: (data) => {
@@ -125,6 +151,24 @@ function App() {
         queryKey: queryKeys.currentUser(data.token),
       });
       pushToast({ type: "success", message: "Welcome back!" });
+
+      if (pendingCoachTeamId.current) {
+        const teamId = pendingCoachTeamId.current;
+        pendingCoachTeamId.current = null;
+        submitRoleRequest({ roleRequestType: "coach", teamId }, data.token)
+          .then(() => {
+            pushToast({
+              type: "success",
+              message: "Coach access request submitted — an admin will review it shortly.",
+            });
+          })
+          .catch((error) => {
+            pushToast({
+              type: "error",
+              message: error?.message || "Failed to submit coach access request.",
+            });
+          });
+      }
     },
     onError: (error) => {
       pushToast({
@@ -143,6 +187,9 @@ function App() {
       });
     },
     onError: (error) => {
+      // A failed signup never reaches signInMutation's success handler, so
+      // this would otherwise leak into an unrelated later sign-in.
+      pendingCoachTeamId.current = null;
       pushToast({
         type: "error",
         message: error?.message || "Registration failed.",
@@ -150,8 +197,9 @@ function App() {
     },
   });
 
-  const handleSignUp = ({ name, email, password, confirmPassword }) => {
-    signUpMutation.mutate({ name, email, password, confirmPassword });
+  const handleSignUp = ({ name, email, phone, password, confirmPassword, coachTeamId }) => {
+    pendingCoachTeamId.current = coachTeamId || null;
+    signUpMutation.mutate({ name, email, phone, password, confirmPassword });
   };
 
   const handleSignIn = ({ email, password }) => {
@@ -189,17 +237,31 @@ function App() {
   if (token && !isLoggedIn && !isUserError) {
     return <div>Loading...</div>;
   }
+
+  // Competitive Edge Training is reached via a new-tab link from the Huskies
+  // site (never client-side navigation from a Huskies page), so a plain
+  // pathname read at render time is enough here, no useLocation() needed.
+  const isCetPage = window.location.pathname.startsWith("/competitive-edge-training");
+
   return (
     <BrowserRouter>
+    <AnalyticsTracker />
     <CurrentUserContext.Provider value={user}>
       <div className="page">
-        <Header
-          onSignUp={handleSignUp}
-          onSignIn={handleSignIn}
-          onClick={openSignUpModal}
-          openSignInModal={openSignInModal}
-          onSignOut={handleSignOut}
-        />
+        {isLoggedIn && user?.mustChangePassword && (
+          <ForcePasswordChangeModal token={token} />
+        )}
+        {isCetPage ? (
+          <CetHeader />
+        ) : (
+          <Header
+            onSignUp={handleSignUp}
+            onSignIn={handleSignIn}
+            onClick={openSignUpModal}
+            openSignInModal={openSignInModal}
+            onSignOut={handleSignOut}
+          />
+        )}
         <Routes>
           <Route path="/" element={<Main onJoinClick={openSignUpModal} />} />
           <Route path="/schedule" element={<Schedule />} />
@@ -208,6 +270,20 @@ function App() {
           <Route path="/coaches" element={<Coaches />} />
           <Route path="/collegecommits" element={<CollegeCommits />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/competitive-edge-training" element={<LessonBooking />} />
+          <Route
+            path="/competitive-edge-training/performance-assessment"
+            element={<AssessmentRegistrationForm variant="public" />}
+          />
+          <Route
+            path="/competitive-edge-training/performance-assessment/huskies"
+            element={<AssessmentRegistrationForm variant="huskies" />}
+          />
+          <Route
+            path="/competitive-edge-training/performance-assessment/confirmation"
+            element={<AssessmentConfirmation />}
+          />
+          <Route path="/lesson-requests/act" element={<LessonRequestAction />} />
           <Route
             path="/reset-password"
             element={<ResetPasswordPage onLoginClick={openSignInModal} />}
@@ -341,7 +417,7 @@ function App() {
           onUpdate={handleSaveProfile}
         />
       )}
-      <Footer />
+      {isCetPage ? <CetFooter /> : <Footer />}
     </CurrentUserContext.Provider>
     </BrowserRouter>
   );

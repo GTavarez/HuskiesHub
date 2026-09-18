@@ -1,0 +1,46 @@
+.cet-header {
+  background: #0a0a0a;
+  border-bottom: 1px solid rgba(216, 30, 44, 0.35);
+  padding: 14px 32px;
+  display: flex;
+  justify-content: center;
+}
+
+.cet-footer {
+  background: #0a0a0a;
+  border-top: 1px solid rgba(216, 30, 44, 0.35);
+  padding: 36px 32px;
+  text-align: center;
+}
+
+.cet-footer__brand {
+  color: #ffffff;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  margin: 0 0 14px;
+}
+
+.cet-footer__links {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-bottom: 16px;
+}
+
+.cet-footer__link {
+  color: #e2222f;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.cet-footer__link:hover {
+  text-decoration: underline;
+}
+
+.cet-footer__copyright {
+  color: #666666;
+  font-size: 0.78rem;
+  margin: 0;
+}

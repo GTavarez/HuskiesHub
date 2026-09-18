@@ -3,11 +3,11 @@ import { apiFetch, ApiError } from "./client";
 
 const authHeaders = (token) => ({ Authorization: `Bearer ${token}` });
 
-const createCheckoutSession = ({ type, productId, registrationId }, token) =>
+const createCheckoutSession = ({ type, productId, registrationId, amountCents }, token) =>
   apiFetch("/api/payments/checkout-session", {
     method: "POST",
     headers: authHeaders(token),
-    body: JSON.stringify({ type, productId, registrationId }),
+    body: JSON.stringify({ type, productId, registrationId, amountCents }),
   });
 
 const createSetupSession = ({ registrationId }, token) =>
@@ -48,6 +48,11 @@ const sendReminders = (token) =>
     headers: authHeaders(token),
   });
 
+const getFallWinterPaymentLink = (token) =>
+  apiFetch("/api/payments/fall-winter-link", {
+    headers: authHeaders(token),
+  });
+
 // Auth-gated file download requires a fetch with an Authorization header —
 // a plain <a href> can't attach one, so this resolves a same-origin blob URL instead.
 const exportQuickbooksCsvBlobUrl = async ({ from, to }, token) => {
@@ -71,4 +76,5 @@ export {
   runAutopay,
   sendReminders,
   exportQuickbooksCsvBlobUrl,
+  getFallWinterPaymentLink,
 };

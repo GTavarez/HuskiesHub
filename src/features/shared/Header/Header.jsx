@@ -5,6 +5,7 @@ import logo from "../../../assets/logo.png";
 import CurrentUserContext from "../../../context/CurrentUserContext";
 import { resolveMediaUrl } from "../../../utils/media.js";
 import { routeConfig } from "../../../routes/routeConfig.js";
+import NotificationBell from "../NotificationBell/NotificationBell.jsx";
 
 const MORE_LINKS = routeConfig.filter((route) => route.group === "more");
 
@@ -82,12 +83,23 @@ function Header({ onClick, onSignOut, openSignInModal }) {
         <img src={logo} alt="HuskiesHub Logo" className="header__logo" />
       </Link>
 
-      {/* HAMBURGER BUTTON */}
-      <button className="header__hamburger" onClick={toggleHamburger}>
-        <span className={navOpen ? "bar bar1 open" : "bar bar1"}></span>
-        <span className={navOpen ? "bar bar2 open" : "bar bar2"}></span>
-        <span className={navOpen ? "bar bar3 open" : "bar bar3"}></span>
-      </button>
+      {/* Grouped so the bell stays visible next to the hamburger even while
+          .header__nav is collapsed (display:none) below the 768px
+          breakpoint — previously the bell lived inside .header__nav and
+          disappeared along with it until the menu was opened. */}
+      <div className="header__mobile-actions">
+        {currentUser && (
+          <div className="header__bell-mobile">
+            <NotificationBell token={localStorage.getItem("jwt")} />
+          </div>
+        )}
+        {/* HAMBURGER BUTTON */}
+        <button className="header__hamburger" onClick={toggleHamburger}>
+          <span className={navOpen ? "bar bar1 open" : "bar bar1"}></span>
+          <span className={navOpen ? "bar bar2 open" : "bar bar2"}></span>
+          <span className={navOpen ? "bar bar3 open" : "bar bar3"}></span>
+        </button>
+      </div>
 
       {/* NAVIGATION */}
       <nav className={navOpen ? "header__nav open" : "header__nav"} ref={navRef}>
@@ -126,22 +138,36 @@ function Header({ onClick, onSignOut, openSignInModal }) {
         </button>
         {dropdownOpen && (
           <div className="header__nav-dropdown_menu">
-            {MORE_LINKS.map((route) => (
-              <Link
-                key={route.path}
-                to={route.path}
-                className="header__dropdown-link"
-                onClick={closeAllMenus}
-              >
-                {route.label}
-              </Link>
-            ))}
+            {MORE_LINKS.map((route) =>
+              route.newTab ? (
+                <a
+                  key={route.path}
+                  href={route.path}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="header__dropdown-link"
+                  onClick={closeAllMenus}
+                >
+                  {route.label}
+                </a>
+              ) : (
+                <Link
+                  key={route.path}
+                  to={route.path}
+                  className="header__dropdown-link"
+                  onClick={closeAllMenus}
+                >
+                  {route.label}
+                </Link>
+              )
+            )}
           </div>
         )}
 
         {/* PROFILE MENU */}
         {currentUser ? (
           <>
+            <NotificationBell token={localStorage.getItem("jwt")} />
             <button className="header__user-chip" onClick={toggleProfileMenu} type="button">
               {renderImage()}
               <span className="header__user-chip-name">{currentUser.name}</span>

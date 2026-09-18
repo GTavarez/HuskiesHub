@@ -1,16 +1,16 @@
 // src/Components/Coaches/CoachCard.jsx
 import React from "react";
+import { resolveMediaUrl } from "../../../utils/media.js";
 
-function CoachCard({ coach, cleanImage }) {
+function CoachCard({ coach }) {
+  const photoUrl = resolveMediaUrl(coach.avatar);
+  const title = coach.coachTitle || (coach.role === "admin" ? "Head Coach / Director" : "Coach");
+
   return (
     <article className="coach-card">
       <div className="coach-card__image-wrapper">
-        {coach.image ? (
-          <img
-            src={cleanImage(coach.image)}
-            alt={coach.name}
-            className="coach-card__image"
-          />
+        {photoUrl ? (
+          <img src={photoUrl} alt={coach.name} className="coach-card__image" />
         ) : (
           <div className="coach-card__image coach-card__image--placeholder">
             {coach.name.charAt(0)}
@@ -20,8 +20,15 @@ function CoachCard({ coach, cleanImage }) {
 
       <div className="coach-card__content">
         <h3 className="coach-card__name">{coach.name}</h3>
-        <p className="coach-card__role">{coach.role}</p>
-        <p className="coach-card__bio">{coach.bio}</p>
+        <p className="coach-card__role">
+          {title}
+          {coach.teamId?.name ? ` — ${coach.teamId.name}` : ""}
+        </p>
+        {coach.bio ? (
+          <p className="coach-card__bio">{coach.bio}</p>
+        ) : (
+          <p className="coach-card__bio coach-card__bio--empty">Bio coming soon.</p>
+        )}
 
         <div className="coach-card__contact">
           {coach.email && (

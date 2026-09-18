@@ -30,6 +30,53 @@
   font-style: italic;
 }
 
+.bi-dashboard__weather-list {
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  background: rgba(100, 181, 246, 0.15);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.bi-dashboard__weather-row {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 12px;
+  align-items: baseline;
+  padding: 10px 14px;
+  background: rgba(17, 34, 64, 0.75);
+}
+
+.bi-dashboard__weather-condition {
+  color: #f8fbff;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.bi-dashboard__weather-date {
+  color: #b9c8de;
+  font-size: 0.85rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.bi-dashboard__weather-location {
+  color: #8ea2c0;
+  font-size: 0.85rem;
+  text-align: right;
+}
+
+@media (max-width: 560px) {
+  .bi-dashboard__weather-row {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+  .bi-dashboard__weather-location {
+    text-align: left;
+  }
+}
+
 @media (max-width: 900px) {
   .bi-dashboard__grid {
     grid-template-columns: repeat(2, 1fr);

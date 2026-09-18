@@ -50,6 +50,15 @@
   border-bottom: 2px solid rgba(255, 255, 255, 0.05);
 }
 
+/* The club logo standing in for a not-yet-uploaded team photo shouldn't be
+   cropped/zoomed the way a real banner photo is. */
+.team__banner-img--placeholder {
+  object-fit: contain !important;
+  background: #0a192f;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
 .team__content {
   padding: 24px 20px 30px;
 }

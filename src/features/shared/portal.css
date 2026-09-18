@@ -93,6 +93,11 @@
   color: #81c784;
 }
 
+.portal__badge--meeting {
+  background: rgba(255, 183, 77, 0.2);
+  color: #ffb74d;
+}
+
 .portal__link-button {
   background: none;
   border: none;
@@ -179,7 +184,19 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
   gap: 10px;
+}
+
+/* Native form controls (esp. datetime-local) have a wide intrinsic min-width
+   that flexbox won't shrink by default, which forces the whole row — and via
+   the parent grid track, every sibling field in the form — wider than the
+   viewport on mobile. Letting them shrink/wrap keeps the row (and the form)
+   inside the panel instead of bleeding off the edge of the screen. */
+.portal__row > .portal__input,
+.portal__row > .portal__select {
+  flex: 1 1 140px;
+  min-width: 0;
 }
 
 .portal__player-row {

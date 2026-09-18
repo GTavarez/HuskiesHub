@@ -1,4 +1,5 @@
-import { apiFetch } from "./client";
+import { apiBaseUrl } from "../utils/config";
+import { apiFetch, ApiError } from "./client";
 
 const authHeaders = (token) => ({ Authorization: `Bearer ${token}` });
 
@@ -22,4 +23,22 @@ const deletePlayer = (playerId, token) =>
     headers: authHeaders(token),
   });
 
-export { createPlayer, updatePlayer, deletePlayer };
+const getTeamContacts = (teamId, token) =>
+  apiFetch(`/api/players/team/${teamId}/contacts`, {
+    headers: authHeaders(token),
+  });
+
+// Auth-gated file download requires a fetch with an Authorization header —
+// a plain <a href> can't attach one, so this resolves a same-origin blob URL instead.
+const exportContactsCsvBlobUrl = async (token) => {
+  const response = await fetch(`${apiBaseUrl}/api/players/export/contacts`, {
+    headers: authHeaders(token),
+  });
+  if (!response.ok) {
+    throw new ApiError("Failed to export CSV", response.status, null);
+  }
+  const blob = await response.blob();
+  return URL.createObjectURL(blob);
+};
+
+export { createPlayer, updatePlayer, deletePlayer, exportContactsCsvBlobUrl, getTeamContacts };

@@ -100,6 +100,11 @@
   line-height: 1.5;
 }
 
+.coach-card__bio--empty {
+  font-style: italic;
+  color: #8ea2c0;
+}
+
 .coach-card__contact {
   margin-top: 6px;
   display: flex;

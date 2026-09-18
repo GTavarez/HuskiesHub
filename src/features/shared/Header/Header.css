@@ -368,6 +368,19 @@
   }
 }
 
+.header__mobile-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Hidden on desktop — .header__nav is always visible there, so the bell
+   already shows via its original spot inside the nav. Only needed once
+   .header__nav collapses behind the hamburger below 768px. */
+.header__bell-mobile {
+  display: none;
+}
+
 /* HAMBURGER BUTTON */
 .header__hamburger {
   display: none;
@@ -401,6 +414,11 @@
 /* MOBILE NAV */
 @media (max-width: 768px) {
   .header__hamburger {
+    display: flex;
+    z-index: 11000;
+  }
+
+  .header__bell-mobile {
     display: flex;
     z-index: 11000;
   }

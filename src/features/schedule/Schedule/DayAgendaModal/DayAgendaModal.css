@@ -1,0 +1,47 @@
+.day-agenda__overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(10, 25, 47, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  padding: 20px;
+}
+
+.day-agenda__content {
+  background-color: #0a192f;
+  color: #e6f1ff;
+  padding: 2.2rem;
+  border-radius: 16px;
+  box-shadow: 0 0 15px rgba(100, 181, 246, 0.2);
+  max-width: 520px;
+  width: 100%;
+  max-height: 85vh;
+  overflow-y: auto;
+  position: relative;
+}
+
+.day-agenda__close {
+  position: absolute;
+  top: 14px;
+  right: 18px;
+  background: transparent;
+  border: none;
+  color: #cbd5f5;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.day-agenda__title {
+  margin: 0 0 16px;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #ffffff;
+}

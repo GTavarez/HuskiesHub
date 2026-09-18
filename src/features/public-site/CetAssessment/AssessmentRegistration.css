@@ -1,0 +1,294 @@
+/* Shared black/red CET branding — matches LessonBooking.css. */
+
+.assessment-form,
+.assessment-confirmation {
+  background: #0a0a0a;
+  color: #f0f0f0;
+  min-height: 60vh;
+  padding: 48px 20px 80px;
+}
+
+.assessment-form__inner,
+.assessment-confirmation__hero,
+.assessment-confirmation__upsell,
+.assessment-confirmation__remote {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.assessment-form__title,
+.assessment-confirmation__title {
+  color: #e2222f;
+  font-size: 2rem;
+  margin: 0 0 8px;
+  text-align: center;
+}
+
+.assessment-form__subtitle {
+  text-align: center;
+  color: #c7c7c7;
+  margin: 0 0 24px;
+}
+
+.assessment-form__meta,
+.assessment-confirmation__meta {
+  text-align: center;
+  color: #c7c7c7;
+  margin: 0 0 16px;
+}
+
+.assessment-confirmation__cancelled {
+  text-align: center;
+  color: #ffb4b4;
+  background: rgba(216, 30, 44, 0.12);
+  border: 1px solid rgba(216, 30, 44, 0.3);
+  border-radius: 10px;
+  padding: 10px 14px;
+}
+
+.assessment-form__form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  background: #1a1a1a;
+  border: 1px solid rgba(216, 30, 44, 0.25);
+  border-radius: 14px;
+  padding: 24px;
+}
+
+.assessment-form__row {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.assessment-form__row > .assessment-form__label {
+  flex: 1 1 200px;
+  min-width: 0;
+}
+
+.assessment-form__label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: #e5e5e5;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.assessment-form__input {
+  background: #0a0a0a;
+  border: 1px solid rgba(216, 30, 44, 0.4);
+  border-radius: 8px;
+  padding: 10px 12px;
+  color: #f0f0f0;
+  font-size: 0.95rem;
+  font-family: inherit;
+}
+
+.assessment-form__input:focus {
+  outline: none;
+  border-color: #e2222f;
+}
+
+.assessment-form__checkbox-row,
+.assessment-form__radio-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #e5e5e5;
+  font-size: 0.9rem;
+}
+
+.assessment-form__payment-choice {
+  background: rgba(216, 30, 44, 0.08);
+  border: 1px solid rgba(216, 30, 44, 0.25);
+  border-radius: 10px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.assessment-form__submit {
+  margin-top: 8px;
+  background: #e2222f;
+  color: #ffffff;
+  border: none;
+  border-radius: 999px;
+  padding: 12px 20px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+}
+
+.assessment-form__submit:hover:not(:disabled) {
+  background: #b81926;
+}
+
+.assessment-form__submit:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+/* ---- Confirmation page ---- */
+
+.assessment-confirmation__hero {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.assessment-confirmation__eyebrow {
+  text-align: center;
+  color: #c7c7c7;
+  font-size: 1.1rem;
+  margin: 0 0 4px;
+}
+
+.assessment-confirmation__lead {
+  text-align: center;
+  color: #f0f0f0;
+  font-size: 1.05rem;
+  margin: 0 0 24px;
+}
+
+.assessment-confirmation__academy-card {
+  background: linear-gradient(160deg, #1a1a1a, #120a0b);
+  border: 1px solid rgba(216, 30, 44, 0.5);
+  border-radius: 16px;
+  padding: 28px;
+  text-align: center;
+}
+
+.assessment-confirmation__academy-title {
+  color: #e2222f;
+  font-size: 1.4rem;
+  margin: 0 0 6px;
+  letter-spacing: 0.02em;
+}
+
+.assessment-confirmation__academy-sub {
+  color: #c7c7c7;
+  margin: 0 0 18px;
+}
+
+.assessment-confirmation__academy-list {
+  text-align: left;
+  color: #e5e5e5;
+  margin: 0 0 18px;
+  padding-left: 20px;
+  display: inline-block;
+}
+
+.assessment-confirmation__academy-rate-label {
+  color: #c7c7c7;
+  margin: 0;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.assessment-confirmation__academy-rate {
+  color: #ffffff;
+  font-size: 2.4rem;
+  font-weight: 800;
+  margin: 0 0 16px;
+}
+
+.assessment-confirmation__academy-cta {
+  background: #e2222f;
+  color: #ffffff;
+  border: none;
+  border-radius: 999px;
+  padding: 14px 28px;
+  font-weight: 700;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+}
+
+.assessment-confirmation__academy-cta:hover:not(:disabled) {
+  background: #b81926;
+}
+
+.assessment-confirmation__academy-cta:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+.assessment-confirmation__urgency {
+  margin: 16px 0 0;
+  color: #ffb4b4;
+  font-size: 0.85rem;
+}
+
+.assessment-confirmation__remote {
+  margin-top: 36px;
+  text-align: center;
+}
+
+.assessment-confirmation__remote-lead {
+  color: #c7c7c7;
+  margin: 0 0 18px;
+}
+
+.assessment-confirmation__remote-options {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.assessment-confirmation__remote-option {
+  flex: 1 1 240px;
+  background: #1a1a1a;
+  border: 1px solid rgba(216, 30, 44, 0.2);
+  border-radius: 12px;
+  padding: 18px;
+}
+
+.assessment-confirmation__remote-option h3 {
+  color: #f0f0f0;
+  margin: 0 0 8px;
+  font-size: 1rem;
+}
+
+.assessment-confirmation__remote-option p {
+  color: #c7c7c7;
+  font-size: 0.85rem;
+  margin: 0 0 14px;
+}
+
+.assessment-confirmation__remote-btn {
+  background: transparent;
+  border: 1px solid #e2222f;
+  color: #e2222f;
+  border-radius: 999px;
+  padding: 8px 16px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+}
+
+.assessment-confirmation__remote-btn:hover:not(:disabled) {
+  background: rgba(216, 30, 44, 0.15);
+}
+
+.assessment-confirmation__footer {
+  text-align: center;
+  margin-top: 40px;
+}
+
+.assessment-confirmation__back-link {
+  color: #c7c7c7;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.assessment-confirmation__back-link:hover {
+  color: #e2222f;
+}

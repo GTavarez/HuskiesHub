@@ -2,9 +2,23 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>huskies-frontend</title>
+    <title>Empire State Huskies</title>
+
+    <!-- Google Analytics (GA4) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CQLEM7J5CJ"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      // send_page_view disabled here — the SPA sends page_view manually on
+      // every route change instead (see src/utils/analytics.js), since the
+      // default gtag pageview only fires once on the initial full page load.
+      gtag("config", "G-CQLEM7J5CJ", { send_page_view: false });
+    </script>
   </head>
   <body>
     <div id="root"></div>

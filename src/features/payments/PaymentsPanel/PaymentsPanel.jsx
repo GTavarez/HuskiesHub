@@ -21,10 +21,54 @@ function centsToDollars(cents) {
   return `$${(cents / 100).toFixed(2)}`;
 }
 
+// Lets a family pay down their balance in whatever amount they can, whenever
+// they can — separate from the fixed registration fee and the fixed monthly
+// autopay installment. Local input state, so it needs its own component
+// rather than living inline in the registrations .map() below.
+function CustomAmountPayment({ registrationId, balanceCents, checkoutMutation }) {
+  const [amount, setAmount] = useState("");
+  const maxDollars = (balanceCents / 100).toFixed(2);
+
+  const handlePay = () => {
+    const dollars = Number(amount);
+    if (!dollars || dollars <= 0) return;
+    checkoutMutation.mutate({
+      type: "partialRegistration",
+      registrationId,
+      amountCents: Math.round(dollars * 100),
+    });
+  };
+
+  return (
+    <div style={{ marginTop: 8, display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
+      <input
+        className="portal__input"
+        type="number"
+        min="0.01"
+        max={maxDollars}
+        step="0.01"
+        placeholder={`Any amount up to $${maxDollars}`}
+        value={amount}
+        onChange={(e) => setAmount(e.target.value)}
+        style={{ maxWidth: 200 }}
+      />
+      <button
+        type="button"
+        className="portal__button"
+        disabled={checkoutMutation.isPending || !amount}
+        onClick={handlePay}
+      >
+        Pay This Amount
+      </button>
+    </div>
+  );
+}
+
 function PaymentsPanel({ currentUser, token }) {
   const children = currentUser?.childrenData || [];
   const [selectedPlayerId, setSelectedPlayerId] = useState(children[0]?._id || "");
   const [activeTab, setActiveTab] = useState("Registration");
+  const [uniformOptIn, setUniformOptIn] = useState(true);
   const [selectedLessonSlotByProduct, setSelectedLessonSlotByProduct] = useState({});
   const { pushToast } = useToast();
   const queryClient = useQueryClient();
@@ -157,7 +201,41 @@ function PaymentsPanel({ currentUser, token }) {
               <strong>Register {selectedPlayer?.name} for {CURRENT_SEASON}</strong>
               <p className="portal__card-meta">
                 Registration fee: {centsToDollars(selectedPlayerTeam.registrationFeeCents)}
+                {" · "}
+                Monthly plan:{" "}
+                {centsToDollars(
+                  uniformOptIn
+                    ? selectedPlayerTeam.autopayAmountCents
+                    : Math.round(
+                        Math.max(
+                          0,
+                          selectedPlayerTeam.autopayAmountCents *
+                            selectedPlayerTeam.autopayTotalInstallments -
+                            (selectedPlayerTeam.uniformFeeCents || 0)
+                        ) / selectedPlayerTeam.autopayTotalInstallments
+                      )
+                )}
+                /mo × {selectedPlayerTeam.autopayTotalInstallments}
               </p>
+
+              <label
+                style={{ display: "flex", alignItems: "center", gap: 8, margin: "12px 0" }}
+              >
+                <input
+                  type="checkbox"
+                  checked={uniformOptIn}
+                  onChange={(e) => setUniformOptIn(e.target.checked)}
+                />
+                Include uniform package (
+                {centsToDollars(selectedPlayerTeam.uniformFeeCents || 0)})
+              </label>
+              {!uniformOptIn && (
+                <p className="portal__card-meta">
+                  Uniform opted out — {centsToDollars(selectedPlayerTeam.uniformFeeCents || 0)}{" "}
+                  discounted off your monthly balance.
+                </p>
+              )}
+
               <button
                 type="button"
                 className="portal__button"
@@ -166,6 +244,7 @@ function PaymentsPanel({ currentUser, token }) {
                   createRegistrationMutation.mutate({
                     playerId: selectedPlayerId,
                     season: CURRENT_SEASON,
+                    uniformOptIn,
                   })
                 }
               >
@@ -193,6 +272,10 @@ function PaymentsPanel({ currentUser, token }) {
                   Registration fee: {centsToDollars(registration.registrationFeeCents)}
                   {" · "}
                   Balance: {centsToDollars(registrationFeeBalanceCents)}
+                  {" · "}
+                  {registration.uniformOptIn
+                    ? `Uniform included (${centsToDollars(registration.uniformFeeCents || 0)})`
+                    : `Uniform opted out (-${centsToDollars(registration.uniformFeeCents || 0)})`}
                 </p>
 
                 {!registrationFeePaid && (
@@ -226,6 +309,14 @@ function PaymentsPanel({ currentUser, token }) {
                   </button>
                 )}
 
+                {!registrationFeePaid && (
+                  <CustomAmountPayment
+                    registrationId={registration._id}
+                    balanceCents={registrationFeeBalanceCents}
+                    checkoutMutation={checkoutMutation}
+                  />
+                )}
+
                 {registrationFeePaid && registration.autopayAmountCents > 0 && (
                   <div style={{ marginTop: 12 }}>
                     <strong>Monthly Payment Plan: </strong>
@@ -235,6 +326,16 @@ function PaymentsPanel({ currentUser, token }) {
                       <>
                         {centsToDollars(registration.autopayAmountCents)}/month — {registration.autopayInstallmentsCompleted} of{" "}
                         {registration.autopayTotalInstallments} payments made
+                        <div style={{ marginTop: 8 }}>
+                          <button
+                            type="button"
+                            className="portal__button"
+                            disabled={setupMutation.isPending}
+                            onClick={() => setupMutation.mutate(registration._id)}
+                          >
+                            {setupMutation.isPending ? "Starting..." : "Update Payment Method"}
+                          </button>
+                        </div>
                       </>
                     ) : (
                       <>

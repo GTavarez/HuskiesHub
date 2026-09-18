@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getEvents, createEvent } from "../../../api/events.js";
+import { getEvents, createEvent, cancelEvent } from "../../../api/events.js";
 import { queryKeys } from "../../../api/queryKeys.js";
 import { useToast } from "../../../context/ToastContext.js";
+import { sortEventsForAttendance } from "../../../utils/eventSort.js";
+import EventEditForm from "../../shared/EventEditForm/EventEditForm.jsx";
 
 const EMPTY_FORM = {
   type: "practice",
@@ -10,12 +12,18 @@ const EMPTY_FORM = {
   startsAt: "",
   endsAt: "",
   location: "",
+  notifyTeam: true,
 };
 
+// Coaches can add, edit, and cancel any event on their own team — including
+// ones an admin or another coach posted, not just ones they created
+// themselves. Hard delete stays admin-only (see AdminDashboard's Schedule
+// tab), the one action still not available here.
 function PracticePlans({ teamId, token }) {
   const queryClient = useQueryClient();
   const { pushToast } = useToast();
   const [form, setForm] = useState(EMPTY_FORM);
+  const [editingEventId, setEditingEventId] = useState(null);
 
   const { data: events = [] } = useQuery({
     queryKey: queryKeys.events(teamId),
@@ -40,6 +48,7 @@ function PracticePlans({ teamId, token }) {
 
   const handleChange = (field) => (e) =>
     setForm((prev) => ({ ...prev, [field]: e.target.value }));
+  const toggleNotify = (e) => setForm((prev) => ({ ...prev, notifyTeam: e.target.checked }));
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -55,6 +64,25 @@ function PracticePlans({ teamId, token }) {
     });
   };
 
+  const cancelMutation = useMutation({
+    mutationFn: ({ eventId, notifyTeam }) => cancelEvent(eventId, notifyTeam, token),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.events(teamId) });
+      pushToast({ type: "success", message: "Event cancelled." });
+    },
+    onError: (error) => {
+      pushToast({ type: "error", message: error?.message || "Failed to cancel event." });
+    },
+  });
+
+  const handleCancel = (event) => {
+    if (!window.confirm(`Cancel "${event.title}" on ${new Date(event.startsAt).toLocaleString()}?`)) {
+      return;
+    }
+    const notifyTeam = window.confirm("Also email the team to let them know it's cancelled?");
+    cancelMutation.mutate({ eventId: event._id, notifyTeam });
+  };
+
   const handleCopy = (event) => {
     setForm({
       type: event.type,
@@ -62,6 +90,7 @@ function PracticePlans({ teamId, token }) {
       startsAt: "",
       endsAt: "",
       location: event.location || "",
+      notifyTeam: true,
     });
     pushToast({
       type: "success",
@@ -130,6 +159,11 @@ function PracticePlans({ teamId, token }) {
           placeholder="e.g. Huskies Indoor Facility"
         />
 
+        <label className="portal__checkbox-row">
+          <input type="checkbox" checked={form.notifyTeam} onChange={toggleNotify} />
+          Email the team about this
+        </label>
+
         <button
           type="submit"
           className="portal__button"
@@ -141,25 +175,65 @@ function PracticePlans({ teamId, token }) {
 
       <h3 className="portal__section-title">Upcoming</h3>
       {events.length === 0 && <p className="portal__empty">No events scheduled yet.</p>}
-      {events.map((event) => (
-        <div key={event._id} className="portal__card portal__card--row">
-          <div>
-            <span className={`portal__badge portal__badge--${event.type}`}>
-              {event.type}
-            </span>{" "}
-            <strong>{event.title}</strong>
-            <p className="portal__card-meta">
-              {new Date(event.startsAt).toLocaleString()}
-              {event.location ? ` · ${event.location}` : ""}
-            </p>
+      {sortEventsForAttendance(events).map((event) => (
+        <div key={event._id} className="portal__card">
+          <div className="portal__card--row">
+            <div>
+              <span className={`portal__badge portal__badge--${event.type}`}>
+                {event.type}
+              </span>{" "}
+              {event.status === "cancelled" && (
+                <span className="portal__badge" style={{ background: "rgba(229, 115, 115, 0.25)", color: "#e57373" }}>
+                  cancelled
+                </span>
+              )}{" "}
+              <strong>{event.title}</strong>
+              <p className="portal__card-meta">
+                {new Date(event.startsAt).toLocaleString()}
+                {event.location ? ` · ${event.location}` : ""}
+              </p>
+            </div>
+            <div>
+              <button
+                type="button"
+                className="portal__link-button"
+                onClick={() => handleCopy(event)}
+              >
+                Copy
+              </button>
+              {event.status !== "cancelled" && (
+                <>
+                  <button
+                    type="button"
+                    className="portal__link-button"
+                    style={{ marginLeft: 12 }}
+                    onClick={() =>
+                      setEditingEventId(editingEventId === event._id ? null : event._id)
+                    }
+                  >
+                    Edit
+                  </button>
+                  <button
+                    type="button"
+                    className="portal__link-button"
+                    style={{ marginLeft: 12 }}
+                    disabled={cancelMutation.isPending}
+                    onClick={() => handleCancel(event)}
+                  >
+                    Cancel
+                  </button>
+                </>
+              )}
+            </div>
           </div>
-          <button
-            type="button"
-            className="portal__link-button"
-            onClick={() => handleCopy(event)}
-          >
-            Copy
-          </button>
+          {editingEventId === event._id && (
+            <EventEditForm
+              event={event}
+              teamId={teamId}
+              token={token}
+              onClose={() => setEditingEventId(null)}
+            />
+          )}
         </div>
       ))}
     </div>

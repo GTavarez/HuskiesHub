@@ -29,6 +29,7 @@ function PlayerProfileModal({ onClose, player, currentUser, token }) {
   const [displayPlayer, setDisplayPlayer] = useState(player);
   const [isEditing, setIsEditing] = useState(false);
   const [form, setForm] = useState(null);
+  const [newFunFact, setNewFunFact] = useState("");
   const queryClient = useQueryClient();
   const { pushToast } = useToast();
 
@@ -76,12 +77,26 @@ function PlayerProfileModal({ onClose, player, currentUser, token }) {
       committedCollege: displayPlayer.committedCollege || "",
       battingThrowing: displayPlayer.battingThrowing || "",
       contactEmail: displayPlayer.contactEmail || "",
+      bio: displayPlayer.bio || "",
+      funFacts: (displayPlayer.funFacts || []).map((fact) => fact.text),
     });
+    setNewFunFact("");
     setIsEditing(true);
   };
 
   const handleFieldChange = (field, value) => {
     setForm((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleAddFunFact = () => {
+    const text = newFunFact.trim();
+    if (!text) return;
+    setForm((prev) => ({ ...prev, funFacts: [...prev.funFacts, text] }));
+    setNewFunFact("");
+  };
+
+  const handleRemoveFunFact = (index) => {
+    setForm((prev) => ({ ...prev, funFacts: prev.funFacts.filter((_, i) => i !== index) }));
   };
 
   const handleSubmit = (e) => {
@@ -143,6 +158,42 @@ function PlayerProfileModal({ onClose, player, currentUser, token }) {
               Committed to a college
             </label>
 
+            <label className="profile__edit-label">
+              About Me
+              <textarea
+                className="profile__edit-input"
+                rows={3}
+                value={form.bio}
+                onChange={(e) => handleFieldChange("bio", e.target.value)}
+                placeholder="Tell people a bit about yourself..."
+              />
+            </label>
+
+            <label className="profile__edit-label">Fun Facts</label>
+            {form.funFacts.map((fact, index) => (
+              <div className="profile__edit-funfact-row" key={`${fact}-${index}`}>
+                <span>{fact}</span>
+                <button
+                  type="button"
+                  className="profile__edit-funfact-remove"
+                  onClick={() => handleRemoveFunFact(index)}
+                >
+                  Remove
+                </button>
+              </div>
+            ))}
+            <div className="profile__edit-funfact-row">
+              <input
+                className="profile__edit-input"
+                value={newFunFact}
+                onChange={(e) => setNewFunFact(e.target.value)}
+                placeholder="e.g. Favorite player: Jennie Finch"
+              />
+              <button type="button" className="profile__edit-funfact-add" onClick={handleAddFunFact}>
+                Add
+              </button>
+            </div>
+
             <div className="profile__edit-actions">
               <button
                 type="button"
@@ -180,9 +231,6 @@ function PlayerProfileModal({ onClose, player, currentUser, token }) {
     displayed.highSchool || null,
     displayed.gradYear ? `Class of ${displayed.gradYear}` : null,
   ].filter(Boolean);
-  const bioPositionText = displayed.position ? displayed.position.toLowerCase() : "player";
-  const bioSchoolClause = displayed.highSchool ? ` from ${displayed.highSchool}` : "";
-
   return (
     <div className="profile__overlay" onClick={onClose}>
       <div
@@ -231,39 +279,34 @@ function PlayerProfileModal({ onClose, player, currentUser, token }) {
         {/* BIO */}
         <div className="profile__section">
           <h2>About {displayed.name}</h2>
-          <p>
-            {displayed.name} is a dedicated {bioPositionText}
-            {bioSchoolClause}. Known for their strong work ethic and
-            leadership, {displayed.name.split(" ")[0]} represents the Empire
-            State Huskies with pride and passion.
-          </p>
+          {displayed.bio ? (
+            <p>{displayed.bio}</p>
+          ) : (
+            <p className="profile__empty-hint">
+              {canEdit
+                ? "No bio yet — click Edit Profile to add one."
+                : `${displayed.name} hasn't added a bio yet.`}
+            </p>
+          )}
         </div>
 
         {/* FUN FACTS */}
         <div className="profile__section">
           <h2>Fun Facts</h2>
-          <ul className="profile__funfacts">
-            <li>
-              <strong>Favorite Player:</strong> Jennie Finch
-            </li>
-            <li>
-              <strong>Pre-game Ritual:</strong> Listens to hype music
-            </li>
-            <li>
-              <strong>Favorite Moment:</strong> Winning the state semifinals
-            </li>
-          </ul>
+          {displayed.funFacts && displayed.funFacts.length > 0 ? (
+            <ul className="profile__funfacts">
+              {displayed.funFacts.map((fact) => (
+                <li key={fact._id || fact.text}>{fact.text}</li>
+              ))}
+            </ul>
+          ) : (
+            <p className="profile__empty-hint">
+              {canEdit
+                ? "No fun facts yet — click Edit Profile to add some!"
+                : `${displayed.name} hasn't added any fun facts yet.`}
+            </p>
+          )}
         </div>
-
-        {/* HIGHLIGHTS */}
-        {/* <div className="profile__section">
-          <h2>Highlights</h2>
-          <div className="highlights__grid">
-            <img src="/assets/highlights/highlight1.jpg" alt="" />
-            <img src="/assets/highlights/highlight2.jpg" alt="" />
-            <img src="/assets/highlights/highlight3.jpg" alt="" />
-          </div>
-        </div> */}
 
         <div className="profile__footer">
           <button className="profile__return-btn" onClick={onClose}>

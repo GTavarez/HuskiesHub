@@ -32,6 +32,11 @@ const queryKeys = {
   pendingHotelReservations: () => ["pendingHotelReservations"],
   coachPayments: (coachUserId) => ["coachPayments", coachUserId],
   lessonSlots: (filters) => ["lessonSlots", filters],
+  upcomingNotifications: () => ["upcomingNotifications"],
+  coaches: () => ["coaches"],
+  teamContacts: (teamId) => ["teamContacts", teamId],
+  conversations: (teamId) => ["conversations", teamId],
+  conversationMessages: (conversationId) => ["conversationMessages", conversationId],
 };
 
 export { queryKeys };

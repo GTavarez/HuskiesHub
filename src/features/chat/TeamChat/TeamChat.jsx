@@ -2,11 +2,19 @@ import { useEffect, useRef, useState } from "react";
 import { io } from "socket.io-client";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getMessages } from "../../../api/messages";
+import { getConversationMessages } from "../../../api/conversations";
 import { queryKeys } from "../../../api/queryKeys";
 import { socketUrl } from "../../../utils/config.js";
 import "./TeamChat.css";
 
-function TeamChat({ teamId }) {
+// Renders either the original whole-team room (teamId) or one coach-created
+// group chat (conversationId) — same message list/input UI either way, just
+// a different history fetch and a different socket auth payload.
+function TeamChat({ teamId, conversationId }) {
+  const isGroup = Boolean(conversationId);
+  const roomQueryKey = isGroup
+    ? queryKeys.conversationMessages(conversationId)
+    : queryKeys.messages(teamId);
   const queryClient = useQueryClient();
   const [text, setText] = useState("");
   const bottomRef = useRef(null);
@@ -19,21 +27,22 @@ function TeamChat({ teamId }) {
     isError,
     error,
   } = useQuery({
-    queryKey: queryKeys.messages(teamId),
-    queryFn: () => getMessages(teamId, token),
-    enabled: Boolean(teamId && token),
+    queryKey: roomQueryKey,
+    queryFn: () =>
+      isGroup ? getConversationMessages(conversationId, token) : getMessages(teamId, token),
+    enabled: Boolean(token && (isGroup ? conversationId : teamId)),
   });
 
   // Live socket messages
   useEffect(() => {
-    if (!token || !teamId) return;
+    if (!token || (isGroup ? !conversationId : !teamId)) return;
     const socket = io(socketUrl, {
-      auth: { token, teamId },
+      auth: isGroup ? { token, conversationId } : { token, teamId },
     });
     socketRef.current = socket;
 
     socket.on("new-message", (message) => {
-      queryClient.setQueryData(queryKeys.messages(teamId), (prev) => [
+      queryClient.setQueryData(roomQueryKey, (prev) => [
         ...(Array.isArray(prev) ? prev : []),
         message,
       ]);
@@ -44,7 +53,8 @@ function TeamChat({ teamId }) {
       socket.disconnect();
       socketRef.current = null;
     };
-  }, [queryClient, teamId, token]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [queryClient, teamId, conversationId, isGroup, token]);
 
   // Auto-scroll
   useEffect(() => {
@@ -63,9 +73,7 @@ function TeamChat({ teamId }) {
         resolve();
       }),
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: queryKeys.messages(teamId),
-      });
+      queryClient.invalidateQueries({ queryKey: roomQueryKey });
     },
   });
 

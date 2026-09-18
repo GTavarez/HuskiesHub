@@ -8,12 +8,14 @@ import AnnouncementsPanel from "../AnnouncementsPanel/AnnouncementsPanel.jsx";
 import DocumentsPanel from "../DocumentsPanel/DocumentsPanel.jsx";
 import ProductsPanel from "../ProductsPanel/ProductsPanel.jsx";
 import RegistrationsPanel from "../RegistrationsPanel/RegistrationsPanel.jsx";
+import SchedulePanel from "../SchedulePanel/SchedulePanel.jsx";
 import WaiverPanel from "../WaiverPanel/WaiverPanel.jsx";
 import CollegeCoachApprovalsPanel from "../CollegeCoachApprovalsPanel/CollegeCoachApprovalsPanel.jsx";
 import RoleRequestsPanel from "../RoleRequestsPanel/RoleRequestsPanel.jsx";
 import TournamentsPanel from "../TournamentsPanel/TournamentsPanel.jsx";
 import CoachPaymentsPanel from "../CoachPaymentsPanel/CoachPaymentsPanel.jsx";
 import LessonSlotsPanel from "../LessonSlotsPanel/LessonSlotsPanel.jsx";
+import LessonRequestsPanel from "../LessonRequestsPanel/LessonRequestsPanel.jsx";
 import AiAssistant from "../../analytics/AiAssistant/AiAssistant.jsx";
 import "../../shared/portal.css";
 import "./AdminDashboard.css";
@@ -26,12 +28,14 @@ const TABS = [
   { key: "documents", label: "Documents" },
   { key: "products", label: "Products" },
   { key: "registrations", label: "Registrations & Payments" },
+  { key: "schedule", label: "Schedule" },
   { key: "waiver", label: "Waiver" },
   { key: "role-requests", label: "Role Requests" },
   { key: "college-coach", label: "College Coach Approvals" },
   { key: "tournaments", label: "Tournaments" },
   { key: "coach-payments", label: "Coach Payments" },
   { key: "lesson-slots", label: "Lesson Slots" },
+  { key: "lesson-requests", label: "Lesson Requests" },
 ];
 
 function MediaUploadForm({ token }) {
@@ -168,6 +172,7 @@ function AdminDashboard({ token }) {
         {activeTab === "documents" && <DocumentsPanel token={token} />}
         {activeTab === "products" && <ProductsPanel token={token} />}
         {activeTab === "registrations" && <RegistrationsPanel token={token} />}
+        {activeTab === "schedule" && <SchedulePanel token={token} />}
         {activeTab === "waiver" && <WaiverPanel token={token} />}
         {activeTab === "role-requests" && <RoleRequestsPanel token={token} />}
         {activeTab === "college-coach" && (
@@ -176,6 +181,7 @@ function AdminDashboard({ token }) {
         {activeTab === "tournaments" && <TournamentsPanel token={token} />}
         {activeTab === "coach-payments" && <CoachPaymentsPanel token={token} />}
         {activeTab === "lesson-slots" && <LessonSlotsPanel token={token} />}
+        {activeTab === "lesson-requests" && <LessonRequestsPanel token={token} />}
       </div>
     </section>
   );

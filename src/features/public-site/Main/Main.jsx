@@ -21,8 +21,23 @@ function Main({ onJoinClick }) {
     queryFn: getTeams,
   });
 
+  // Registration/payment actually lives in the Parent Portal, not the
+  // generic My Profile page — a parent clicking "Register" was landing on
+  // /profile, which has no registration content for them at all.
+  const registerHref = currentUser?.role === "parent" ? "/parent" : "/profile";
+
   return (
     <main className="main__content">
+      <a
+        href="/competitive-edge-training"
+        target="_blank"
+        rel="noreferrer"
+        className="main__cet-banner"
+      >
+        <span className="main__cet-banner-text">🥎 Competitive Edge Training</span>
+        <span className="main__cet-banner-cta">Learn More →</span>
+      </a>
+
       <WeatherBanner />
       <section className="main__image_section">
         <div className="main__image_section_content">
@@ -83,7 +98,7 @@ function Main({ onJoinClick }) {
                     : "Registration fee: TBD"}
                 </p>
                 {currentUser ? (
-                  <Link to="/profile" className="main__registration_card-btn">
+                  <Link to={registerHref} className="main__registration_card-btn">
                     Register
                   </Link>
                 ) : (
