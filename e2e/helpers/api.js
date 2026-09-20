@@ -20,6 +20,8 @@ function authed(request, token) {
     get: (path) => request.get(`${apiBaseUrl}${path}`, { headers: { Authorization: `Bearer ${token}` } }),
     post: (path, data) =>
       request.post(`${apiBaseUrl}${path}`, { headers: { Authorization: `Bearer ${token}` }, data }),
+    put: (path, data) =>
+      request.put(`${apiBaseUrl}${path}`, { headers: { Authorization: `Bearer ${token}` }, data }),
     patch: (path, data) =>
       request.patch(`${apiBaseUrl}${path}`, { headers: { Authorization: `Bearer ${token}` }, data }),
     delete: (path) => request.delete(`${apiBaseUrl}${path}`, { headers: { Authorization: `Bearer ${token}` } }),

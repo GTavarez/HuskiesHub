@@ -28,6 +28,10 @@ export const ids = {
   adminId: '6ab00c3fff9f4e446fe0e3eb',
   coachId: '6ab00c3fff9f4e446fe0e3ee',
   parentId: '6ab00c3fff9f4e446fe0e3f0',
+  // A second dummy team/player, so tests that need a genuinely 'someone
+  // else's player' can WRITE to it safely. Prefer these over foreignTeamId.
+  otherTeamId: '6ab01158a6a7d94b35eada30',
+  otherPlayerId: '6ab01158a6a7d94b35eada34',
   // Premier: a real team, used ONLY to assert a coach gets a 403 trying to
   // touch it. Never written to.
   foreignTeamId: '695d3b42510e717bb7cca3e1',

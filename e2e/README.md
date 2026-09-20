@@ -30,6 +30,11 @@ npx playwright test coach-event-permissions   # just one file
   request gets rejected. Never assert success against it, and never call a
   mutating endpoint there without a same-test check that it was actually
   rejected first.
+- Known small side effect: performance entries and goals have no delete
+  endpoint, so the one positive-path performance test adds a single entry to
+  the dummy `QA Test Player` on every run. Harmless (dummy player), but it
+  accumulates; clear `performanceentries` for the two QA players in the
+  database now and then. All negative-path tests write nothing.
 - **Payments are intentionally out of scope.** Stripe is running in live
   mode (`cs_live_...` session ids), so there's no safe way to exercise a real
   checkout without moving real money. Don't add a test that completes a

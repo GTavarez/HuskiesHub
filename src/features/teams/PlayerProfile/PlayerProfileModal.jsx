@@ -37,7 +37,8 @@ function PlayerProfileModal({ onClose, player, currentUser, token }) {
     currentUser &&
       player &&
       (currentUser.role === "admin" ||
-        currentUser.role === "coach" ||
+        (currentUser.role === "coach" &&
+          String(currentUser.teamId) === String(player.teamId)) ||
         (currentUser.role === "parent" &&
           (currentUser.childrenData || []).some(
             (child) => String(child._id) === String(player._id)
