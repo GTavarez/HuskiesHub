@@ -8,6 +8,8 @@ finds it.
 
 ## Running
 
+First copy `qa.env.example` to `qa.env` and set `QA_PASSWORD` (ask whoever owns the QA accounts; it is never committed). In the nightly cloud routine, set `QA_PASSWORD` as an environment variable on the cloud environment instead.
+
 ```bash
 npm run test:e2e          # headless, terminal output
 npm run test:e2e:ui       # Playwright's interactive UI mode
@@ -17,7 +19,7 @@ npx playwright test coach-event-permissions   # just one file
 ## How it stays safe to run against production
 
 - Every test uses the dedicated QA accounts in `e2e/fixtures/accounts.js`
-  (`qa-admin@example.com`, `qa-coach@example.com`, `qa-parent@example.com`) on
+  (`qa-admin@example.com`, `qa-coach@example.com`, `qa-parent@example.com`; password from `QA_PASSWORD`) on
   a dedicated `QA Test Team` — never a real coach, parent, or team.
 - Anything a test creates (an event, an announcement) is deleted in an
   `afterEach` hook, via the admin QA account. If a test fails before cleanup

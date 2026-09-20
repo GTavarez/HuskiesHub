@@ -1,6 +1,13 @@
+import { existsSync } from 'node:fs';
 import { defineConfig } from '@playwright/test';
 
-// Runs against the live production frontend/backend — there's no separate
+// Local runs pick up QA_PASSWORD from a gitignored qa.env file. In the cloud
+// routine it comes from the environment instead, so the file won't exist.
+if (existsSync('qa.env')) {
+  process.loadEnvFile('qa.env');
+}
+
+// Runs against the live production frontend/backend: there's no separate
 // staging environment for this project. Every test that creates data uses
 // the dedicated QA fixtures (see e2e/fixtures/accounts.js) and cleans up
 // after itself, so it never touches a real family's or coach's data.
