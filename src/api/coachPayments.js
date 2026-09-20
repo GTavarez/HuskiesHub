@@ -7,6 +7,9 @@ const getCoachPayments = (coachUserId, token) => {
   return apiFetch(`/api/payroll${query}`, { headers: authHeaders(token) });
 };
 
+const getCoachPayees = (token) =>
+  apiFetch("/api/payroll/payees", { headers: authHeaders(token) });
+
 const createCoachPayment = (payload, token) =>
   apiFetch("/api/payroll", {
     method: "POST",
@@ -14,11 +17,20 @@ const createCoachPayment = (payload, token) =>
     body: JSON.stringify(payload),
   });
 
-const updateCoachPaymentStatus = (id, status, token) =>
+const updateCoachPaymentStatus = (id, { status, method, reference }, token) =>
   apiFetch(`/api/payroll/${id}`, {
     method: "PATCH",
     headers: authHeaders(token),
-    body: JSON.stringify({ status }),
+    body: JSON.stringify({ status, method, reference }),
   });
 
-export { getCoachPayments, createCoachPayment, updateCoachPaymentStatus };
+const deleteCoachPayment = (id, token) =>
+  apiFetch(`/api/payroll/${id}`, { method: "DELETE", headers: authHeaders(token) });
+
+export {
+  getCoachPayments,
+  getCoachPayees,
+  createCoachPayment,
+  updateCoachPaymentStatus,
+  deleteCoachPayment,
+};
