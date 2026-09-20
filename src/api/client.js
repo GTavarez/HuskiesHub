@@ -40,4 +40,4 @@ async function apiFetch(path, options = {}) {
   throw new ApiError(message, response.status, data);
 }
 
-export { apiFetch, ApiError };
+export { apiFetch, ApiError, API_BASE_URL };

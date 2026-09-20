@@ -1,10 +1,12 @@
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueries } from "@tanstack/react-query";
 import { getEvents } from "../../../api/events.js";
+import { getTeams } from "../../../api/teams.js";
 import { getAnnouncements } from "../../../api/announcements.js";
 import { getDocuments, downloadDocumentBlobUrl } from "../../../api/documents.js";
 import { queryKeys } from "../../../api/queryKeys.js";
 import { resolveMediaUrl } from "../../../utils/media.js";
+import { sortEventsForAttendance } from "../../../utils/eventSort.js";
 import RsvpControl from "../RsvpControl/RsvpControl.jsx";
 import PaymentsPanel from "../../payments/PaymentsPanel/PaymentsPanel.jsx";
 import RecruitingProfileEditor from "../../recruiting/RecruitingProfileEditor/RecruitingProfileEditor.jsx";
@@ -13,27 +15,63 @@ import AiAssistant from "../../analytics/AiAssistant/AiAssistant.jsx";
 import "../../shared/portal.css";
 
 function ParentDashboard({ currentUser, token }) {
-  const teamId = currentUser?.teamId || currentUser?.childrenData?.[0]?.teamId;
   const children = currentUser?.childrenData || [];
+  // A family can have kids on more than one team (e.g. 12U + Premier), and
+  // emails already go out for every one of them — so the dashboard has to
+  // show every team's schedule, announcements and documents, not just the
+  // first child's.
+  const teamIds = [
+    ...new Set(
+      [currentUser?.teamId, ...children.map((child) => child.teamId)]
+        .filter(Boolean)
+        .map(String)
+    ),
+  ];
+  const teamId = teamIds[0];
   const [recruitingPlayerId, setRecruitingPlayerId] = useState(children[0]?._id || "");
 
-  const { data: events = [] } = useQuery({
-    queryKey: queryKeys.events(teamId),
-    queryFn: () => getEvents(teamId, token),
-    enabled: Boolean(teamId && token),
+  const { data: teams = [] } = useQuery({
+    queryKey: queryKeys.teams(),
+    queryFn: getTeams,
+    enabled: teamIds.length > 1,
+  });
+  const teamNameById = new Map(teams.map((team) => [String(team._id), team.name]));
+  const showTeamLabels = teamIds.length > 1;
+
+  const eventQueries = useQueries({
+    queries: teamIds.map((id) => ({
+      queryKey: queryKeys.events(id),
+      queryFn: () => getEvents(id, token),
+      enabled: Boolean(token),
+    })),
+  });
+  const announcementQueries = useQueries({
+    queries: teamIds.map((id) => ({
+      queryKey: queryKeys.announcements(id),
+      queryFn: () => getAnnouncements(id, token),
+      enabled: Boolean(token),
+    })),
+  });
+  const documentQueries = useQueries({
+    queries: teamIds.map((id) => ({
+      queryKey: queryKeys.documents(id),
+      queryFn: () => getDocuments(id, token),
+      enabled: Boolean(token),
+    })),
   });
 
-  const { data: announcements = [] } = useQuery({
-    queryKey: queryKeys.announcements(teamId),
-    queryFn: () => getAnnouncements(teamId, token),
-    enabled: Boolean(teamId && token),
-  });
-
-  const { data: documents = [] } = useQuery({
-    queryKey: queryKeys.documents(teamId),
-    queryFn: () => getDocuments(teamId, token),
-    enabled: Boolean(teamId && token),
-  });
+  // Organization-wide announcements/documents come back once per team, so
+  // dedupe by id before showing them.
+  const mergeUnique = (queries) => {
+    const seen = new Map();
+    queries.forEach((query) => (query.data || []).forEach((item) => seen.set(item._id, item)));
+    return [...seen.values()];
+  };
+  const events = sortEventsForAttendance(mergeUnique(eventQueries));
+  const announcements = mergeUnique(announcementQueries).sort(
+    (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+  );
+  const documents = mergeUnique(documentQueries);
 
   const handleDownload = async (doc) => {
     const url = await downloadDocumentBlobUrl(doc._id, token);
@@ -97,7 +135,7 @@ function ParentDashboard({ currentUser, token }) {
                   event={event}
                   currentUserId={currentUser._id}
                   token={token}
-                  teamId={teamId}
+                  teamId={String(event.teamId)}
                 />
               )}
             </div>

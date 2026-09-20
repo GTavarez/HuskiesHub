@@ -58,3 +58,30 @@
   align-self: flex-start;
   margin-right: auto;
 }
+
+.team-chat__input .team-chat__attach {
+  background: #112240;
+  color: #64b5f6;
+  border: 1px solid #64b5f6;
+}
+
+.team-chat__attachment {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px 0;
+}
+
+.team-chat__attachment-img {
+  max-height: 72px;
+  max-width: 120px;
+  border-radius: 8px;
+}
+
+.team-chat__attachment-remove {
+  background: transparent;
+  border: none;
+  color: #f2b8b5;
+  cursor: pointer;
+  font-size: 13px;
+}

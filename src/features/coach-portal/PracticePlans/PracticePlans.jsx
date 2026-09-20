@@ -5,6 +5,7 @@ import { queryKeys } from "../../../api/queryKeys.js";
 import { useToast } from "../../../context/ToastContext.js";
 import { sortEventsForAttendance } from "../../../utils/eventSort.js";
 import EventEditForm from "../../shared/EventEditForm/EventEditForm.jsx";
+import SuggestInput, { titleAfterOpponentChange } from "../../shared/SuggestInput/SuggestInput.jsx";
 
 const EMPTY_FORM = {
   type: "practice",
@@ -12,6 +13,7 @@ const EMPTY_FORM = {
   startsAt: "",
   endsAt: "",
   location: "",
+  opponent: "",
   notifyTeam: true,
 };
 
@@ -35,6 +37,7 @@ function PracticePlans({ teamId, token }) {
     mutationFn: (payload) => createEvent(payload, token),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.events(teamId) });
+      queryClient.invalidateQueries({ queryKey: ["savedOptions"] });
       pushToast({ type: "success", message: "Practice plan saved." });
       setForm(EMPTY_FORM);
     },
@@ -90,6 +93,7 @@ function PracticePlans({ teamId, token }) {
       startsAt: "",
       endsAt: "",
       location: event.location || "",
+      opponent: event.opponent || "",
       notifyTeam: true,
     });
     pushToast({
@@ -114,6 +118,31 @@ function PracticePlans({ teamId, token }) {
           <option value="game">Game</option>
           <option value="lesson">Lesson</option>
         </select>
+
+        {form.type === "game" && (
+          <>
+            <label className="portal__label" htmlFor="practice-opponent">
+              Opponent
+            </label>
+            <SuggestInput
+              id="practice-opponent"
+              kind="opponent"
+              teamId={teamId}
+              token={token}
+              className="portal__input"
+              value={form.opponent}
+              onChange={(e) => {
+                const next = e.target.value;
+                setForm((prev) => ({
+                  ...prev,
+                  opponent: next,
+                  title: titleAfterOpponentChange(prev.title, prev.opponent, next),
+                }));
+              }}
+              placeholder="Pick a past opponent or type a new one"
+            />
+          </>
+        )}
 
         <label className="portal__label" htmlFor="practice-title">
           Title
@@ -151,12 +180,14 @@ function PracticePlans({ teamId, token }) {
         <label className="portal__label" htmlFor="practice-location">
           Location
         </label>
-        <input
+        <SuggestInput
           id="practice-location"
+          kind="location"
+          token={token}
           className="portal__input"
           value={form.location}
           onChange={handleChange("location")}
-          placeholder="e.g. Huskies Indoor Facility"
+          placeholder="Pick a saved field or type a new location"
         />
 
         <label className="portal__checkbox-row">

@@ -64,9 +64,9 @@ test('coach cannot delete another team\'s announcement', async ({ request }) => 
   const adminToken = await apiSignIn(request, accounts.admin.email, accounts.admin.password);
   const adminApi = authed(request, adminToken);
   const createRes = await adminApi.post('/api/announcements', {
-    teamId: ids.foreignTeamId,
-    title: 'QA E2E foreign-team announcement',
-    body: 'admin-created, on a real team, for a negative delete check',
+    teamId: ids.otherTeamId,
+    title: 'QA E2E other-team announcement',
+    body: 'admin-created on the dummy QA Other Team, for a negative delete check',
   });
   const foreignAnnouncement = await createRes.json();
 

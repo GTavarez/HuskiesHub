@@ -1,0 +1,26 @@
+.chat-photo__link {
+  display: inline-block;
+  margin-top: 6px;
+}
+
+.chat-photo {
+  display: block;
+  max-width: 240px;
+  max-height: 260px;
+  width: auto;
+  height: auto;
+  border-radius: 10px;
+  background: #112240;
+}
+
+.chat-photo--loading {
+  width: 160px;
+  height: 120px;
+  margin-top: 6px;
+}
+
+.chat-photo__missing {
+  margin: 6px 0 0;
+  font-size: 12px;
+  opacity: 0.7;
+}

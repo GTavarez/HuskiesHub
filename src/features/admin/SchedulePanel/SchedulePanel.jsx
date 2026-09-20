@@ -7,6 +7,7 @@ import { queryKeys } from "../../../api/queryKeys.js";
 import { sortEventsForAttendance } from "../../../utils/eventSort.js";
 import { useToast } from "../../../context/ToastContext.js";
 import EventEditForm from "../../shared/EventEditForm/EventEditForm.jsx";
+import SuggestInput, { titleAfterOpponentChange } from "../../shared/SuggestInput/SuggestInput.jsx";
 
 const RSVP_LABELS = { yes: "Going", maybe: "Maybe", no: "Can't go" };
 
@@ -16,6 +17,7 @@ const EMPTY_NEW_EVENT = {
   startsAt: "",
   endsAt: "",
   location: "",
+  opponent: "",
   notifyTeam: true,
 };
 
@@ -27,6 +29,7 @@ const EMPTY_NEW_EVENT = {
 // going outside the app to update a calendar by hand.
 function CreateEventForm({ teamId, token, onCreated }) {
   const [form, setForm] = useState(EMPTY_NEW_EVENT);
+  const queryClient = useQueryClient();
   const { pushToast } = useToast();
 
   const handleChange = (field) => (e) => setForm((prev) => ({ ...prev, [field]: e.target.value }));
@@ -36,6 +39,7 @@ function CreateEventForm({ teamId, token, onCreated }) {
     mutationFn: (payload) => createEvent(payload, token),
     onSuccess: () => {
       onCreated();
+      queryClient.invalidateQueries({ queryKey: ["savedOptions"] });
       setForm(EMPTY_NEW_EVENT);
       pushToast({ type: "success", message: "Event added." });
     },
@@ -57,6 +61,7 @@ function CreateEventForm({ teamId, token, onCreated }) {
       startsAt: new Date(form.startsAt).toISOString(),
       endsAt: new Date(form.endsAt).toISOString(),
       location: form.location,
+      opponent: form.type === "game" ? form.opponent : "",
       notifyTeam: form.notifyTeam,
     });
   };
@@ -70,6 +75,24 @@ function CreateEventForm({ teamId, token, onCreated }) {
         <option value="lesson">Lesson</option>
         <option value="meeting">Meeting</option>
       </select>
+      {form.type === "game" && (
+        <SuggestInput
+          kind="opponent"
+          teamId={teamId}
+          token={token}
+          className="portal__input"
+          value={form.opponent}
+          onChange={(e) => {
+            const next = e.target.value;
+            setForm((prev) => ({
+              ...prev,
+              opponent: next,
+              title: titleAfterOpponentChange(prev.title, prev.opponent, next),
+            }));
+          }}
+          placeholder="Opponent (pick or type)"
+        />
+      )}
       <input
         className="portal__input"
         value={form.title}
@@ -90,11 +113,13 @@ function CreateEventForm({ teamId, token, onCreated }) {
           onChange={handleChange("endsAt")}
         />
       </div>
-      <input
+      <SuggestInput
+        kind="location"
+        token={token}
         className="portal__input"
         value={form.location}
         onChange={handleChange("location")}
-        placeholder="Location"
+        placeholder="Location (pick or type)"
       />
       <label className="portal__checkbox-row">
         <input type="checkbox" checked={form.notifyTeam} onChange={toggleNotify} />

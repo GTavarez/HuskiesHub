@@ -10,6 +10,7 @@ const queryKeys = {
   event: (eventId) => ["event", eventId],
   attendance: (eventId, playerId) => ["attendance", eventId, playerId],
   announcements: (teamId) => ["announcements", teamId],
+  savedOptions: (kind, teamId) => ["savedOptions", kind, teamId || null],
   documents: (teamId) => ["documents", teamId],
   playerNotes: (playerId) => ["playerNotes", playerId],
   products: (type) => ["products", type],

@@ -4,6 +4,7 @@ import { getTeams } from "../../../../api/teams.js";
 import { createEvent, deleteEvent } from "../../../../api/events.js";
 import { queryKeys } from "../../../../api/queryKeys.js";
 import { useToast } from "../../../../context/ToastContext.js";
+import SuggestInput, { titleAfterOpponentChange } from "../../../shared/SuggestInput/SuggestInput.jsx";
 import "./DayAgendaModal.css";
 
 const EMPTY_FORM = {
@@ -13,6 +14,7 @@ const EMPTY_FORM = {
   startTime: "17:00",
   endTime: "19:00",
   location: "",
+  opponent: "",
   notifyTeam: true,
 };
 
@@ -36,6 +38,7 @@ function AddEventForm({ date, token, lockedTeamId, lockedTeamName, onDone }) {
     mutationFn: (payload) => createEvent(payload, token),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["events"] });
+      queryClient.invalidateQueries({ queryKey: ["savedOptions"] });
       pushToast({ type: "success", message: "Event added." });
       onDone();
     },
@@ -59,6 +62,7 @@ function AddEventForm({ date, token, lockedTeamId, lockedTeamName, onDone }) {
       teamId: form.teamId,
       title: form.title,
       location: form.location,
+      opponent: form.type === "game" ? form.opponent : "",
       startsAt: new Date(`${dateStr}T${form.startTime}`).toISOString(),
       endsAt: new Date(`${dateStr}T${form.endTime}`).toISOString(),
       notifyTeam: form.notifyTeam,
@@ -85,6 +89,24 @@ function AddEventForm({ date, token, lockedTeamId, lockedTeamName, onDone }) {
         <option value="lesson">Lesson</option>
         <option value="meeting">Meeting</option>
       </select>
+      {form.type === "game" && (
+        <SuggestInput
+          kind="opponent"
+          teamId={form.teamId}
+          token={token}
+          className="portal__input"
+          value={form.opponent}
+          onChange={(e) => {
+            const next = e.target.value;
+            setForm((prev) => ({
+              ...prev,
+              opponent: next,
+              title: titleAfterOpponentChange(prev.title, prev.opponent, next),
+            }));
+          }}
+          placeholder={form.teamId ? "Opponent (pick or type)" : "Pick a team first, then the opponent"}
+        />
+      )}
       <input
         className="portal__input"
         value={form.title}
@@ -105,11 +127,13 @@ function AddEventForm({ date, token, lockedTeamId, lockedTeamName, onDone }) {
           onChange={handleChange("endTime")}
         />
       </div>
-      <input
+      <SuggestInput
+        kind="location"
+        token={token}
         className="portal__input"
         value={form.location}
         onChange={handleChange("location")}
-        placeholder="Location"
+        placeholder="Location (pick or type)"
       />
       <label className="portal__checkbox-row">
         <input type="checkbox" checked={form.notifyTeam} onChange={toggleNotify} />

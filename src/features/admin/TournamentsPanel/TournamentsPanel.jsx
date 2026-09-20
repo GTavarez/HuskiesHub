@@ -128,12 +128,14 @@ function HotelReservationForm({ tournamentId, token }) {
 }
 
 function TournamentRow({ tournament, token }) {
-  const [expanded, setExpanded] = useState(false);
+  const [showForm, setShowForm] = useState(false);
 
+  // Hotels load and show by default: hiding them behind a link is what left
+  // admins unable to find where to add one.
   const { data: reservations = [] } = useQuery({
     queryKey: queryKeys.hotelReservations(tournament._id),
     queryFn: () => getHotelReservationsForTournament(tournament._id, token),
-    enabled: Boolean(expanded && token),
+    enabled: Boolean(token),
   });
 
   return (
@@ -147,37 +149,39 @@ function TournamentRow({ tournament, token }) {
         {new Date(tournament.endDate).toLocaleDateString()}
         {tournament.location ? ` · ${tournament.location}` : ""}
       </p>
+
+      <h3 className="portal__section-title" style={{ fontSize: 15, marginTop: 12 }}>
+        Hotels
+      </h3>
+      {reservations.length === 0 && (
+        <p className="portal__empty">No hotels added for this tournament yet.</p>
+      )}
+      {reservations.map((reservation) => (
+        <div key={reservation._id} className="portal__row" style={{ padding: "6px 0" }}>
+          <span>
+            {reservation.hotelName} — {reservation.roomCount} room(s),{" "}
+            {centsToDollars(reservation.costCents)} ({reservation.status})
+          </span>
+        </div>
+      ))}
+
       <button
         type="button"
-        className="portal__link-button"
-        onClick={() => setExpanded((prev) => !prev)}
+        className="portal__button"
+        style={{ marginTop: 8 }}
+        onClick={() => setShowForm((prev) => !prev)}
       >
-        {expanded ? "Hide hotel reservations" : "View hotel reservations"}
+        {showForm ? "Close" : "+ Add hotel"}
       </button>
-
-      {expanded && (
-        <div style={{ marginTop: 8 }}>
-          {reservations.length === 0 && (
-            <p className="portal__empty">No hotel reservations yet.</p>
-          )}
-          {reservations.map((reservation) => (
-            <div key={reservation._id} className="portal__row" style={{ padding: "6px 0" }}>
-              <span>
-                {reservation.hotelName} — {reservation.roomCount} room(s),{" "}
-                {centsToDollars(reservation.costCents)} ({reservation.status})
-              </span>
-            </div>
-          ))}
-          <HotelReservationForm tournamentId={tournament._id} token={token} />
-        </div>
-      )}
+      {showForm && <HotelReservationForm tournamentId={tournament._id} token={token} />}
     </div>
   );
 }
 
-function PendingHotelReservations({ token }) {
+function PendingHotelReservations({ token, tournaments }) {
   const queryClient = useQueryClient();
   const { pushToast } = useToast();
+  const tournamentNameById = new Map(tournaments.map((t) => [String(t._id), t.name]));
 
   const { data: pending = [] } = useQuery({
     queryKey: queryKeys.pendingHotelReservations(),
@@ -197,7 +201,7 @@ function PendingHotelReservations({ token }) {
   });
 
   if (pending.length === 0) {
-    return <p className="portal__empty">No pending hotel reservations.</p>;
+    return <p className="portal__empty">Nothing waiting for confirmation.</p>;
   }
 
   return (
@@ -206,6 +210,9 @@ function PendingHotelReservations({ token }) {
         <div key={reservation._id} className="portal__card portal__card--row">
           <span>
             {reservation.hotelName} — {centsToDollars(reservation.costCents)}
+            {tournamentNameById.get(String(reservation.tournamentId))
+              ? ` (${tournamentNameById.get(String(reservation.tournamentId))})`
+              : ""}
           </span>
           <div className="portal__row" style={{ gap: 8 }}>
             <button
@@ -271,12 +278,11 @@ function TournamentsPanel({ token }) {
 
   return (
     <div>
-      <h2 className="portal__section-title">Pending Hotel Reservations</h2>
-      <PendingHotelReservations token={token} />
-
-      <h2 className="portal__section-title" style={{ marginTop: 24 }}>
-        Tournaments
-      </h2>
+      <h2 className="portal__section-title">Tournaments &amp; Hotels</h2>
+      <p className="portal__card-meta" style={{ marginBottom: 12 }}>
+        Hotels are added to a tournament. Add the tournament first, then use
+        &ldquo;+ Add hotel&rdquo; on its card.
+      </p>
       <form className="portal__form" onSubmit={handleSubmit}>
         <label className="portal__label" htmlFor="tournament-name">
           Name
@@ -319,11 +325,20 @@ function TournamentsPanel({ token }) {
       </form>
 
       <div style={{ marginTop: 16 }}>
-        {tournaments.length === 0 && <p className="portal__empty">No tournaments yet.</p>}
+        {tournaments.length === 0 && (
+          <p className="portal__empty">
+            No tournaments yet. Add one above, then you can add hotels to it.
+          </p>
+        )}
         {tournaments.map((tournament) => (
           <TournamentRow key={tournament._id} tournament={tournament} token={token} />
         ))}
       </div>
+
+      <h2 className="portal__section-title" style={{ marginTop: 24 }}>
+        Hotels awaiting confirmation
+      </h2>
+      <PendingHotelReservations token={token} tournaments={tournaments} />
     </div>
   );
 }

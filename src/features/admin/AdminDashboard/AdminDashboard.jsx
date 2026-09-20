@@ -32,7 +32,7 @@ const TABS = [
   { key: "waiver", label: "Waiver" },
   { key: "role-requests", label: "Role Requests" },
   { key: "college-coach", label: "College Coach Approvals" },
-  { key: "tournaments", label: "Tournaments" },
+  { key: "tournaments", label: "Tournaments & Hotels" },
   { key: "coach-payments", label: "Coach Payments" },
   { key: "lesson-slots", label: "Lesson Slots" },
   { key: "lesson-requests", label: "Lesson Requests" },
