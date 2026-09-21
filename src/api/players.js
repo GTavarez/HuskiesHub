@@ -17,6 +17,12 @@ const updatePlayer = (playerId, payload, token) =>
     body: JSON.stringify(payload),
   });
 
+// Private phone and contact email; only the family, their coach and admins may read them.
+const getPlayerContact = (playerId, token) =>
+  apiFetch(`/api/players/${playerId}/contact`, {
+    headers: authHeaders(token),
+  });
+
 const deletePlayer = (playerId, token) =>
   apiFetch(`/api/players/${playerId}`, {
     method: "DELETE",
@@ -41,4 +47,4 @@ const exportContactsCsvBlobUrl = async (token) => {
   return URL.createObjectURL(blob);
 };
 
-export { createPlayer, updatePlayer, deletePlayer, exportContactsCsvBlobUrl, getTeamContacts };
+export { getPlayerContact, createPlayer, updatePlayer, deletePlayer, exportContactsCsvBlobUrl, getTeamContacts };
