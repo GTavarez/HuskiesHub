@@ -6,6 +6,7 @@ import PerformanceLogger from "../../performance/PerformanceLogger/PerformanceLo
 import AiAssistant from "../../analytics/AiAssistant/AiAssistant.jsx";
 import CoachAvailability from "../CoachAvailability/CoachAvailability.jsx";
 import CoachContactsPanel from "../CoachContactsPanel/CoachContactsPanel.jsx";
+import CoachPayouts from "../CoachPayouts/CoachPayouts.jsx";
 import AnnouncementsPanel from "../../admin/AnnouncementsPanel/AnnouncementsPanel.jsx";
 import "../../shared/portal.css";
 
@@ -18,10 +19,14 @@ const TABS = [
   { key: "notes", label: "Player Notes" },
   { key: "performance", label: "Performance" },
   { key: "assistant", label: "Assistant" },
+  { key: "payouts", label: "Get Paid" },
 ];
 
 function CoachDashboard({ currentUser, token }) {
-  const [activeTab, setActiveTab] = useState("plans");
+  // Stripe sends coaches back here with ?payouts=return or ?payouts=refresh.
+  const [activeTab, setActiveTab] = useState(() =>
+    new URLSearchParams(window.location.search).has("payouts") ? "payouts" : "plans"
+  );
   const teamId = currentUser?.teamId;
 
   if (!teamId) {
@@ -77,6 +82,7 @@ function CoachDashboard({ currentUser, token }) {
           <PerformanceLogger teamId={teamId} token={token} />
         )}
         {activeTab === "assistant" && <AiAssistant context="coach" token={token} />}
+        {activeTab === "payouts" && <CoachPayouts token={token} />}
       </div>
     </section>
   );

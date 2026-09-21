@@ -6,6 +6,9 @@ import {
   createCoachPayment,
   updateCoachPaymentStatus,
   deleteCoachPayment,
+  getStripePlatform,
+  getCoachConnectStatuses,
+  payCoachWithStripe,
 } from "../../../api/coachPayments.js";
 import { queryKeys } from "../../../api/queryKeys.js";
 import { useToast } from "../../../context/ToastContext.js";
@@ -19,7 +22,12 @@ const METHODS = [
   { value: "bank_transfer", label: "Bank transfer" },
   { value: "other", label: "Other" },
 ];
-const METHOD_LABELS = Object.fromEntries(METHODS.map((m) => [m.value, m.label]));
+const CONNECT_STATUS_LABELS = {
+  ready: "Ready for Stripe",
+  incomplete: "Setup unfinished",
+  not_started: "Not set up",
+};
+const METHOD_LABELS = { ...Object.fromEntries(METHODS.map((m) => [m.value, m.label])), stripe: "Stripe" };
 
 function centsToDollars(cents) {
   return `$${((cents || 0) / 100).toFixed(2)}`;
@@ -127,6 +135,25 @@ function CoachPaymentsPanel({ token }) {
     enabled: Boolean(token),
   });
 
+  // Stripe is optional: if it can't be reached the ledger still works.
+  const { data: platform, isError: platformError } = useQuery({
+    queryKey: ["stripePlatform"],
+    queryFn: () => getStripePlatform(token),
+    enabled: Boolean(token),
+    retry: false,
+  });
+
+  const { data: connectStatuses = [] } = useQuery({
+    queryKey: ["coachConnectStatuses"],
+    queryFn: () => getCoachConnectStatuses(token),
+    enabled: Boolean(token) && Boolean(platform?.connectEnabled),
+    retry: false,
+  });
+  const connectStatusByCoach = useMemo(
+    () => new Map(connectStatuses.map((c) => [String(c.coachUserId), c.status])),
+    [connectStatuses]
+  );
+
   const refresh = () =>
     queryClient.invalidateQueries({ queryKey: queryKeys.coachPayments(undefined) });
 
@@ -160,6 +187,30 @@ function CoachPaymentsPanel({ token }) {
       pushToast({ type: "error", message: error?.message || "Failed to update payment." });
     },
   });
+
+  const stripePayMutation = useMutation({
+    mutationFn: (id) => payCoachWithStripe(id, token),
+    onSuccess: () => {
+      refresh();
+      queryClient.invalidateQueries({ queryKey: ["stripePlatform"] });
+      pushToast({ type: "success", message: "Payment sent through Stripe." });
+    },
+    onError: (error) => {
+      // A failure can still mean money moved (the message says so), so refresh.
+      refresh();
+      pushToast({ type: "error", message: error?.message || "Stripe payment failed." });
+    },
+  });
+
+  const handleStripePay = (payment) => {
+    const ok = window.confirm(
+      `Send ${centsToDollars(payment.amountCents)} to ${payment.coachName} through Stripe?
+
+` +
+        "This moves real money out of your Stripe balance and can't be undone."
+    );
+    if (ok) stripePayMutation.mutate(payment._id);
+  };
 
   const deleteMutation = useMutation({
     mutationFn: (id) => deleteCoachPayment(id, token),
@@ -210,9 +261,43 @@ function CoachPaymentsPanel({ token }) {
   return (
     <div>
       <p className="portal__subtitle" style={{ marginBottom: 12 }}>
-        Record what each coach is owed, pay them by Zelle, Venmo, check or bank transfer, then mark
-        it paid here. No money moves through this screen.
+        Record what each coach is owed, then pay them. Coaches who have finished Stripe setup get a
+        "Pay with Stripe" button, which sends real money from your Stripe balance. Everyone else you
+        pay outside the app (Zelle, Venmo, check, bank transfer) and mark paid here.
       </p>
+
+      <div className="portal__card" style={{ marginBottom: 16 }}>
+        <strong>Stripe payouts</strong>
+        {platformError && (
+          <p className="portal__card-meta">
+            Couldn't reach Stripe. Recording and marking payments still works.
+          </p>
+        )}
+        {platform && (
+          <>
+            <p className="portal__card-meta">
+              Paying from Stripe account {platform.name || platform.accountId} ({platform.accountId})
+              {platform.livemode === false ? " · TEST MODE" : ""}
+            </p>
+            {platform.connectEnabled ? (
+              <>
+                <p className="portal__card-meta">
+                  Available to send: {platform.availableCents == null ? "unknown" : centsToDollars(platform.availableCents)}
+                </p>
+                {connectStatuses.map((c) => (
+                  <p key={c.coachUserId} className="portal__card-meta">
+                    {c.name}: {CONNECT_STATUS_LABELS[c.status] || c.status}
+                  </p>
+                ))}
+              </>
+            ) : (
+              <p className="portal__card-meta">
+                Stripe Connect isn't usable yet on this account: {platform.connectMessage || "not enabled"}
+              </p>
+            )}
+          </>
+        )}
+      </div>
 
       <div className="portal__card" style={{ marginBottom: 16 }}>
         <strong>Owed to coaches: {centsToDollars(totalOwed)}</strong>
@@ -336,6 +421,16 @@ function CoachPaymentsPanel({ token }) {
                 <span className="portal__badge">{payment.status}</span>
                 {payment.status === "unpaid" ? (
                   <>
+                    {connectStatusByCoach.get(String(payment.coachUserId)) === "ready" && (
+                      <button
+                        type="button"
+                        className="portal__button"
+                        disabled={stripePayMutation.isPending}
+                        onClick={() => handleStripePay(payment)}
+                      >
+                        {stripePayMutation.isPending ? "Sending..." : "Pay with Stripe"}
+                      </button>
+                    )}
                     <button
                       type="button"
                       className="portal__link-button"
@@ -356,7 +451,7 @@ function CoachPaymentsPanel({ token }) {
                       Delete
                     </button>
                   </>
-                ) : (
+                ) : payment.method === "stripe" ? null : (
                   <button
                     type="button"
                     className="portal__link-button"

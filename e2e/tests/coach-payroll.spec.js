@@ -128,3 +128,42 @@ test('a parent cannot see coach pay', async () => {
   expect((await parent.get(`/api/payroll?coachUserId=${ids.coachId}`)).status()).toBe(403);
   expect((await parent.post('/api/payroll', { coachUserId: ids.coachId, ...period, amountCents: 100 })).status()).toBe(403);
 });
+
+// ---------- Stripe Connect payouts ----------
+// Read-only or refusal checks only: nothing here creates a Stripe account or
+// sends money. The QA coach has no Stripe account, so a payout must be refused.
+
+test('admin can see which Stripe account payouts come from', async () => {
+  const res = await admin.get('/api/payroll/connect/platform');
+  expect(res.status()).toBe(200);
+  const body = await res.json();
+  expect(body.accountId).toMatch(/^acct_/);
+  expect(typeof body.connectEnabled).toBe('boolean');
+});
+
+test('a coach can read their own payout setup status', async () => {
+  const res = await coach.get('/api/payroll/connect/me');
+  expect(res.status()).toBe(200);
+  expect(['not_started', 'incomplete', 'ready']).toContain((await res.json()).status);
+});
+
+test('a payout is refused for a coach who has not set up Stripe', async () => {
+  const record = await (await addRecord()).json();
+  const res = await admin.post(`/api/payroll/${record._id}/stripe-payout`, {});
+  expect(res.status()).toBe(400);
+  expect((await res.json()).message).toMatch(/hasn't set up Stripe payouts/);
+  const after = (await (await admin.get('/api/payroll')).json()).find((p) => p._id === record._id);
+  expect(after.status).toBe('unpaid');
+});
+
+test('Stripe payout endpoints are limited to the right roles', async () => {
+  const record = await (await addRecord()).json();
+
+  expect((await coach.post(`/api/payroll/${record._id}/stripe-payout`, {})).status()).toBe(403);
+  expect((await parent.post(`/api/payroll/${record._id}/stripe-payout`, {})).status()).toBe(403);
+  expect((await coach.get('/api/payroll/connect/platform')).status()).toBe(403);
+  expect((await coach.get('/api/payroll/connect/coaches')).status()).toBe(403);
+  expect((await parent.get('/api/payroll/connect/me')).status()).toBe(403);
+  expect((await parent.post('/api/payroll/connect/onboard', {})).status()).toBe(403);
+  expect((await admin.post('/api/payroll/connect/onboard', {})).status()).toBe(403);
+});
