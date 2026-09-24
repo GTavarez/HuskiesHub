@@ -13,6 +13,7 @@ import { getAnnouncements } from "../../../api/announcements.js";
 import { queryKeys } from "../../../api/queryKeys.js";
 import { resolveImageUrl, resolveMediaUrl } from "../../../utils/media";
 import { generateTeamRosterPdf } from "../../../utils/teamRosterPdf";
+import ShowcaseSheetModal from "../ShowcaseSheetModal/ShowcaseSheetModal.jsx";
 import { useToast } from "../../../context/ToastContext.js";
 
 const NEW_PLAYER_DEFAULTS = {
@@ -38,6 +39,7 @@ function Players({
 }) {
   const [activeTab, setActiveTab] = useState("players");
   const [isGeneratingRoster, setIsGeneratingRoster] = useState(false);
+  const [isShowcaseOpen, setIsShowcaseOpen] = useState(false);
   const [isAddingPlayer, setIsAddingPlayer] = useState(false);
   const [newPlayerForm, setNewPlayerForm] = useState(NEW_PLAYER_DEFAULTS);
   const { teamsId } = useParams();
@@ -254,10 +256,20 @@ function Players({
             <button
               type="button"
               className="players__back-btn"
+              onClick={() => setIsShowcaseOpen(true)}
+            >
+              Download Team Roster PDF
+            </button>
+          )}
+
+          {canDownloadRoster && (
+            <button
+              type="button"
+              className="players__back-btn"
               onClick={handleDownloadRoster}
               disabled={isGeneratingRoster}
             >
-              {isGeneratingRoster ? "Generating..." : "Download Team Roster PDF"}
+              {isGeneratingRoster ? "Generating..." : "Photo Roster PDF"}
             </button>
           )}
 
@@ -275,6 +287,15 @@ function Players({
         <h2>{team ? `${team.name} ${team.ageGroup}` : "Teams"}</h2>
         <div className="players__divider"></div>
       </header>
+
+      {canDownloadRoster && isShowcaseOpen && team && (
+        <ShowcaseSheetModal
+          team={team}
+          players={players}
+          token={token}
+          onClose={() => setIsShowcaseOpen(false)}
+        />
+      )}
 
       {canDownloadRoster && isAddingPlayer && (
         <form className="portal__form" onSubmit={handleAddPlayerSubmit} style={{ maxWidth: 480, margin: "0 auto 24px" }}>

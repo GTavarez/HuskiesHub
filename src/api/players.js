@@ -23,6 +23,13 @@ const getPlayerContact = (playerId, token) =>
     headers: authHeaders(token),
   });
 
+// Private phone, email, city and SAT/ACT for a whole team, for the showcase
+// sheet. Admins and that team's coach only.
+const getTeamShowcaseDetails = (teamId, token) =>
+  apiFetch(`/api/players/team/${teamId}/showcase-details`, {
+    headers: authHeaders(token),
+  });
+
 const deletePlayer = (playerId, token) =>
   apiFetch(`/api/players/${playerId}`, {
     method: "DELETE",
@@ -47,4 +54,4 @@ const exportContactsCsvBlobUrl = async (token) => {
   return URL.createObjectURL(blob);
 };
 
-export { getPlayerContact, createPlayer, updatePlayer, deletePlayer, exportContactsCsvBlobUrl, getTeamContacts };
+export { getTeamShowcaseDetails, getPlayerContact, createPlayer, updatePlayer, deletePlayer, exportContactsCsvBlobUrl, getTeamContacts };

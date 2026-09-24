@@ -26,6 +26,7 @@ const EDIT_FIELDS = [
 // never includes them.
 const PRIVATE_FIELDS = [
   { name: "phone", label: "Phone (private)", type: "tel" },
+  { name: "city", label: "City (private)", type: "text" },
   { name: "contactEmail", label: "Contact Email (private)", type: "text" },
 ];
 
@@ -137,7 +138,11 @@ function PlayerProfileModal({ onClose, player, currentUser, token }) {
       committedCollege: displayPlayer.committedCollege || "",
       battingThrowing: displayPlayer.battingThrowing || "",
       ...(contactEditable
-        ? { phone: contact.phone || "", contactEmail: contact.contactEmail || "" }
+        ? {
+            phone: contact.phone || "",
+            city: contact.city || "",
+            contactEmail: contact.contactEmail || "",
+          }
         : {}),
       ...(scoresEditable
         ? { satScore: scores?.satScore ?? "", actScore: scores?.actScore ?? "" }
@@ -450,6 +455,7 @@ function PlayerProfileModal({ onClose, player, currentUser, token }) {
                     "Not added yet"
                   )}
                 </p>
+                {contact.city && <p>City: {contact.city}</p>}
                 {contact.contactEmail && <p>Email: {contact.contactEmail}</p>}
               </>
             )}
