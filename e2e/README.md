@@ -67,4 +67,8 @@ The cloud environment the routine runs in needs:
 - Nothing else for HTTPS: the routine sends traffic through a proxy with its
   own certificate authority, so `playwright.config.js` turns on
   `ignoreHTTPSErrors` automatically whenever `NODE_EXTRA_CA_CERTS` is set.
-  Local runs keep full certificate checking.
+  Local runs keep full certificate checking. The browser is also given the
+  proxy address and credentials from `HTTPS_PROXY`.
+- If browser tests still can't load pages in the routine, set
+  `QA_SKIP_BROWSER=1` as an environment variable. Tests whose names end in
+  `@browser` are then skipped and only the API tests run.

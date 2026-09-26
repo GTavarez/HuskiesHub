@@ -17,7 +17,7 @@ test.afterEach(async ({ request }) => {
   createdEventId = null;
 });
 
-test('coach can create an event on their own team from the Coach Portal', async ({ page, request }) => {
+test('coach can create an event on their own team from the Coach Portal @browser', async ({ page, request }) => {
   await loginAs(page, accounts.coach);
   await page.goto('/coach');
   await page.getByPlaceholder('e.g. Batting cages session').fill('QA E2E practice');

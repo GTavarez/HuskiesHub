@@ -10,7 +10,7 @@ const PNG = Buffer.from(
   'base64'
 );
 
-test('a parent can attach and send a photo in the team chat', async ({ page, request }) => {
+test('a parent can attach and send a photo in the team chat @browser', async ({ page, request }) => {
   const token = await apiSignIn(request, accounts.parent.email, accounts.parent.password);
   await page.addInitScript((jwt) => localStorage.setItem('jwt', jwt), token);
 

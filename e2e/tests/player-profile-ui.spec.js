@@ -16,7 +16,7 @@ test.afterEach(async () => {
   await admin.put(`/api/recruiting-profiles/${ids.playerId}`, { satScore: null, actScore: null });
 });
 
-test('a parent can add a phone number and test scores on their child\'s profile', async ({ page, request }) => {
+test('a parent can add a phone number and test scores on their child\'s profile @browser', async ({ page, request }) => {
   const token = await apiSignIn(request, accounts.parent.email, accounts.parent.password);
   await page.addInitScript((jwt) => localStorage.setItem('jwt', jwt), token);
 
@@ -36,7 +36,7 @@ test('a parent can add a phone number and test scores on their child\'s profile'
   await expect(details).toContainText('ACT: 29');
 });
 
-test('out-of-range scores are stopped before saving', async ({ page, request }) => {
+test('out-of-range scores are stopped before saving @browser', async ({ page, request }) => {
   const token = await apiSignIn(request, accounts.parent.email, accounts.parent.password);
   await page.addInitScript((jwt) => localStorage.setItem('jwt', jwt), token);
 
@@ -53,7 +53,7 @@ test('out-of-range scores are stopped before saving', async ({ page, request }) 
   await expect(page.getByRole('button', { name: /save changes/i })).toBeVisible();
 });
 
-test('a logged-out visitor sees no private details on a player profile', async ({ page }) => {
+test('a logged-out visitor sees no private details on a player profile @browser', async ({ page }) => {
   await admin.patch(`/api/players/${ids.playerId}`, { phone: '2015550142' });
   await admin.put(`/api/recruiting-profiles/${ids.playerId}`, { satScore: 1310, actScore: 29 });
 
@@ -70,7 +70,7 @@ test('a logged-out visitor sees no private details on a player profile', async (
 
 // Uses a made-up school; the QA player is marked committed only for this test
 // and is always restored, and the logo is removed afterwards.
-test('a parent can add a school logo for their committed player, and it shows on the profile', async ({ page, request }) => {
+test('a parent can add a school logo for their committed player, and it shows on the profile @browser', async ({ page, request }) => {
   const PNG = Buffer.from(
     'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==',
     'base64'

@@ -80,7 +80,7 @@ test('a player\'s city is private, like phone and email', async ({ request }) =>
   expect(contact.city).toBe('Testville');
 });
 
-test('an admin can download the sheet, in the right column order, with the private details', async ({ page, request }) => {
+test('an admin can download the sheet, in the right column order, with the private details @browser', async ({ page, request }) => {
   await fillQaPlayer();
   const token = await apiSignIn(request, accounts.admin.email, accounts.admin.password);
   await page.addInitScript((jwt) => localStorage.setItem('jwt', jwt), token);
@@ -128,7 +128,7 @@ test('an admin can download the sheet, in the right column order, with the priva
   expect([...positions].sort((a, b) => a - b)).toEqual(positions);
 });
 
-test('a parent does not get the roster sheet button', async ({ page, request }) => {
+test('a parent does not get the roster sheet button @browser', async ({ page, request }) => {
   const token = await apiSignIn(request, accounts.parent.email, accounts.parent.password);
   await page.addInitScript((jwt) => localStorage.setItem('jwt', jwt), token);
   await page.goto(`/teams/${ids.teamId}`);
