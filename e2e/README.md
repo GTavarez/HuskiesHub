@@ -56,3 +56,15 @@ registration/payment role-gating (read-only checks, e.g. a coach getting 403
 on `/api/registrations`), RSVP + attendee-name resolution, and the
 notification email pipeline (can be asserted via the backend's mailer being
 called, without actually needing a real inbox).
+
+## Running in the nightly cloud routine
+
+The cloud environment the routine runs in needs:
+
+- `QA_PASSWORD` set as an environment variable (see above).
+- Network access that allows the production frontend and backend hosts and
+  `cdn.playwright.dev` (for the browser download), or Full network access.
+- Nothing else for HTTPS: the routine sends traffic through a proxy with its
+  own certificate authority, so `playwright.config.js` turns on
+  `ignoreHTTPSErrors` automatically whenever `NODE_EXTRA_CA_CERTS` is set.
+  Local runs keep full certificate checking.
