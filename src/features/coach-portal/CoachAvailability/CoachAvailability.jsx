@@ -4,6 +4,7 @@ import { getEvents } from "../../../api/events.js";
 import { getTeamContacts } from "../../../api/players.js";
 import { queryKeys } from "../../../api/queryKeys.js";
 import { sortEventsForAttendance } from "../../../utils/eventSort.js";
+import { summarizeRsvps } from "../../../utils/attendanceSummary.js";
 
 const STATUS_LABELS = { yes: "Going", maybe: "Maybe", no: "Can't go" };
 
@@ -20,13 +21,6 @@ function CoachAvailability({ teamId, token }) {
     enabled: Boolean(teamId && token),
   });
 
-  // Attendance shows the player's name, not whichever account (parent or
-  // player) actually submitted the RSVP.
-  const nameById = useMemo(
-    () => new Map(contacts.map((c) => [c._id, c.attendeeName || c.name])),
-    [contacts]
-  );
-
   const upcoming = useMemo(
     () => sortEventsForAttendance(events.filter((e) => e.status !== "cancelled")),
     [events]
@@ -39,11 +33,9 @@ function CoachAvailability({ teamId, token }) {
         <p className="portal__empty">No upcoming practices, games, lessons, or meetings yet.</p>
       )}
       {upcoming.map((event) => {
-        const byStatus = { yes: [], no: [], maybe: [] };
-        (event.rsvps || []).forEach((rsvp) => {
-          const name = nameById.get(rsvp.userId) || nameById.get(String(rsvp.userId));
-          if (byStatus[rsvp.status]) byStatus[rsvp.status].push(name || "Unknown");
-        });
+        // One entry per player, however many of their accounts answered.
+        const { yes, no, maybe } = summarizeRsvps(event.rsvps, contacts);
+        const byStatus = { yes, no, maybe };
 
         return (
           <div key={event._id} className="portal__card">

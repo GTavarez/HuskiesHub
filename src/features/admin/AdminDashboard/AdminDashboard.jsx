@@ -14,6 +14,7 @@ import CollegeCoachApprovalsPanel from "../CollegeCoachApprovalsPanel/CollegeCoa
 import RoleRequestsPanel from "../RoleRequestsPanel/RoleRequestsPanel.jsx";
 import TournamentsPanel from "../TournamentsPanel/TournamentsPanel.jsx";
 import CoachPaymentsPanel from "../CoachPaymentsPanel/CoachPaymentsPanel.jsx";
+import CoachesPagePanel from "../CoachesPagePanel/CoachesPagePanel.jsx";
 import LessonSlotsPanel from "../LessonSlotsPanel/LessonSlotsPanel.jsx";
 import LessonRequestsPanel from "../LessonRequestsPanel/LessonRequestsPanel.jsx";
 import AiAssistant from "../../analytics/AiAssistant/AiAssistant.jsx";
@@ -34,6 +35,7 @@ const TABS = [
   { key: "college-coach", label: "College Coach Approvals" },
   { key: "tournaments", label: "Tournaments & Hotels" },
   { key: "coach-payments", label: "Coach Payments" },
+  { key: "coaches-page", label: "Coaches Page" },
   { key: "lesson-slots", label: "Lesson Slots" },
   { key: "lesson-requests", label: "Lesson Requests" },
 ];
@@ -180,6 +182,7 @@ function AdminDashboard({ token }) {
         )}
         {activeTab === "tournaments" && <TournamentsPanel token={token} />}
         {activeTab === "coach-payments" && <CoachPaymentsPanel token={token} />}
+        {activeTab === "coaches-page" && <CoachesPagePanel token={token} />}
         {activeTab === "lesson-slots" && <LessonSlotsPanel token={token} />}
         {activeTab === "lesson-requests" && <LessonRequestsPanel token={token} />}
       </div>

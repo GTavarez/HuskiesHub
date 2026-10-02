@@ -3,7 +3,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateEvent } from "../../../api/events.js";
 import { queryKeys } from "../../../api/queryKeys.js";
 import { useToast } from "../../../context/ToastContext.js";
-import SuggestInput, { titleAfterOpponentChange } from "../SuggestInput/SuggestInput.jsx";
+import SuggestInput from "../SuggestInput/SuggestInput.jsx";
+import { titleAfterOpponentChange } from "../../../utils/gameTitle.js";
 
 function toDatetimeLocalValue(isoString) {
   const d = new Date(isoString);

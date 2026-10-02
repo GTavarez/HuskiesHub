@@ -1,13 +1,15 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getTeams } from "../../../api/teams.js";
 import { getEvents, createEvent, cancelEvent } from "../../../api/events.js";
 import { getTeamContacts } from "../../../api/players.js";
 import { queryKeys } from "../../../api/queryKeys.js";
 import { sortEventsForAttendance } from "../../../utils/eventSort.js";
+import { summarizeRsvps } from "../../../utils/attendanceSummary.js";
 import { useToast } from "../../../context/ToastContext.js";
 import EventEditForm from "../../shared/EventEditForm/EventEditForm.jsx";
-import SuggestInput, { titleAfterOpponentChange } from "../../shared/SuggestInput/SuggestInput.jsx";
+import SuggestInput from "../../shared/SuggestInput/SuggestInput.jsx";
+import { titleAfterOpponentChange } from "../../../utils/gameTitle.js";
 
 const RSVP_LABELS = { yes: "Going", maybe: "Maybe", no: "Can't go" };
 
@@ -156,12 +158,6 @@ function SchedulePanel({ token }) {
     queryFn: () => getTeamContacts(teamId, token),
     enabled: Boolean(teamId && token),
   });
-  // Attendance shows the player's name, not whichever account (parent or
-  // player) actually submitted the RSVP.
-  const nameById = useMemo(
-    () => new Map(contacts.map((c) => [String(c._id), c.attendeeName || c.name])),
-    [contacts]
-  );
 
   const cancelMutation = useMutation({
     mutationFn: ({ eventId, notifyTeam }) => cancelEvent(eventId, notifyTeam, token),
@@ -246,7 +242,7 @@ function SchedulePanel({ token }) {
                         setAvailabilityEventId(availabilityEventId === event._id ? null : event._id)
                       }
                     >
-                      Attendance ({(event.rsvps || []).length})
+                      Attendance ({summarizeRsvps(event.rsvps, contacts).respondedCount})
                     </button>
                     <button
                       type="button"
@@ -272,15 +268,9 @@ function SchedulePanel({ token }) {
               {availabilityEventId === event._id && (
                 <div style={{ marginTop: 8, display: "flex", gap: 24, flexWrap: "wrap" }}>
                   {(() => {
-                    const byStatus = { yes: [], no: [], maybe: [] };
-                    (event.rsvps || []).forEach((rsvp) => {
-                      const name = nameById.get(String(rsvp.userId));
-                      if (byStatus[rsvp.status]) byStatus[rsvp.status].push(name || "Unknown");
-                    });
-                    const responded = new Set((event.rsvps || []).map((r) => String(r.userId)));
-                    const notYetResponded = contacts
-                      .filter((c) => !responded.has(String(c._id)))
-                      .map((c) => c.name);
+                    // One entry per player, however many of their accounts answered.
+                    const { yes, no, maybe, notYetResponded } = summarizeRsvps(event.rsvps, contacts);
+                    const byStatus = { yes, no, maybe };
                     return (
                       <>
                         {Object.entries(RSVP_LABELS).map(([status, label]) => (

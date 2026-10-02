@@ -70,7 +70,7 @@ function CollegeCommits() {
                 #{player.jersey} | {player.position} | Class of {player.gradYear}
               </p>
               <p className="commit__college">
-                🎓 Committed To: <span>{player.committedCollege || "TBA"}</span>
+                🎓 Committed To: <span>{player.committedCollege?.trim() || "TBA"}</span>
               </p>
               <div className="commit__logo">
                 <CollegeLogo college={player.committedCollege} className="college-logo--large" />

@@ -4,7 +4,8 @@ import { getTeams } from "../../../../api/teams.js";
 import { createEvent, deleteEvent } from "../../../../api/events.js";
 import { queryKeys } from "../../../../api/queryKeys.js";
 import { useToast } from "../../../../context/ToastContext.js";
-import SuggestInput, { titleAfterOpponentChange } from "../../../shared/SuggestInput/SuggestInput.jsx";
+import SuggestInput from "../../../shared/SuggestInput/SuggestInput.jsx";
+import { titleAfterOpponentChange } from "../../../../utils/gameTitle.js";
 import "./DayAgendaModal.css";
 
 const EMPTY_FORM = {

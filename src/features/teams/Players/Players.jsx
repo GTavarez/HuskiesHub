@@ -12,8 +12,8 @@ import { getCoaches } from "../../../api/users.js";
 import { getAnnouncements } from "../../../api/announcements.js";
 import { queryKeys } from "../../../api/queryKeys.js";
 import { resolveImageUrl, resolveMediaUrl } from "../../../utils/media";
-import { generateTeamRosterPdf } from "../../../utils/teamRosterPdf";
 import ShowcaseSheetModal from "../ShowcaseSheetModal/ShowcaseSheetModal.jsx";
+import RosterBookletModal from "../RosterBookletModal/RosterBookletModal.jsx";
 import { useToast } from "../../../context/ToastContext.js";
 
 const NEW_PLAYER_DEFAULTS = {
@@ -38,7 +38,7 @@ function Players({
   token,
 }) {
   const [activeTab, setActiveTab] = useState("players");
-  const [isGeneratingRoster, setIsGeneratingRoster] = useState(false);
+  const [isRosterOpen, setIsRosterOpen] = useState(false);
   const [isShowcaseOpen, setIsShowcaseOpen] = useState(false);
   const [isAddingPlayer, setIsAddingPlayer] = useState(false);
   const [newPlayerForm, setNewPlayerForm] = useState(NEW_PLAYER_DEFAULTS);
@@ -118,18 +118,6 @@ function Players({
       (currentUser?.role === "admin" ||
         (currentUser?.role === "coach" && String(currentUser?.teamId) === String(team._id)))
   );
-
-  const handleDownloadRoster = async () => {
-    setIsGeneratingRoster(true);
-    try {
-      await generateTeamRosterPdf({
-        teamName: `${team.name} ${team.ageGroup}`,
-        players,
-      });
-    } finally {
-      setIsGeneratingRoster(false);
-    }
-  };
 
   const createPlayerMutation = useMutation({
     mutationFn: (payload) => createPlayer(payload, token),
@@ -256,7 +244,7 @@ function Players({
             <button
               type="button"
               className="players__back-btn"
-              onClick={() => setIsShowcaseOpen(true)}
+              onClick={() => setIsRosterOpen(true)}
             >
               Download Team Roster PDF
             </button>
@@ -266,10 +254,9 @@ function Players({
             <button
               type="button"
               className="players__back-btn"
-              onClick={handleDownloadRoster}
-              disabled={isGeneratingRoster}
+              onClick={() => setIsShowcaseOpen(true)}
             >
-              {isGeneratingRoster ? "Generating..." : "Photo Roster PDF"}
+              Showcase Sheet PDF
             </button>
           )}
 
@@ -287,6 +274,15 @@ function Players({
         <h2>{team ? `${team.name} ${team.ageGroup}` : "Teams"}</h2>
         <div className="players__divider"></div>
       </header>
+
+      {canDownloadRoster && isRosterOpen && team && (
+        <RosterBookletModal
+          team={team}
+          players={players}
+          token={token}
+          onClose={() => setIsRosterOpen(false)}
+        />
+      )}
 
       {canDownloadRoster && isShowcaseOpen && team && (
         <ShowcaseSheetModal

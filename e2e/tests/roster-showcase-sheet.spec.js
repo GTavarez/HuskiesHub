@@ -86,7 +86,7 @@ test('an admin can download the sheet, in the right column order, with the priva
   await page.addInitScript((jwt) => localStorage.setItem('jwt', jwt), token);
 
   await page.goto(`/teams/${ids.teamId}`);
-  await page.getByRole('button', { name: /^download team roster pdf$/i }).click();
+  await page.getByRole('button', { name: /^showcase sheet pdf$/i }).click();
 
   await page.getByLabel(/showcase or tournament name/i).fill('Jersey Outlaws');
   await page.getByLabel(/^manager name/i).fill('Pat Manager');
@@ -134,4 +134,41 @@ test('a parent does not get the roster sheet button @browser', async ({ page, re
   await page.goto(`/teams/${ids.teamId}`);
   await expect(page.locator('.players__header-actions')).toBeVisible();
   await expect(page.getByRole('button', { name: /roster pdf/i })).toHaveCount(0);
+});
+
+test('the team roster PDF has player cards in the booklet layout and a details page @browser', async ({ page, request }) => {
+  await fillQaPlayer();
+  const token = await apiSignIn(request, accounts.admin.email, accounts.admin.password);
+  await page.addInitScript((jwt) => localStorage.setItem('jwt', jwt), token);
+
+  await page.goto(`/teams/${ids.teamId}`);
+  await page.getByRole('button', { name: /^download team roster pdf$/i }).click();
+  await page.getByLabel(/^season/i).fill('2026-2027 Season');
+  await page.getByLabel(/^events \(one per line/i).fill('JUNE 6-7: Jersey Outlaws Showcase, Jackson NJ');
+  await page.getByLabel(/^coaching staff/i).fill('Pat Coach | (201) 555-0100 | pat@example.com');
+
+  const downloadPromise = page.waitForEvent('download');
+  await page.getByRole('button', { name: /download pdf/i }).click();
+  const download = await downloadPromise;
+  const path = await download.path();
+  const pdf = readFileSync(path, 'latin1');
+  if (process.env.SAVE_ROSTER_PDF) copyFileSync(path, process.env.SAVE_ROSTER_PDF);
+
+  expect(download.suggestedFilename()).toMatch(/-roster\.pdf$/);
+  for (const expected of [
+    'QA TEST PLAYER',
+    'Bats/Throws: L/R',
+    'qa-sheet@example.com',
+    ') 555-0142',
+    'JUNE 6-7:',
+    'COACHING STAFF',
+    'PAT COACH',
+    'pat@example.com',
+    '2026-2027 Season',
+    'NOTES',
+  ]) {
+    expect(pdf, `PDF should contain "${expected}"`).toContain(expected);
+  }
+  // Landscape letter.
+  expect(pdf).toMatch(/MediaBox \[0 0 792\.?\d* 612\.?\d*\]/);
 });

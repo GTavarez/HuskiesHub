@@ -37,6 +37,10 @@ function ParentDashboard({ currentUser, token }) {
   });
   const teamNameById = new Map(teams.map((team) => [String(team._id), team.name]));
   const showTeamLabels = teamIds.length > 1;
+  const teamBadge = (id) =>
+    showTeamLabels && teamNameById.get(String(id)) ? (
+      <span className="portal__badge">{teamNameById.get(String(id))}</span>
+    ) : null;
 
   const eventQueries = useQueries({
     queries: teamIds.map((id) => ({
@@ -124,6 +128,7 @@ function ParentDashboard({ currentUser, token }) {
                     cancelled
                   </span>
                 )}
+                {teamBadge(event.teamId)}
                 <strong>{event.title}</strong>
               </div>
               <p className="portal__card-meta">
@@ -149,7 +154,7 @@ function ParentDashboard({ currentUser, token }) {
           )}
           {announcements.map((announcement) => (
             <div key={announcement._id} className="portal__card">
-              <strong>{announcement.title}</strong>
+              {teamBadge(announcement.teamId)} <strong>{announcement.title}</strong>
               <p className="portal__card-body">{announcement.body}</p>
               {announcement.imageUrl && (
                 <img

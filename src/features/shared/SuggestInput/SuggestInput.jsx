@@ -37,18 +37,4 @@ function SuggestInput({ kind, teamId, token, value, onChange, ...inputProps }) {
   );
 }
 
-// Title prefill for a game: picking an opponent fills "vs. Opponent" unless
-// the person already wrote their own title.
-function autoGameTitle(opponent) {
-  return opponent ? `vs. ${opponent}` : "";
-}
-
-function titleAfterOpponentChange(currentTitle, previousOpponent, nextOpponent) {
-  if (!currentTitle || currentTitle === autoGameTitle(previousOpponent)) {
-    return autoGameTitle(nextOpponent);
-  }
-  return currentTitle;
-}
-
 export default SuggestInput;
-export { titleAfterOpponentChange };

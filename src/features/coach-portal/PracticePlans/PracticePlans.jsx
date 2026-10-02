@@ -5,7 +5,8 @@ import { queryKeys } from "../../../api/queryKeys.js";
 import { useToast } from "../../../context/ToastContext.js";
 import { sortEventsForAttendance } from "../../../utils/eventSort.js";
 import EventEditForm from "../../shared/EventEditForm/EventEditForm.jsx";
-import SuggestInput, { titleAfterOpponentChange } from "../../shared/SuggestInput/SuggestInput.jsx";
+import SuggestInput from "../../shared/SuggestInput/SuggestInput.jsx";
+import { titleAfterOpponentChange } from "../../../utils/gameTitle.js";
 
 const EMPTY_FORM = {
   type: "practice",
