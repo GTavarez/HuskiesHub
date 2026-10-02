@@ -163,6 +163,14 @@ function toLocalDateKey(input) {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 }
 
+// A Google Calendar all-day entry has a date but no time ("YYYY-MM-DD").
+// Parsing that as a Date lands on midnight UTC, which a US browser shows as
+// the evening before ("8:00 PM"), so say "All day" instead.
+function gameTimeLabel(game) {
+  if (typeof game.start === "string" && /^\d{4}-\d{2}-\d{2}$/.test(game.start)) return "All day";
+  return new Date(game.start).toLocaleTimeString();
+}
+
 // Shows everything happening on one calendar day — games and team events —
 // with quick add right from the popup instead of making them jump to the
 // Schedule admin tab or Coach Portal. Admins can add to any team and delete
@@ -224,7 +232,7 @@ function DayAgendaModal({
             <div onClick={() => onSelectGame(game)} style={{ cursor: "pointer" }}>
               <span className="portal__badge portal__badge--game">game</span>{" "}
               <strong>{game.title}</strong>
-              <p className="portal__card-meta">{new Date(game.start).toLocaleTimeString()}</p>
+              <p className="portal__card-meta">{gameTimeLabel(game)}</p>
             </div>
           </div>
         ))}
