@@ -1,10 +1,13 @@
 import "./Players.css";
 /* import { playersData } from "../../../utils/constants"; */
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import PlayerProfileModal from "../PlayerProfile/PlayerProfileModal";
 import PlayerProfilePreviewModal from "../PlayerProfilePreviewModal/PlayerProfilePreviewModal";
 import { useState } from "react";
 import ChatHub from "../../chat/ChatHub/ChatHub";
+import { EventChatModal } from "../../chat/EventChat/EventChat.jsx";
+import { getChatSummary } from "../../../api/chat.js";
+import { getEvent } from "../../../api/events.js";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getTeam, getTeamPlayers } from "../../../api/teams";
 import { createPlayer, deletePlayer } from "../../../api/players";
@@ -37,7 +40,12 @@ function Players({
   currentUser,
   token,
 }) {
-  const [activeTab, setActiveTab] = useState("players");
+  // A notification can link straight to a chat (?chat=conv:<id>) or to one
+  // game's chat (?event=<id>).
+  const [searchParams, setSearchParams] = useSearchParams();
+  const chatParam = searchParams.get("chat");
+  const eventParam = searchParams.get("event");
+  const [activeTab, setActiveTab] = useState(chatParam ? "chat" : "players");
   const [isRosterOpen, setIsRosterOpen] = useState(false);
   const [isShowcaseOpen, setIsShowcaseOpen] = useState(false);
   const [isAddingPlayer, setIsAddingPlayer] = useState(false);
@@ -109,6 +117,22 @@ function Players({
             (child) => String(child.teamId) === String(team._id)
           )))
   );
+
+  // Unread messages across this team's chats, shown on the Team Chat tab.
+  const { data: chatSummary } = useQuery({
+    queryKey: queryKeys.chatSummary(team?._id),
+    queryFn: () => getChatSummary(team._id, token),
+    enabled: Boolean(canAccessThisTeamChat && token),
+    refetchInterval: 30 * 1000,
+    refetchOnWindowFocus: true,
+  });
+  const chatUnread = chatSummary?.totalUnread || 0;
+
+  const { data: linkedEvent } = useQuery({
+    queryKey: queryKeys.event(eventParam),
+    queryFn: () => getEvent(eventParam, token),
+    enabled: Boolean(eventParam && canAccessThisTeamChat && token),
+  });
 
   // Coaches/admins only — this is a printable sheet for the bench, not a
   // public download.
@@ -219,6 +243,11 @@ function Players({
             disabled={!isLoggedIn || !canAccessThisTeamChat}
           >
             Team Chat
+            {chatUnread > 0 && (
+              <span className="players__tab-badge" aria-label={`${chatUnread} unread`}>
+                {chatUnread > 99 ? "99+" : chatUnread}
+              </span>
+            )}
           </button>
 
           <button
@@ -274,6 +303,18 @@ function Players({
         <h2>{team ? `${team.name} ${team.ageGroup}` : "Teams"}</h2>
         <div className="players__divider"></div>
       </header>
+
+      {eventParam && linkedEvent && (
+        <EventChatModal
+          eventId={linkedEvent._id}
+          title={linkedEvent.title}
+          onClose={() => {
+            const next = new URLSearchParams(searchParams);
+            next.delete("event");
+            setSearchParams(next, { replace: true });
+          }}
+        />
+      )}
 
       {canDownloadRoster && isRosterOpen && team && (
         <RosterBookletModal
@@ -464,6 +505,7 @@ function Players({
                 token={token}
                 currentUser={currentUser}
                 canManageGroups={["coach", "admin"].includes(currentUser?.role)}
+                initialKey={chatParam}
               />
             ) : (
               <p style={{ color: "#9fbad1", textAlign: "center" }}>

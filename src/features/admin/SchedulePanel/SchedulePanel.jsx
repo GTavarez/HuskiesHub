@@ -6,6 +6,7 @@ import { getTeamContacts } from "../../../api/players.js";
 import { queryKeys } from "../../../api/queryKeys.js";
 import { sortEventsForAttendance } from "../../../utils/eventSort.js";
 import { summarizeRsvps } from "../../../utils/attendanceSummary.js";
+import { EventChatButton } from "../../chat/EventChat/EventChat.jsx";
 import { useToast } from "../../../context/ToastContext.js";
 import EventEditForm from "../../shared/EventEditForm/EventEditForm.jsx";
 import SuggestInput from "../../shared/SuggestInput/SuggestInput.jsx";
@@ -244,6 +245,9 @@ function SchedulePanel({ token }) {
                     >
                       Attendance ({summarizeRsvps(event.rsvps, contacts).respondedCount})
                     </button>
+                    <span style={{ marginRight: 12 }}>
+                      <EventChatButton event={event} />
+                    </span>
                     <button
                       type="button"
                       className="portal__link-button"

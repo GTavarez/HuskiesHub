@@ -1,0 +1,67 @@
+.pinned-bar {
+  border-bottom: 1px solid #1d3a5f;
+  background: rgba(246, 196, 83, 0.08);
+  font-size: 13px;
+}
+
+.pinned-bar__row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+}
+
+.pinned-bar__latest {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: #eaf2ff;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.pinned-bar__text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pinned-bar__toggle {
+  padding: 2px 10px;
+  border: 1px solid #3d6a9c;
+  border-radius: 999px;
+  background: transparent;
+  color: #cfe6ff;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.pinned-bar__list {
+  margin: 0;
+  padding: 0 12px 8px;
+  list-style: none;
+}
+
+.pinned-bar__list button {
+  display: block;
+  width: 100%;
+  padding: 6px 8px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: #eaf2ff;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.pinned-bar__list button:hover {
+  background: rgba(100, 181, 246, 0.14);
+}

@@ -7,15 +7,17 @@ const getMessages = (teamId, token) =>
     },
   });
 
-// Posts a photo (plus optional caption) into a team room or a group chat.
-// The server broadcasts the new message over the socket, so callers don't
-// need to add it to the list themselves.
-const sendChatPhoto = ({ teamId, conversationId, file, text }, token) => {
+// Posts a photo (plus optional caption) into a team room, a group or direct
+// chat, or a game's chat. The server broadcasts the new message over the
+// socket, so callers don't need to add it to the list themselves.
+const sendChatPhoto = ({ teamId, conversationId, eventId, file, text, replyToId }, token) => {
   const body = new FormData();
   body.append("photo", file);
   if (conversationId) body.append("conversationId", conversationId);
+  else if (eventId) body.append("eventId", eventId);
   else body.append("teamId", teamId);
   if (text) body.append("text", text);
+  if (replyToId) body.append("replyToId", replyToId);
   return apiFetch("/api/messages/photo", {
     method: "POST",
     headers: { Authorization: `Bearer ${token}` },

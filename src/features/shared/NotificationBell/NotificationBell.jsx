@@ -1,7 +1,9 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getUpcomingNotifications } from "../../../api/notifications.js";
 import { rsvpToEvent } from "../../../api/events.js";
+import { getChatSummary } from "../../../api/chat.js";
 import { queryKeys } from "../../../api/queryKeys.js";
 import "./NotificationBell.css";
 
@@ -29,6 +31,26 @@ function NotificationBell({ token }) {
     enabled: Boolean(token),
     refetchInterval: REFRESH_MS,
   });
+
+  // Unread chat messages across every team the person is on.
+  const { data: chatSummary } = useQuery({
+    queryKey: queryKeys.chatSummary(),
+    queryFn: () => getChatSummary(undefined, token),
+    enabled: Boolean(token),
+    refetchInterval: 30 * 1000,
+    refetchOnWindowFocus: true,
+  });
+  const unreadRooms = (chatSummary?.rooms || []).filter((room) => room.unread > 0);
+  const chatUnread = chatSummary?.totalUnread || 0;
+
+  // Shows the unread count in the browser tab, like "(3) Empire State Huskies".
+  React.useEffect(() => {
+    const base = document.title.replace(/^\(\d+\+?\)\s*/, "");
+    document.title = chatUnread > 0 ? `(${chatUnread > 99 ? "99+" : chatUnread}) ${base}` : base;
+    return () => {
+      document.title = base;
+    };
+  }, [chatUnread]);
 
   const rsvpMutation = useMutation({
     mutationFn: ({ eventId, status }) => rsvpToEvent(eventId, status, token),
@@ -63,21 +85,44 @@ function NotificationBell({ token }) {
         <span className="notification-bell__icon" aria-hidden="true">
           🔔
         </span>
-        {upcoming.length > 0 && (
+        {upcoming.length + chatUnread > 0 && (
           <span
             className={
-              needsConfirmation > 0
+              needsConfirmation > 0 || chatUnread > 0
                 ? "notification-bell__badge notification-bell__badge--alert"
                 : "notification-bell__badge"
             }
           >
-            {upcoming.length}
+            {upcoming.length + chatUnread > 99 ? "99+" : upcoming.length + chatUnread}
           </span>
         )}
       </button>
 
       {open && (
         <div className="notification-bell__panel">
+          {unreadRooms.length > 0 && (
+            <>
+              <p className="notification-bell__panel-title">Unread messages</p>
+              {unreadRooms.map((room) => (
+                <Link
+                  key={room.key}
+                  to={`/teams/${room.teamId}?chat=${room.key}`}
+                  className="notification-bell__item notification-bell__chat"
+                  onClick={() => setOpen(false)}
+                >
+                  <div className="notification-bell__item-main">
+                    <span className="notification-bell__item-title">
+                      {room.type === "team" ? `${room.teamName} chat` : room.name}
+                    </span>
+                    <span className="notification-bell__item-when">
+                      {room.lastMessage ? `${room.lastMessage.senderName}: ${room.lastMessage.preview}` : ""}
+                    </span>
+                  </div>
+                  <span className="notification-bell__confirmed">{room.unread} new</span>
+                </Link>
+              ))}
+            </>
+          )}
           <p className="notification-bell__panel-title">Upcoming (next 7 days)</p>
           {upcoming.length === 0 && (
             <p className="notification-bell__empty">Nothing coming up.</p>

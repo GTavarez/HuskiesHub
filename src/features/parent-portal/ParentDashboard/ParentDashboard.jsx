@@ -5,6 +5,7 @@ import { getTeams } from "../../../api/teams.js";
 import { getAnnouncements } from "../../../api/announcements.js";
 import { getDocuments, downloadDocumentBlobUrl } from "../../../api/documents.js";
 import { queryKeys } from "../../../api/queryKeys.js";
+import { EventChatButton } from "../../chat/EventChat/EventChat.jsx";
 import { resolveMediaUrl } from "../../../utils/media.js";
 import { sortEventsForAttendance } from "../../../utils/eventSort.js";
 import RsvpControl from "../RsvpControl/RsvpControl.jsx";
@@ -143,6 +144,7 @@ function ParentDashboard({ currentUser, token }) {
                   teamId={String(event.teamId)}
                 />
               )}
+              {event.status !== "cancelled" && <EventChatButton event={event} />}
             </div>
           ))}
         </div>

@@ -41,6 +41,11 @@ const queryKeys = {
   teamContacts: (teamId) => ["teamContacts", teamId],
   conversations: (teamId) => ["conversations", teamId],
   conversationMessages: (conversationId) => ["conversationMessages", conversationId],
+  eventMessages: (eventId) => ["eventMessages", eventId],
+  chatSummary: (teamId) => ["chatSummary", teamId || "all"],
+  chatRoom: (roomKey) => ["chatRoom", roomKey],
+  chatPinned: (roomKey) => ["chatPinned", roomKey],
+  chatMembers: (roomKey) => ["chatMembers", roomKey],
 };
 
 export { queryKeys };

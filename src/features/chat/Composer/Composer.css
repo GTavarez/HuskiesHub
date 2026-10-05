@@ -1,0 +1,145 @@
+.chat-composer {
+  position: relative;
+  padding: 8px 12px 10px;
+  border-top: 1px solid #112240;
+  background: #0a192f;
+}
+
+.chat-composer--locked {
+  padding: 14px 16px;
+  text-align: center;
+  color: #9fbad1;
+  font-size: 14px;
+}
+
+.chat-composer__row {
+  align-items: flex-end;
+  padding: 0;
+  border-top: none;
+}
+
+.chat-composer__input {
+  flex: 1;
+  min-width: 0;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background: #fff;
+  color: #0a192f;
+  font: inherit;
+  line-height: 1.35;
+  resize: none;
+}
+
+.chat-composer__send {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  background: #64b5f6;
+  color: #0a192f;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.chat-composer__send:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.chat-composer__reply {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 6px;
+  padding: 6px 10px;
+  border-left: 3px solid #64b5f6;
+  border-radius: 4px;
+  background: rgba(100, 181, 246, 0.1);
+  font-size: 12px;
+  color: #eaf2ff;
+}
+
+.chat-composer__reply > div {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.chat-composer__reply span {
+  color: #b9cbe0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chat-composer__reply button {
+  border: none;
+  background: transparent;
+  color: #9fbad1;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.chat-composer__photo {
+  padding: 0 0 8px;
+}
+
+.chat-composer__mentions {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: calc(100% - 4px);
+  z-index: 15;
+  margin: 0;
+  padding: 4px;
+  list-style: none;
+  border: 1px solid #2b4468;
+  border-radius: 10px;
+  background: #0d1f3a;
+  box-shadow: 0 -6px 20px rgba(0, 0, 0, 0.4);
+}
+
+.chat-composer__mentions button {
+  display: block;
+  width: 100%;
+  padding: 7px 10px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: #eaf2ff;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.chat-composer__mentions button:hover,
+.chat-composer__mentions button.is-active {
+  background: rgba(100, 181, 246, 0.2);
+}
+
+.chat-composer__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 0;
+  font-size: 12px;
+  color: #9fbad1;
+}
+
+.chat-composer__foot:empty {
+  display: none;
+}
+
+.chat-composer__urgent {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+  cursor: pointer;
+}
+
+.chat-composer__count {
+  margin-left: auto;
+  margin-top: 6px;
+}

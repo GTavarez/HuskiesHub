@@ -4,6 +4,7 @@ import { getEvents, createEvent, cancelEvent } from "../../../api/events.js";
 import { queryKeys } from "../../../api/queryKeys.js";
 import { useToast } from "../../../context/ToastContext.js";
 import { sortEventsForAttendance } from "../../../utils/eventSort.js";
+import { EventChatButton } from "../../chat/EventChat/EventChat.jsx";
 import EventEditForm from "../../shared/EventEditForm/EventEditForm.jsx";
 import SuggestInput from "../../shared/SuggestInput/SuggestInput.jsx";
 import { titleAfterOpponentChange } from "../../../utils/gameTitle.js";
@@ -233,6 +234,11 @@ function PracticePlans({ teamId, token }) {
               >
                 Copy
               </button>
+              {event.status !== "cancelled" && (
+                <span style={{ marginLeft: 12 }}>
+                  <EventChatButton event={event} />
+                </span>
+              )}
               {event.status !== "cancelled" && (
                 <>
                   <button

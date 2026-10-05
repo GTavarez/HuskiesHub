@@ -1,0 +1,39 @@
+.push-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 8px 14px;
+  background: rgba(100, 181, 246, 0.14);
+  border-bottom: 1px solid #1d3a5f;
+  color: #eaf2ff;
+  font-size: 13px;
+}
+
+.push-banner--on {
+  background: rgba(120, 200, 140, 0.12);
+  color: #bfe8c9;
+}
+
+.push-banner__buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.push-banner button {
+  padding: 5px 12px;
+  border: 1px solid #3d6a9c;
+  border-radius: 8px;
+  background: transparent;
+  color: #cfe6ff;
+  font: inherit;
+  cursor: pointer;
+}
+
+.push-banner button.push-banner__primary {
+  border-color: #64b5f6;
+  background: #64b5f6;
+  color: #0a192f;
+  font-weight: 700;
+}

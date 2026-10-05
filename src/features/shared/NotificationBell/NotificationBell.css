@@ -154,3 +154,8 @@
     right: -60px;
   }
 }
+
+.notification-bell__chat {
+  text-decoration: none;
+  color: inherit;
+}
