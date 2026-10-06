@@ -84,7 +84,7 @@ function MessageBubble({
     isMine ? "mine" : "theirs",
     showHeader ? "chat-msg--first" : "chat-msg--continued",
     mentionedMe ? "chat-msg--mentioned" : "",
-    message.urgent ? "chat-msg--urgent" : "",
+    message.urgent || message.flagged ? "chat-msg--urgent" : "",
     deleted ? "chat-msg--deleted" : "",
   ]
     .filter(Boolean)
@@ -134,6 +134,7 @@ function MessageBubble({
         ) : (
           <>
             {message.urgent && <span className="chat-msg__urgent">Urgent</span>}
+            {message.flagged && !message.urgent && <span className="chat-msg__urgent">Flagged for staff</span>}
 
             {message.replyTo?.messageId && (
               <button

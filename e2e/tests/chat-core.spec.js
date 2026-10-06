@@ -312,6 +312,28 @@ test('only coaches can send urgent, and it is limited per hour', async () => {
   expect(sent.message.urgent).toBe(true);
 });
 
+// ---------- parent flag ----------
+
+test('a parent can flag a team message for staff; coaches use urgent instead', async () => {
+  const parentConn = await open(tokens.parent);
+  const coachConn = await open(tokens.coach);
+
+  const flagged = await say(parentConn, { text: 'QA E2E parent flagged', flag: true });
+  expect(flagged.ok).toBe(true);
+  expect(flagged.message.flagged).toBe(true);
+  // A flag alerts staff only. It is not an urgent message to every family.
+  expect(flagged.message.urgent).toBe(false);
+
+  // A plain message is not flagged.
+  const plain = await say(parentConn, { text: 'QA E2E parent not flagged' });
+  expect(plain.message.flagged).toBe(false);
+
+  // Coaches have urgent; the flag is for parents.
+  const refused = await sendChat(coachConn.socket, { text: 'QA E2E coach flag', flag: true });
+  expect(refused.ok).toBe(false);
+  expect(refused.error).toMatch(/parents/i);
+});
+
 // ---------- seen by ----------
 
 test('"seen by" shows who has opened the chat, to the sender and coaches only', async () => {

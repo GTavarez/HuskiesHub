@@ -347,6 +347,7 @@ function TeamChat({ teamId, conversationId, eventId, onManage }) {
         canPost={canPost}
         lockedMessage="Only coaches and admins can post in this chat."
         canUrgent={moderator}
+        canFlag={currentUser?.role === "parent" && (info?.type === "team" || info?.type === "event")}
         onSend={chat.send}
         onSendPhoto={handleSendPhoto}
         onTyping={chat.notifyTyping}

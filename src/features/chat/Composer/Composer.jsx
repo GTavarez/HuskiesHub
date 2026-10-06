@@ -18,6 +18,7 @@ function Composer({
   canPost,
   lockedMessage,
   canUrgent,
+  canFlag,
   onSend,
   onSendPhoto,
   onTyping,
@@ -27,6 +28,7 @@ function Composer({
   const [photo, setPhoto] = useState(null);
   const [photoPreview, setPhotoPreview] = useState(null);
   const [urgent, setUrgent] = useState(false);
+  const [flag, setFlag] = useState(false);
   const [sending, setSending] = useState(false);
   const [mentionIds, setMentionIds] = useState({}); // name -> user id
   const [mention, setMention] = useState(null); // { start, query }
@@ -90,6 +92,7 @@ function Composer({
     setText("");
     setPhoto(null);
     setUrgent(false);
+    setFlag(false);
     setMentionIds({});
     setMention(null);
     onCancelReply();
@@ -112,11 +115,15 @@ function Composer({
       return;
     }
 
+    if (flag && !window.confirm("Flag this as urgent? The coaches and admins will be alerted right away.")) {
+      return;
+    }
+
     const mentions = Object.entries(mentionIds)
       .filter(([name]) => body.includes(`@${name}`))
       .map(([, id]) => id);
     setSending(true);
-    const ack = await onSend({ text: body, replyToId: replyTo?._id, mentions, urgent });
+    const ack = await onSend({ text: body, replyToId: replyTo?._id, mentions, urgent, flag });
     setSending(false);
     if (ack.ok) reset();
     else pushToast({ type: "error", message: ack.error || "Couldn't send that message." });
@@ -258,6 +265,12 @@ function Composer({
           <label className="chat-composer__urgent">
             <input type="checkbox" checked={urgent} onChange={(e) => setUrgent(e.target.checked)} />
             Urgent (also emails everyone)
+          </label>
+        )}
+        {canFlag && (
+          <label className="chat-composer__urgent">
+            <input type="checkbox" checked={flag} onChange={(e) => setFlag(e.target.checked)} />
+            Flag as urgent (alerts the coaches and admins right away)
           </label>
         )}
         {text.length > MAX_LENGTH - 200 && (
