@@ -39,6 +39,8 @@ function Footer() {
 
       <div className="footer__bottom">
         <span>© {year} HuskiesHub. All rights reserved.</span>
+        <NavLink to="/privacy">Privacy</NavLink>
+        <NavLink to="/terms">Terms</NavLink>
       </div>
     </footer>
   );
