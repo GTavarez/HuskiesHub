@@ -36,13 +36,13 @@ const getCurrentUser = (token) =>
     },
   });
 
-const updateUserProfile = (name, avatar, token, phone, bio, coachTitle) =>
+const updateUserProfile = (name, avatar, token, phone, bio, coachTitle, smsOptIn) =>
   apiFetch("/me", {
     method: "PATCH",
     headers: {
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify({ name, avatar, phone, bio, coachTitle }),
+    body: JSON.stringify({ name, avatar, phone, bio, coachTitle, smsOptIn }),
   });
 
 const changePassword = ({ currentPassword, newPassword, confirmNewPassword }, token) =>

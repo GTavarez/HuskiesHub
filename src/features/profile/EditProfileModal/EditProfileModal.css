@@ -131,3 +131,18 @@ textarea.editProfile__input {
     padding: 24px;
   }
 }
+
+.editProfile__checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13px;
+  line-height: 1.4;
+  color: #c9d8e6;
+  cursor: pointer;
+}
+
+.editProfile__checkbox input {
+  margin-top: 3px;
+  flex-shrink: 0;
+}

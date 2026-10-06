@@ -9,6 +9,7 @@ import "./EditProfileModal.css";
 function EditProfileModal({ currentUser, token, onClose, onUpdate }) {
   const [name, setName] = useState(currentUser?.name || "");
   const [phone, setPhone] = useState(currentUser?.phone || "");
+  const [smsOptIn, setSmsOptIn] = useState(Boolean(currentUser?.smsOptIn));
   const [bio, setBio] = useState(currentUser?.bio || "");
   const [coachTitle, setCoachTitle] = useState(currentUser?.coachTitle || "");
   const [avatarPreview, setAvatarPreview] = useState(
@@ -31,8 +32,8 @@ function EditProfileModal({ currentUser, token, onClose, onUpdate }) {
   };
 
   const updateProfileMutation = useMutation({
-    mutationFn: ({ nextName, nextAvatar, nextPhone, nextBio, nextCoachTitle }) =>
-      updateUserProfile(nextName, nextAvatar, token, nextPhone, nextBio, nextCoachTitle),
+    mutationFn: ({ nextName, nextAvatar, nextPhone, nextBio, nextCoachTitle, nextSmsOptIn }) =>
+      updateUserProfile(nextName, nextAvatar, token, nextPhone, nextBio, nextCoachTitle, nextSmsOptIn),
     onSuccess: (data, variables) => {
       const updatedUser = data?.user ?? {
         _id: currentUser._id,
@@ -40,6 +41,7 @@ function EditProfileModal({ currentUser, token, onClose, onUpdate }) {
         email: currentUser.email,
         avatar: variables.nextAvatar,
         phone: variables.nextPhone,
+        smsOptIn: variables.nextSmsOptIn,
         bio: variables.nextBio,
         coachTitle: variables.nextCoachTitle,
       };
@@ -102,6 +104,7 @@ function EditProfileModal({ currentUser, token, onClose, onUpdate }) {
         nextPhone: phone,
         nextBio: bio,
         nextCoachTitle: coachTitle,
+        nextSmsOptIn: currentUser?.role === "parent" ? smsOptIn : undefined,
       });
     } catch (err) {
       pushToast({
@@ -161,6 +164,21 @@ function EditProfileModal({ currentUser, token, onClose, onUpdate }) {
               placeholder="(555) 555-5555"
             />
           </label>
+
+          {currentUser?.role === "parent" && (
+            <label className="editProfile__checkbox">
+              <input
+                type="checkbox"
+                checked={smsOptIn}
+                onChange={(e) => setSmsOptIn(e.target.checked)}
+              />
+              <span>
+                Text me about schedule changes, cancellations and urgent messages. Needs a mobile
+                number above. Message and data rates may apply. Reply STOP to opt out, or untick
+                this box.
+              </span>
+            </label>
+          )}
 
           {(currentUser?.role === "coach" || currentUser?.role === "admin") && (
             <>
