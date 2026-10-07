@@ -1,7 +1,7 @@
 import "./Privacy.css";
 import React from "react";
 
-const CONTACT_EMAIL = "info@huskieshub.com";
+const CONTACT_EMAIL = "yoffeeallie@gmail.com";
 const SITE = "www.eshuskiesyoffee.com";
 
 function Privacy() {
