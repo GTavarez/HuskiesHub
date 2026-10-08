@@ -2,7 +2,7 @@ import "../Privacy/Privacy.css";
 import React from "react";
 import { Link } from "react-router-dom";
 
-const CONTACT_EMAIL = "yoffeeallie@gmail.com";
+const CONTACT_EMAIL = "cesportstraining@gmail.com";
 const SITE = "www.eshuskiesyoffee.com";
 
 function Terms() {

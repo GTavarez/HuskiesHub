@@ -26,7 +26,7 @@ function Footer() {
 
           <div className="footer__column">
             <h4>Connect</h4>
-            <a href="mailto:yoffeeallie@gmail.com">Email</a>
+            <a href="mailto:cesportstraining@gmail.com">Email</a>
             <a href="https://instagram.com" target="_blank" rel="noreferrer">
               Instagram
             </a>
