@@ -10,7 +10,30 @@ import { accounts, ids } from '../fixtures/accounts.js';
 
 let createdEventId;
 
+// The form-created practice gets a title that no other run shares, and every
+// leftover "QA E2E practice" event is swept, so a failed run can never pile up
+// events that make the next run (or the nightly routine) fail.
+const PRACTICE_PREFIX = 'QA E2E practice';
+
+async function sweepPracticeLeftovers(request) {
+  const adminToken = await apiSignIn(request, accounts.admin.email, accounts.admin.password);
+  const admin = authed(request, adminToken);
+  const listRes = await admin.get(`/api/events?teamId=${ids.teamId}`);
+  if (!listRes.ok()) return;
+  const events = await listRes.json();
+  await Promise.all(
+    events
+      .filter((e) => e.title.startsWith(PRACTICE_PREFIX))
+      .map((e) => admin.delete(`/api/events/${e._id}`))
+  );
+}
+
+test.beforeEach(async ({ request }) => {
+  await sweepPracticeLeftovers(request);
+});
+
 test.afterEach(async ({ request }) => {
+  await sweepPracticeLeftovers(request);
   if (!createdEventId) return;
   const adminToken = await apiSignIn(request, accounts.admin.email, accounts.admin.password);
   await authed(request, adminToken).delete(`/api/events/${createdEventId}`);
@@ -18,15 +41,16 @@ test.afterEach(async ({ request }) => {
 });
 
 test('coach can create an event on their own team from the Coach Portal @browser', async ({ page, request }) => {
+  const title = `${PRACTICE_PREFIX} ${Date.now()}`;
   await loginAs(page, accounts.coach);
   await page.goto('/coach');
-  await page.getByPlaceholder('e.g. Batting cages session').fill('QA E2E practice');
+  await page.getByPlaceholder('e.g. Batting cages session').fill(title);
   await page.locator('#practice-starts').fill('2027-01-15T17:00');
   await page.locator('#practice-ends').fill('2027-01-15T19:00');
   await page.getByLabel('Email the team about this').uncheck();
   await page.getByRole('button', { name: 'Save Practice Plan' }).click();
   await expect(page.getByText('Practice plan saved.')).toBeVisible();
-  await expect(page.getByText('QA E2E practice')).toBeVisible();
+  await expect(page.getByText(title).first()).toBeVisible();
 
   // Find what was just created through the real UI so afterEach can clean
   // it up — this test doesn't get the id back directly since it goes
@@ -34,7 +58,7 @@ test('coach can create an event on their own team from the Coach Portal @browser
   const adminToken = await apiSignIn(request, accounts.admin.email, accounts.admin.password);
   const listRes = await authed(request, adminToken).get(`/api/events?teamId=${ids.teamId}`);
   const events = await listRes.json();
-  const created = events.find((e) => e.title === 'QA E2E practice');
+  const created = events.find((e) => e.title === title);
   createdEventId = created?._id;
 });
 
