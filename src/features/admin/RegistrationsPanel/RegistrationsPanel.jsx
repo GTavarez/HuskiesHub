@@ -94,16 +94,42 @@ function RegistrationRow({ registration, token }) {
     enabled: Boolean(expanded && token && billingUserId),
   });
 
+  // Dollars typed next to each payment's Refund button. Blank means refund
+  // whatever is left of that payment.
+  const [refundAmounts, setRefundAmounts] = useState({});
+
   const refundMutation = useMutation({
-    mutationFn: (paymentId) => refundPayment(paymentId, undefined, token),
+    mutationFn: ({ paymentId, amountCents }) => refundPayment(paymentId, amountCents, token),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.paymentHistory(billingUserId) });
+      setRefundAmounts({});
       pushToast({ type: "success", message: "Refund initiated." });
     },
     onError: (error) => {
       pushToast({ type: "error", message: error?.message || "Failed to initiate refund." });
     },
   });
+
+  const startRefund = (payment) => {
+    const remainingCents = payment.amountCents - (payment.refundedAmountCents || 0);
+    const typed = String(refundAmounts[payment._id] ?? "").trim();
+    const amountCents = typed === "" ? remainingCents : Math.round(Number(typed) * 100);
+    if (!Number.isFinite(amountCents) || amountCents <= 0 || amountCents > remainingCents) {
+      pushToast({
+        type: "error",
+        message: `Enter an amount between $0.01 and ${centsToDollars(remainingCents)}.`,
+      });
+      return;
+    }
+    const ok = window.confirm(
+      `Refund ${centsToDollars(amountCents)} of this ${centsToDollars(payment.amountCents)} payment to the card it was paid with? This can't be undone.`
+    );
+    if (!ok) return;
+    refundMutation.mutate({
+      paymentId: payment._id,
+      amountCents: amountCents === remainingCents ? undefined : amountCents,
+    });
+  };
 
   return (
     <div className="portal__card">
@@ -132,17 +158,37 @@ function RegistrationRow({ registration, token }) {
             <div key={payment._id} className="portal__row" style={{ padding: "6px 0" }}>
               <span>
                 {payment.description || payment.type} — {centsToDollars(payment.amountCents)} (
-                {payment.status})
+                {payment.status}
+                {payment.refundedAmountCents
+                  ? `, ${centsToDollars(payment.refundedAmountCents)} refunded`
+                  : ""}
+                )
               </span>
               {payment.status === "succeeded" && (
-                <button
-                  type="button"
-                  className="portal__link-button"
-                  disabled={refundMutation.isPending}
-                  onClick={() => refundMutation.mutate(payment._id)}
-                >
-                  Refund
-                </button>
+                <span style={{ display: "inline-flex", gap: 6, alignItems: "center" }}>
+                  <input
+                    type="number"
+                    min="0.01"
+                    step="0.01"
+                    placeholder="$ amount"
+                    title="Leave blank to refund whatever is left of this payment"
+                    aria-label="Refund amount in dollars"
+                    className="portal__input"
+                    style={{ width: 150 }}
+                    value={refundAmounts[payment._id] ?? ""}
+                    onChange={(e) =>
+                      setRefundAmounts((prev) => ({ ...prev, [payment._id]: e.target.value }))
+                    }
+                  />
+                  <button
+                    type="button"
+                    className="portal__link-button"
+                    disabled={refundMutation.isPending}
+                    onClick={() => startRefund(payment)}
+                  >
+                    Refund
+                  </button>
+                </span>
               )}
             </div>
           ))}
