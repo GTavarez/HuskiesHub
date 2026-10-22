@@ -36,6 +36,13 @@ const refundPayment = (paymentId, amountCents, token) =>
     body: JSON.stringify(amountCents ? { amountCents } : {}),
   });
 
+const recordOfflinePayment = ({ registrationId, amountCents, note }, token) =>
+  apiFetch("/api/payments/offline", {
+    method: "POST",
+    headers: authHeaders(token),
+    body: JSON.stringify({ registrationId, amountCents, note }),
+  });
+
 const runAutopay = (token) =>
   apiFetch("/api/payments/run-autopay", {
     method: "POST",
@@ -73,6 +80,7 @@ export {
   getBalance,
   getPaymentHistory,
   refundPayment,
+  recordOfflinePayment,
   runAutopay,
   sendReminders,
   exportQuickbooksCsvBlobUrl,

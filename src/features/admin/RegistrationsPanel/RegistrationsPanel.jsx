@@ -6,6 +6,7 @@ import {
   getBalance,
   getPaymentHistory,
   refundPayment,
+  recordOfflinePayment,
   runAutopay,
   sendReminders,
   exportQuickbooksCsvBlobUrl,
@@ -97,6 +98,43 @@ function RegistrationRow({ registration, token }) {
   // Dollars typed next to each payment's Refund button. Blank means refund
   // whatever is left of that payment.
   const [refundAmounts, setRefundAmounts] = useState({});
+  const [offlineAmount, setOfflineAmount] = useState("");
+  const [offlineNote, setOfflineNote] = useState("");
+
+  const offlineMutation = useMutation({
+    mutationFn: (payload) => recordOfflinePayment(payload, token),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.paymentHistory(billingUserId) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.balance(registration.playerId) });
+      setOfflineAmount("");
+      setOfflineNote("");
+      pushToast({ type: "success", message: "Payment recorded." });
+    },
+    onError: (error) => {
+      pushToast({ type: "error", message: error?.message || "Couldn't record that payment." });
+    },
+  });
+
+  const startOfflinePayment = () => {
+    const amountCents = Math.round(Number(offlineAmount) * 100);
+    if (!Number.isFinite(amountCents) || amountCents <= 0) {
+      pushToast({ type: "error", message: "Enter the amount that was paid." });
+      return;
+    }
+    if (!offlineNote.trim()) {
+      pushToast({ type: "error", message: "Add a short note, such as where it was paid." });
+      return;
+    }
+    const ok = window.confirm(
+      `Record ${centsToDollars(amountCents)} as already paid for ${registration.playerName}? No card is charged. This can't be undone from here.`
+    );
+    if (!ok) return;
+    offlineMutation.mutate({
+      registrationId: registration._id,
+      amountCents,
+      note: offlineNote.trim(),
+    });
+  };
 
   const refundMutation = useMutation({
     mutationFn: ({ paymentId, amountCents }) => refundPayment(paymentId, amountCents, token),
@@ -154,10 +192,48 @@ function RegistrationRow({ registration, token }) {
       {expanded && (
         <div style={{ marginTop: 8 }}>
           {payments.length === 0 && <p className="portal__empty">No payments yet.</p>}
+          {registration.status !== "withdrawn" && (
+            <div
+              className="portal__row"
+              style={{ padding: "8px 0", gap: 8, flexWrap: "wrap", alignItems: "center" }}
+            >
+              <strong style={{ fontSize: 14 }}>Record a payment made outside the site</strong>
+              <input
+                type="number"
+                min="0.01"
+                step="0.01"
+                placeholder="$ amount"
+                aria-label="Amount paid outside the site, in dollars"
+                className="portal__input"
+                style={{ width: 120 }}
+                value={offlineAmount}
+                onChange={(e) => setOfflineAmount(e.target.value)}
+              />
+              <input
+                type="text"
+                maxLength={200}
+                placeholder="Note, e.g. paid on the old system"
+                aria-label="Note for the payment"
+                className="portal__input"
+                style={{ flex: 1, minWidth: 200 }}
+                value={offlineNote}
+                onChange={(e) => setOfflineNote(e.target.value)}
+              />
+              <button
+                type="button"
+                className="portal__link-button"
+                disabled={offlineMutation.isPending}
+                onClick={startOfflinePayment}
+              >
+                Record payment
+              </button>
+            </div>
+          )}
           {payments.map((payment) => (
             <div key={payment._id} className="portal__row" style={{ padding: "6px 0" }}>
               <span>
                 {payment.description || payment.type} — {centsToDollars(payment.amountCents)} (
+                {payment.method === "offline" ? "recorded by hand, " : ""}
                 {payment.status}
                 {payment.refundedAmountCents
                   ? `, ${centsToDollars(payment.refundedAmountCents)} refunded`
