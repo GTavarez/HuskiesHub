@@ -486,6 +486,7 @@ function RegistrationsPanel({ token }) {
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
   const [uniformFilter, setUniformFilter] = useState("all");
+  const [autopayFilter, setAutopayFilter] = useState("all");
 
   const { data: teams = [] } = useQuery({
     queryKey: queryKeys.teams(),
@@ -500,9 +501,18 @@ function RegistrationsPanel({ token }) {
   });
 
   const optedOutCount = registrations.filter((r) => !r.uniformOptIn).length;
+  // A family counts as "not on monthly payments" if the registration is still
+  // active, has installments left, and no saved card is set up for autopay.
+  const notOnAutopay = (r) =>
+    r.status !== "withdrawn" &&
+    !r.autopayEnabled &&
+    (r.autopayInstallmentsCompleted || 0) < (r.autopayTotalInstallments || 0);
+  const notOnAutopayCount = registrations.filter(notOnAutopay).length;
   const visibleRegistrations = registrations.filter((registration) => {
-    if (uniformFilter === "included") return registration.uniformOptIn;
-    if (uniformFilter === "opted_out") return !registration.uniformOptIn;
+    if (uniformFilter === "included" && !registration.uniformOptIn) return false;
+    if (uniformFilter === "opted_out" && registration.uniformOptIn) return false;
+    if (autopayFilter === "not_on" && !notOnAutopay(registration)) return false;
+    if (autopayFilter === "on" && !registration.autopayEnabled) return false;
     return true;
   });
 
@@ -642,6 +652,27 @@ function RegistrationsPanel({ token }) {
           </select>
           <span style={{ color: "#9fbad1", fontSize: 14 }}>
             {optedOutCount} of {registrations.length} opted out of the uniform package
+          </span>
+        </div>
+      )}
+
+      {teamId && registrations.length > 0 && (
+        <div className="portal__row" style={{ marginTop: 8, gap: 8, alignItems: "center" }}>
+          <label className="portal__label" htmlFor="autopay-filter" style={{ margin: 0 }}>
+            Monthly payments
+          </label>
+          <select
+            id="autopay-filter"
+            className="portal__select"
+            value={autopayFilter}
+            onChange={(e) => setAutopayFilter(e.target.value)}
+          >
+            <option value="all">All ({registrations.length})</option>
+            <option value="not_on">Not set up ({notOnAutopayCount})</option>
+            <option value="on">Set up ({registrations.filter((r) => r.autopayEnabled).length})</option>
+          </select>
+          <span style={{ color: "#9fbad1", fontSize: 14 }}>
+            {notOnAutopayCount} of {registrations.length} have not set up monthly payments
           </span>
         </div>
       )}
