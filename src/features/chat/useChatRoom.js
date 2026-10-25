@@ -114,6 +114,11 @@ function useChatRoom(room, token) {
       sendVisibility();
     });
     socket.on("disconnect", () => setConnected(false));
+    socket.on("room-ready", () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.chatRoom(roomKey) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.chatPinned(roomKey) });
+      queryClient.invalidateQueries({ queryKey });
+    });
     socket.on("new-message", apply);
     socket.on("message-updated", (message) => {
       apply(message);
