@@ -36,3 +36,15 @@ test('bad input is rejected before anything is recorded', async () => {
   // A registration that does not exist (never a real family's).
   expect(await bad(validBody)).toBe(404);
 });
+
+// ---------- retrying a declined autopay charge ----------
+// Only bad requests are sent here, so no real family is ever charged by a test.
+
+test('only an admin can retry an autopay charge, and bad requests are refused', async () => {
+  const zero = '000000000000000000000000';
+  expect((await parent.post('/api/payments/retry-autopay', { registrationId: zero })).status()).toBe(403);
+  expect((await coach.post('/api/payments/retry-autopay', { registrationId: zero })).status()).toBe(403);
+  expect((await admin.post('/api/payments/retry-autopay', {})).status()).toBe(400);
+  expect((await admin.post('/api/payments/retry-autopay', { registrationId: 'nope' })).status()).toBe(400);
+  expect((await admin.post('/api/payments/retry-autopay', { registrationId: zero })).status()).toBe(404);
+});

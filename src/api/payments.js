@@ -36,6 +36,13 @@ const refundPayment = (paymentId, amountCents, token) =>
     body: JSON.stringify(amountCents ? { amountCents } : {}),
   });
 
+const retryAutopay = ({ registrationId }, token) =>
+  apiFetch("/api/payments/retry-autopay", {
+    method: "POST",
+    headers: authHeaders(token),
+    body: JSON.stringify({ registrationId }),
+  });
+
 const recordOfflinePayment = ({ registrationId, amountCents, note }, token) =>
   apiFetch("/api/payments/offline", {
     method: "POST",
@@ -81,6 +88,7 @@ export {
   getPaymentHistory,
   refundPayment,
   recordOfflinePayment,
+  retryAutopay,
   runAutopay,
   sendReminders,
   exportQuickbooksCsvBlobUrl,

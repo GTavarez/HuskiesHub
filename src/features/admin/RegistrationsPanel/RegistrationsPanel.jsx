@@ -7,6 +7,7 @@ import {
   getPaymentHistory,
   refundPayment,
   recordOfflinePayment,
+  retryAutopay,
   runAutopay,
   sendReminders,
   exportQuickbooksCsvBlobUrl,
@@ -114,6 +115,36 @@ function RegistrationRow({ registration, token }) {
       pushToast({ type: "error", message: error?.message || "Couldn't record that payment." });
     },
   });
+
+  const retryMutation = useMutation({
+    mutationFn: () => retryAutopay({ registrationId: registration._id }, token),
+    onSuccess: (result) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.paymentHistory(billingUserId) });
+      queryClient.invalidateQueries({ queryKey: ["registrations"] });
+      if (result?.outcome === "billed") {
+        pushToast({ type: "success", message: "The payment went through." });
+      } else {
+        pushToast({
+          type: "error",
+          message: `Still declined: ${result?.reason || "the card was not accepted"}. The family was emailed again.`,
+        });
+      }
+    },
+    onError: (error) => {
+      pushToast({ type: "error", message: error?.message || "Couldn't retry that payment." });
+    },
+  });
+
+  // Only this month's declined charge can be retried, so older declines get no button.
+  const now = new Date();
+  const thisBillingPeriod = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+
+  const startRetry = (payment) => {
+    const ok = window.confirm(
+      `Charge ${centsToDollars(payment.amountCents)} to the card on file for ${registration.playerName} now? Do this only after the family has updated their card.`
+    );
+    if (ok) retryMutation.mutate();
+  };
 
   const startOfflinePayment = () => {
     const amountCents = Math.round(Number(offlineAmount) * 100);
@@ -240,6 +271,18 @@ function RegistrationRow({ registration, token }) {
                   : ""}
                 )
               </span>
+              {payment.type === "autopay" &&
+                payment.status === "failed" &&
+                payment.billingPeriod === thisBillingPeriod && (
+                  <button
+                    type="button"
+                    className="portal__link-button"
+                    disabled={retryMutation.isPending}
+                    onClick={() => startRetry(payment)}
+                  >
+                    {retryMutation.isPending ? "Retrying..." : "Retry charge"}
+                  </button>
+                )}
               {payment.status === "succeeded" && (
                 <span style={{ display: "inline-flex", gap: 6, alignItems: "center" }}>
                   <input
