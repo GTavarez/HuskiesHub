@@ -49,4 +49,20 @@ async function waitFor(check, ms = 5000) {
   throw new Error('timed out waiting for condition');
 }
 
-export { connectChat, sendChat, waitFor };
+// Deletes the group chats the tests created (every one is named "QA E2E ...").
+// Left behind, they pile up on the QA accounts and make every chat request slower,
+// which in turn makes the live-update tests time out.
+async function sweepQaGroups(admin, member) {
+  const res = await member.get('/api/conversations');
+  if (!res.ok()) return;
+  const list = await res.json();
+  const groups = (Array.isArray(list) ? list : []).filter(
+    (c) => c.kind !== 'direct' && /^QA E2E/.test(c.name || '')
+  );
+  for (const group of groups) {
+    // eslint-disable-next-line no-await-in-loop
+    await admin.delete(`/api/conversations/${group._id}`);
+  }
+}
+
+export { connectChat, sendChat, waitFor, sweepQaGroups };

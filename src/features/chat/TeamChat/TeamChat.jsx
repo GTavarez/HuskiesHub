@@ -18,7 +18,7 @@ import { sendChatPhoto } from "../../../api/messages.js";
 import { queryKeys } from "../../../api/queryKeys.js";
 import CurrentUserContext from "../../../context/CurrentUserContext.js";
 import { useToast } from "../../../context/ToastContext.js";
-import { layoutMessages, muteLabel } from "../../../utils/chatText.js";
+import { layoutMessages, muteLabel, upsertMessage } from "../../../utils/chatText.js";
 import { useChatRoom } from "../useChatRoom.js";
 import MessageBubble from "../MessageBubble/MessageBubble.jsx";
 import Composer from "../Composer/Composer.jsx";
@@ -182,21 +182,38 @@ function TeamChat({ teamId, conversationId, eventId, onManage }) {
     }
   };
 
-  const handleReact = (id, emoji) => run(() => reactToMessage(id, emoji, token), "Couldn't react.");
+  // The server replies with the updated message. Showing it right away means
+  // your own pin, reaction, edit or delete appears even if the live connection
+  // dropped for a moment and its update never arrived.
+  const showUpdated = (message) => {
+    if (message && message._id) {
+      queryClient.setQueryData(chat.queryKey, (previous) =>
+        upsertMessage(Array.isArray(previous) ? previous : [], message)
+      );
+      queryClient.invalidateQueries({ queryKey: queryKeys.chatPinned(roomKey) });
+    }
+    return message;
+  };
 
-  const handleEdit = async (id, text) => Boolean(await run(() => editMessage(id, text, token), "Couldn't edit that message."));
+  const handleReact = async (id, emoji) =>
+    showUpdated(await run(() => reactToMessage(id, emoji, token), "Couldn't react."));
+
+  const handleEdit = async (id, text) =>
+    Boolean(showUpdated(await run(() => editMessage(id, text, token), "Couldn't edit that message.")));
 
   const handleDelete = async (message) => {
     const own = String(message.senderId) === String(currentUserId);
     const question = own ? "Delete this message?" : "Remove this message for everyone?";
     if (!window.confirm(question)) return;
-    await run(() => deleteMessage(message._id, token), "Couldn't delete that message.");
+    showUpdated(await run(() => deleteMessage(message._id, token), "Couldn't delete that message."));
   };
 
-  const handlePin = (message) =>
-    run(
-      () => (message.pinnedAt ? unpinMessage(message._id, token) : pinMessage(message._id, token)),
-      "Couldn't change the pin."
+  const handlePin = async (message) =>
+    showUpdated(
+      await run(
+        () => (message.pinnedAt ? unpinMessage(message._id, token) : pinMessage(message._id, token)),
+        "Couldn't change the pin."
+      )
     );
 
   const handleReport = async (reason) => {

@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { apiSignIn, authed } from '../helpers/api.js';
-import { connectChat, sendChat, waitFor } from '../helpers/chat.js';
+import { connectChat, sendChat, waitFor, sweepQaGroups } from '../helpers/chat.js';
 import { accounts, ids, apiBaseUrl } from '../fixtures/accounts.js';
 
 // The chat system: live delivery, history, unread, replies, reactions, edit and
@@ -40,6 +40,7 @@ test.afterEach(async () => {
   while (events.length) {
     await admin.delete(`/api/events/${events.pop()}`);
   }
+  await sweepQaGroups(admin, coach);
 });
 
 async function open(token, room = teamRoom) {

@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { apiSignIn, authed } from '../helpers/api.js';
+import { sweepQaGroups } from '../helpers/chat.js';
 import { accounts, ids, apiBaseUrl } from '../fixtures/accounts.js';
 
 // Photos in team chat and group chats. The photo bytes sit behind the same
@@ -28,6 +29,10 @@ test.beforeEach(async ({ request }) => {
   admin = authed(request, tokens.admin);
   coach = authed(request, tokens.coach);
   parent = authed(request, tokens.parent);
+});
+
+test.afterEach(async () => {
+  await sweepQaGroups(admin, coach);
 });
 
 function postPhoto(request, token, fields, file = { name: 'qa.png', mimeType: 'image/png', buffer: PNG }) {
