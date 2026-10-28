@@ -16,7 +16,7 @@ function Clinics() {
 
         <div className="clinic__contact">
           <p>Questions in the meantime? Reach out:</p>
-          <p>📧 cesportraining@gmail.com</p>
+          <p>📧 cesportstraining@gmail.com</p>
           <p>📞 973-800-0356</p>
         </div>
       </div>
