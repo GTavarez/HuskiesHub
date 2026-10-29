@@ -18,6 +18,7 @@ import CoachesPagePanel from "../CoachesPagePanel/CoachesPagePanel.jsx";
 import ChatReportsPanel from "../ChatReportsPanel/ChatReportsPanel.jsx";
 import LessonSlotsPanel from "../LessonSlotsPanel/LessonSlotsPanel.jsx";
 import LessonRequestsPanel from "../LessonRequestsPanel/LessonRequestsPanel.jsx";
+import TryoutsPanel from "../TryoutsPanel/TryoutsPanel.jsx";
 import AiAssistant from "../../analytics/AiAssistant/AiAssistant.jsx";
 import "../../shared/portal.css";
 import "./AdminDashboard.css";
@@ -40,6 +41,7 @@ const TABS = [
   { key: "chat-reports", label: "Chat Reports" },
   { key: "lesson-slots", label: "Lesson Slots" },
   { key: "lesson-requests", label: "Lesson Requests" },
+  { key: "tryouts", label: "Tryouts" },
 ];
 
 function MediaUploadForm({ token }) {
@@ -188,6 +190,7 @@ function AdminDashboard({ token }) {
         {activeTab === "chat-reports" && <ChatReportsPanel token={token} />}
         {activeTab === "lesson-slots" && <LessonSlotsPanel token={token} />}
         {activeTab === "lesson-requests" && <LessonRequestsPanel token={token} />}
+        {activeTab === "tryouts" && <TryoutsPanel token={token} />}
       </div>
     </section>
   );

@@ -24,6 +24,7 @@ import MyProfile from "../../features/profile/MyProfile/MyProfile.jsx";
 import ProtectedRoute from "../../features/shared/ProtectedRoute/ProtectedRoute.jsx";
 import Coaches from "../../features/public-site/Coaches/Coaches.jsx";
 import Clinics from "../../features/public-site/Clinics/Clinics.jsx";
+import Tryouts from "../../features/public-site/Tryouts/Tryouts.jsx";
 import Privacy from "../../features/public-site/Privacy/Privacy.jsx";
 import Terms from "../../features/public-site/Terms/Terms.jsx";
 import Contact from "../../features/public-site/Contact/Contact.jsx";
@@ -269,6 +270,7 @@ function App() {
           <Route path="/schedule" element={<Schedule />} />
           <Route path="/teams" element={<Teams />} />
           <Route path="/clinics" element={<Clinics />} />
+          <Route path="/tryouts" element={<Tryouts />} />
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/coaches" element={<Coaches />} />

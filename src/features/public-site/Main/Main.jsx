@@ -51,7 +51,7 @@ function Main({ onJoinClick }) {
             <Link to="/teams" className="main__cta main__cta_primary">
               View Teams
             </Link>
-            <Link to="/contact" className="main__cta main__cta_secondary">
+            <Link to="/tryouts" className="main__cta main__cta_secondary">
               Join Tryouts
             </Link>
           </div>

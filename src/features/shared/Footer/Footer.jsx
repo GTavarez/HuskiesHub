@@ -22,6 +22,7 @@ function Footer() {
             <NavLink to="/collegecommits">College Commits</NavLink>
             <NavLink to="/coaches">Coaches</NavLink>
             <NavLink to="/clinics">Clinics</NavLink>
+            <NavLink to="/tryouts">Tryouts</NavLink>
           </div>
 
           <div className="footer__column">
