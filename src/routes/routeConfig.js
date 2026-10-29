@@ -13,6 +13,7 @@ const routeConfig = [
     group: "more",
   },
   { path: "/clinics", label: "Clinics", roles: "public", group: "more" },
+  { path: "/tryouts", label: "Tryouts", roles: "public", group: "more" },
   {
     path: "/competitive-edge-training",
     label: "Competitive Edge Training",
