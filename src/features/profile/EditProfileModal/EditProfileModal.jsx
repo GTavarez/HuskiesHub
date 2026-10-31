@@ -173,9 +173,17 @@ function EditProfileModal({ currentUser, token, onClose, onUpdate }) {
                 onChange={(e) => setSmsOptIn(e.target.checked)}
               />
               <span>
-                Text me about schedule changes, cancellations and urgent messages. Needs a mobile
-                number above. Message and data rates may apply. Reply STOP to opt out, or untick
-                this box.
+                Text me Empire State Huskies schedule changes, cancellations and urgent messages
+                (usually a few a month). Needs a mobile number above. Message and data rates may
+                apply. Reply STOP to cancel or HELP for help. See our{" "}
+                <a href="/terms#text-messages" target="_blank" rel="noopener noreferrer">
+                  Terms
+                </a>{" "}
+                and{" "}
+                <a href="/privacy#text-messages" target="_blank" rel="noopener noreferrer">
+                  Privacy Policy
+                </a>
+                .
               </span>
             </label>
           )}

@@ -76,8 +76,8 @@ function Privacy() {
       <h2 id="text-messages">Text messages</h2>
       <p>
         <strong>How you opt in:</strong> text messages are optional. A parent opts in by
-        ticking the box in Edit Profile on {SITE}: &quot;Text me about schedule changes,
-        cancellations and urgent messages.&quot; You must have a mobile number saved in your
+        ticking the box in Edit Profile on {SITE}: &quot;Text me Empire State Huskies
+        schedule changes, cancellations and urgent messages.&quot; You must have a mobile number saved in your
         profile. We do not text anyone who has not ticked the box.
       </p>
       <p>

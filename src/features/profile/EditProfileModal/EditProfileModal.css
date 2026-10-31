@@ -146,3 +146,8 @@ textarea.editProfile__input {
   margin-top: 3px;
   flex-shrink: 0;
 }
+
+.editProfile__checkbox a {
+  color: #8fc1ff;
+  text-decoration: underline;
+}

@@ -45,8 +45,8 @@ function Terms() {
         or club admins. We do not send marketing or promotional texts.
       </p>
       <p>
-        <strong>How to join:</strong> tick &quot;Text me about schedule changes, cancellations
-        and urgent messages&quot; in Edit Profile on {SITE}. You need a mobile number saved in
+        <strong>How to join:</strong> tick &quot;Text me Empire State Huskies schedule changes,
+        cancellations and urgent messages&quot; in Edit Profile on {SITE}. You need a mobile number saved in
         your profile. Joining is optional and is not a condition of any purchase or of
         playing for the club.
       </p>
